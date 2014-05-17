@@ -46,6 +46,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack">
       <HintPath>dll\HtmlAgilityPack.dll</HintPath>
@@ -144,6 +148,9 @@
     <None Include="Resources\S_small.png" />
     <None Include="Resources\XH_small.png" />
     <None Include="Resources\X_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\osutrainer.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
