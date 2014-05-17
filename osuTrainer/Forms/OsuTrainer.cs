@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Resources;
@@ -171,6 +172,32 @@ namespace osuTrainer.Forms
             Properties.Settings.Default.Minpp = Convert.ToInt32(MinppTextbox.Text);
             Properties.Settings.Default.Save();
             UpdateSuggestions();
+        }
+
+        private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Selected = true;
+                ContextMenu m = new ContextMenu();
+                MenuItem beatmapPage = new MenuItem("Beatmap Page");
+                MenuItem download = new MenuItem("Download from Bloodcat");
+                m.MenuItems.Add(beatmapPage);
+                m.MenuItems.Add(download);
+                beatmapPage.Click += new System.EventHandler(beatmapPage_Click);
+                download.Click += new System.EventHandler(download_Click);
+                m.Show(dataGridView1, new Point(e.X, e.Y));
+            }
+        }
+
+        private void beatmapPage_Click(object sender, System.EventArgs e)
+        {
+            Process.Start(currentBeatmap.Url);
+        }
+        private void download_Click(object sender, System.EventArgs e)
+        {
+            MessageBox.Show(currentBeatmap.BloodcatUrl);
+            Process.Start(currentBeatmap.BloodcatUrl);
         }
     }
 }

@@ -3,6 +3,7 @@
     public class Beatmap
     {
         public int Beatmap_id { get; set; }
+        public int BeatmapSet_id { get; set; }
 
         public int Total_length { get; set; }
 
