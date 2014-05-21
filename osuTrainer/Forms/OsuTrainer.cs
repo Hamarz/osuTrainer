@@ -42,12 +42,7 @@ namespace osuTrainer.Forms
 
             LoadUsers();
 
-            trackBar1.Minimum = (int)currentUser.BestScores.Last().PP;
-            trackBar1.Maximum = (int)currentUser.BestScores.First().PP + 1;
-            trackBar1.Value = trackBar1.Minimum;
-
             FillDataGrid();
-            MinPPLabel.Text = Convert.ToString(trackBar1.Value);
         }
 
         private void CheckAPIKey()
@@ -66,7 +61,11 @@ namespace osuTrainer.Forms
 
         private async void FillDataGrid()
         {
+            trackBar1.Minimum = (int)currentUser.BestScores.Last().PP;
+            trackBar1.Maximum = (int)currentUser.BestScores.First().PP + 1;
+            trackBar1.Value = trackBar1.Minimum;
             double minPP = (double)trackBar1.Value;
+            MinPPLabel.Text = Convert.ToString(trackBar1.Value);
             progressBar1.Value = 0;
             progressBar1.Maximum = minSuggestions * 2 + 5;
             progressBar1.Value = progressBar1.Value + 2;
