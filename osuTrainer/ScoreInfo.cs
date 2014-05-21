@@ -11,6 +11,8 @@ namespace osuTrainer
         [System.ComponentModel.DisplayName("Beatmap name")]
         public string BeatmapName { get; set; }
 
+        public string Version { get;set;}
+
         public GlobalVars.Mods Enabled_Mods { get; set; }
 
         [System.ComponentModel.DisplayName("Raw PP")]

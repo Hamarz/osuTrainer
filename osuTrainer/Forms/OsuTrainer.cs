@@ -19,7 +19,7 @@ namespace osuTrainer.Forms
         public List<UserBest> existingBest = new List<UserBest>();
         private int minSuggestions = 20;
         public int[] userids;
-        private SortedSet<UserBest> scoreSuggestions = new SortedSet<UserBest>();
+        private SortedSet<UserBest> scoreSuggestions;
         private SortableBindingList<ScoreInfo> scoreSugDisplay;
 
         // Key = Beatmap ID
@@ -42,7 +42,12 @@ namespace osuTrainer.Forms
 
             LoadUsers();
 
+            trackBar1.Minimum = (int)currentUser.BestScores.Last().PP;
+            trackBar1.Maximum = (int)currentUser.BestScores.First().PP + 1;
+            trackBar1.Value = trackBar1.Minimum;
+
             FillDataGrid();
+            MinPPLabel.Text = Convert.ToString(trackBar1.Value);
         }
 
         private void CheckAPIKey()
@@ -61,17 +66,19 @@ namespace osuTrainer.Forms
 
         private async void FillDataGrid()
         {
+            double minPP = (double)trackBar1.Value;
             progressBar1.Value = 0;
             progressBar1.Maximum = minSuggestions * 2 + 5;
             progressBar1.Value = progressBar1.Value + 2;
-            await Task.Factory.StartNew(() => UpdateSuggestionsAsync());
+            await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPP));
             dataGridView1.DataSource = scoreSugDisplay;
-            dataGridView1.Columns[5].Visible = false;
+            dataGridView1.Columns[6].Visible = false;
             dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridView1.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridView1.Sort(dataGridView1.Columns[4], ListSortDirection.Ascending);
+            dataGridView1.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Sort(dataGridView1.Columns[5], ListSortDirection.Ascending);
             dataGridView1.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
             dataGridView1.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
             dataGridView1.Columns[2].SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -137,7 +144,7 @@ namespace osuTrainer.Forms
             if (dataGridView1.SelectedRows.Count == 1)
             {
                 Beatmap selected;
-                beatmapCache.TryGetValue((int)dataGridView1.SelectedRows[0].Cells[5].Value, out selected);
+                beatmapCache.TryGetValue((int)dataGridView1.SelectedRows[0].Cells[6].Value, out selected);
                 ArtistLbl.Text = selected.Artist;
                 TitleLbl.Text = selected.Title;
                 CreatorLbl.Text = selected.Creator;
@@ -173,13 +180,13 @@ namespace osuTrainer.Forms
             return midpoint;
         }
 
-        private void UpdateSuggestionsAsync()
+        private void UpdateSuggestionsAsync(double minPP)
         {
             scoreSugDisplay = new SortableBindingList<ScoreInfo>();
+            scoreSuggestions = new SortedSet<UserBest>();
             int startid = currentUser.Pp_raw < 700 ? 3499 :
                 currentUser.Pp_rank < 51 ? startid = currentUser.Pp_rank - 2 :
                 FindStartingUser(currentUser.Pp_raw);
-            double minPP = (currentUser.BestScores.First().PP + currentUser.BestScores.Skip(1).First().PP) / 2;
             int foundSuggestions = 0;
             int noSuggestions = 0;
             while (foundSuggestions < minSuggestions)
@@ -207,7 +214,7 @@ namespace osuTrainer.Forms
                         if (j == 0)
                         {
                             noSuggestions++;
-                            startid = startid - 5;
+                            startid = startid - 10;
                         }
                         break;
                     }
@@ -230,7 +237,7 @@ namespace osuTrainer.Forms
             {
                 Beatmap beatmap = new Beatmap(score.Beatmap_Id);
                 beatmapCache.Add(beatmap.Beatmap_id, beatmap);
-                scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Artist = beatmap.Artist, Enabled_Mods = score.Enabled_Mods, ppRaw = (int)Math.Truncate(score.PP), RankImage = GetRankImage(score.Rank), BeatmapId = beatmap.Beatmap_id });
+                scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Version = beatmap.Version, Artist = beatmap.Artist, Enabled_Mods = score.Enabled_Mods, ppRaw = (int)Math.Truncate(score.PP), RankImage = GetRankImage(score.Rank), BeatmapId = beatmap.Beatmap_id });
                 Invoke((MethodInvoker)delegate
                 {
                     if (progressBar1.Value < progressBar1.Maximum)
@@ -304,6 +311,12 @@ namespace osuTrainer.Forms
         private void download_Click(object sender, System.EventArgs e)
         {
             Process.Start(beatmapCache.Single(x => x.Key == currentBeatmap).Value.BloodcatUrl);
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(trackBar1, trackBar1.Value.ToString());
+            MinPPLabel.Text = Convert.ToString(trackBar1.Value);
         }
     }
 }
