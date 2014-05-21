@@ -292,7 +292,7 @@ namespace osuTrainer.Forms
                         break;
                     }
                 }
-                if (startid > 1)
+                if (startid > 0)
                 {
                     startid--;
                 }
