@@ -26,6 +26,7 @@ namespace osuTrainer.Forms
         public Dictionary<int, Beatmap> beatmapCache;
         private int currentBeatmap;
         private GlobalVars.Mods mods;
+        int skippedIds;
 
         public OsuTrainer()
         {
@@ -97,6 +98,28 @@ namespace osuTrainer.Forms
 
         private async void FillDataGrid()
         {
+
+            if (currentUser.Pp_rank > 50000)
+            {
+                skippedIds = 20;
+            }
+            else if (currentUser.Pp_rank > 10000)
+            {
+                skippedIds = 10;
+            }
+            else if (currentUser.Pp_rank > 1000)
+            {
+                skippedIds = 5;
+            }
+            else if (currentUser.Pp_rank > 200)
+            {
+                skippedIds = 1;
+            }
+            else
+            {
+                skippedIds = 0;
+            }
+
             Properties.Settings.Default.Mods = (int)mods;
             Properties.Settings.Default.Save();
             trackBar1.Minimum = (int)currentUser.BestScores.Last().PP;
@@ -234,33 +257,34 @@ namespace osuTrainer.Forms
                 FindStartingUser(currentUser.Pp_raw);
             int foundSuggestions = 0;
             int noSuggestions = 0;
+
             while (foundSuggestions < minSuggestions)
             {
                 string json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
                 List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
                 for (int j = 0; j < tempList.Count; j++)
                 {
-                    if (tempList[j].PP > minPP && (tempList[j].Enabled_Mods == (mods | GlobalVars.Mods.NoVideo) || tempList[j].Enabled_Mods == mods))
+                    if (tempList[j].PP > minPP)
                     {
-                        if (!currentUser.BestScores.Any(score => score.Beatmap_Id == tempList[j].Beatmap_Id))
+                        if ((tempList[j].Enabled_Mods == (mods | GlobalVars.Mods.NoVideo) || tempList[j].Enabled_Mods == mods))
                         {
-                            if (scoreSuggestions.Add(tempList[j]))
+                            if (!currentUser.BestScores.Any(score => score.Beatmap_Id == tempList[j].Beatmap_Id))
                             {
-                                foundSuggestions++;
-                                Invoke((MethodInvoker)delegate
+                                if (scoreSuggestions.Add(tempList[j]))
                                 {
-                                    progressBar1.Value++;
-                                });
+                                    foundSuggestions++;
+                                    Invoke((MethodInvoker)delegate
+                                    {
+                                        progressBar1.Value++;
+                                    });
+                                }
                             }
                         }
                     }
                     else
                     {
-                        if (j == 0)
-                        {
-                            noSuggestions++;
-                            startid = startid - 10;
-                        }
+                        noSuggestions++;
+                        startid -= skippedIds;
                         break;
                     }
                 }
