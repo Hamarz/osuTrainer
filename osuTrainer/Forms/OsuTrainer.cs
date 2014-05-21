@@ -77,7 +77,7 @@ namespace osuTrainer.Forms
 
         private async void FillDataGrid()
         {
-            Properties.Settings.Default.Mods = mods;
+            Properties.Settings.Default.Mods = (int)mods;
             Properties.Settings.Default.Save();
             trackBar1.Minimum = (int)currentUser.BestScores.Last().PP;
             trackBar1.Maximum = (int)currentUser.BestScores.First().PP + 1;
