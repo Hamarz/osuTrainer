@@ -15,7 +15,7 @@ namespace osuTrainer
 
         public GlobalVars.Mods Enabled_Mods { get; set; }
 
-        [System.ComponentModel.DisplayName("Raw PP")]
+        [System.ComponentModel.DisplayName("PP")]
         public int ppRaw { get; set; }
 
         public int BeatmapId { get; set; }

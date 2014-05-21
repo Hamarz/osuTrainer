@@ -77,6 +77,7 @@ namespace osuTrainer.Forms
 
         private async void FillDataGrid()
         {
+            Properties.Settings.Default.Save();
             trackBar1.Minimum = (int)currentUser.BestScores.Last().PP;
             trackBar1.Maximum = (int)currentUser.BestScores.First().PP + 1;
             double minPP = (double)trackBar1.Value;
@@ -89,10 +90,10 @@ namespace osuTrainer.Forms
             dataGridView1.Columns[6].Visible = false;
             dataGridView1.Columns[0].HeaderText = "";
             dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             dataGridView1.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             dataGridView1.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Columns[1].Width = 75;
             dataGridView1.Sort(dataGridView1.Columns[5], ListSortDirection.Ascending);
             dataGridView1.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
             dataGridView1.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -203,18 +204,6 @@ namespace osuTrainer.Forms
             return midpoint;
         }
 
-        public bool CheckMods(UserBest score)
-        {
-            if (mods == 0)
-            {
-                return true;
-            }
-            else
-            {
-                return score.Enabled_Mods == mods || score.Enabled_Mods == (mods | GlobalVars.Mods.NoVideo);
-            }
-        }
-
         private void UpdateSuggestionsAsync(double minPP)
         {
             scoreSugDisplay = new SortableBindingList<ScoreInfo>();
@@ -230,7 +219,7 @@ namespace osuTrainer.Forms
                 List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
                 for (int j = 0; j < tempList.Count; j++)
                 {
-                    if (tempList[j].PP > minPP && CheckMods(tempList[j]))
+                    if (tempList[j].PP > minPP && (tempList[j].Enabled_Mods == (mods | GlobalVars.Mods.NoVideo) || tempList[j].Enabled_Mods == mods))
                     {
                         if (!currentUser.BestScores.Any(score => score.Beatmap_Id == tempList[j].Beatmap_Id))
                         {
