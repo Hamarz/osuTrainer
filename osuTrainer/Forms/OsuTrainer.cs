@@ -290,7 +290,7 @@ namespace osuTrainer.Forms
         {
             if (e.Button == MouseButtons.Right)
             {
-                currentBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells[5].Value;
+                currentBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells[6].Value;
                 dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Selected = true;
                 ContextMenu m = new ContextMenu();
                 MenuItem beatmapPage = new MenuItem("Beatmap Page");
