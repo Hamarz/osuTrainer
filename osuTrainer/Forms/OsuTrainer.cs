@@ -24,8 +24,8 @@ namespace osuTrainer.Forms
 
         // Key = Beatmap ID
         public Dictionary<int, Beatmap> beatmapCache;
-
         private int currentBeatmap;
+        private GlobalVars.Mods mods;
 
         public OsuTrainer()
         {
@@ -42,7 +42,23 @@ namespace osuTrainer.Forms
 
             LoadUsers();
 
+            mods = (GlobalVars.Mods)Properties.Settings.Default.Mods;
             FillDataGrid();
+            switch (mods)
+            {
+                case GlobalVars.Mods.Hidden:
+                    HiddenCB.Checked = true;
+                    goto case GlobalVars.Mods.HardRock;
+                case GlobalVars.Mods.HardRock:
+                    HardrockCB.Checked = true;
+                    goto case GlobalVars.Mods.DoubleTime;
+                case GlobalVars.Mods.DoubleTime:
+                    DoubletimeCB.Checked = true;
+                    goto case GlobalVars.Mods.Flashlight;
+                case GlobalVars.Mods.Flashlight:
+                    FlashlightCB.Checked = true;
+                    break;
+            }
         }
 
         private void CheckAPIKey()
@@ -187,6 +203,18 @@ namespace osuTrainer.Forms
             return midpoint;
         }
 
+        public bool CheckMods(UserBest score)
+        {
+            if (mods == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return score.Enabled_Mods == mods || score.Enabled_Mods == (mods | GlobalVars.Mods.NoVideo);
+            }
+        }
+
         private void UpdateSuggestionsAsync(double minPP)
         {
             scoreSugDisplay = new SortableBindingList<ScoreInfo>();
@@ -202,7 +230,7 @@ namespace osuTrainer.Forms
                 List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
                 for (int j = 0; j < tempList.Count; j++)
                 {
-                    if (tempList[j].PP > minPP)
+                    if (tempList[j].PP > minPP && CheckMods(tempList[j]))
                     {
                         if (!currentUser.BestScores.Any(score => score.Beatmap_Id == tempList[j].Beatmap_Id))
                         {
@@ -226,7 +254,7 @@ namespace osuTrainer.Forms
                         break;
                     }
                 }
-                if (noSuggestions > 8)
+                if (noSuggestions > 5)
                 {
                     break;
                 }
@@ -324,6 +352,78 @@ namespace osuTrainer.Forms
         {
             toolTip1.SetToolTip(trackBar1, trackBar1.Value.ToString());
             MinPPLabel.Text = Convert.ToString(trackBar1.Value);
+        }
+
+        private void HiddenCB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (HiddenCB.Checked)
+            {
+                if (!mods.HasFlag(GlobalVars.Mods.Hidden))
+                {
+                    mods |= GlobalVars.Mods.Hidden;
+                }
+            }
+            else
+            {
+                if (mods.HasFlag(GlobalVars.Mods.Hidden))
+                {
+                    mods -= GlobalVars.Mods.Hidden;
+                }
+            }
+        }
+
+        private void DoubletimeCB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DoubletimeCB.Checked)
+            {
+                if (!mods.HasFlag(GlobalVars.Mods.DoubleTime))
+                {
+                    mods |= GlobalVars.Mods.DoubleTime;
+                }
+            }
+            else
+            {
+                if (mods.HasFlag(GlobalVars.Mods.DoubleTime))
+                {
+                    mods -= GlobalVars.Mods.DoubleTime;
+                }
+            }
+        }
+
+        private void FlashlightCB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (FlashlightCB.Checked)
+            {
+                if (!mods.HasFlag(GlobalVars.Mods.Flashlight))
+                {
+                    mods |= GlobalVars.Mods.Flashlight;
+                }
+            }
+            else
+            {
+                if (mods.HasFlag(GlobalVars.Mods.Flashlight))
+                {
+                    mods -= GlobalVars.Mods.Flashlight;
+                }
+            }
+        }
+
+        private void HardrockCB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (HardrockCB.Checked)
+            {
+                if (!mods.HasFlag(GlobalVars.Mods.HardRock))
+                {
+                    mods |= GlobalVars.Mods.HardRock;
+                }
+            }
+            else
+            {
+                if (mods.HasFlag(GlobalVars.Mods.HardRock))
+                {
+                    mods -= GlobalVars.Mods.HardRock;
+                }
+            }
         }
     }
 }

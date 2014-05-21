@@ -58,5 +58,17 @@ namespace osuTrainer.Properties {
                 this["UserId"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Mods {
+            get {
+                return ((int)(this["Mods"]));
+            }
+            set {
+                this["Mods"] = value;
+            }
+        }
     }
 }

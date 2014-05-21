@@ -53,6 +53,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.MinPPLabel = new System.Windows.Forms.Label();
             this.UpdateButton = new System.Windows.Forms.Button();
+            this.DoubletimeCB = new System.Windows.Forms.CheckBox();
+            this.HardrockCB = new System.Windows.Forms.CheckBox();
+            this.HiddenCB = new System.Windows.Forms.CheckBox();
+            this.FlashlightCB = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -228,9 +232,9 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(397, 113);
+            this.progressBar1.Location = new System.Drawing.Point(476, 113);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(253, 40);
+            this.progressBar1.Size = new System.Drawing.Size(174, 40);
             this.progressBar1.TabIndex = 5;
             // 
             // groupBox2
@@ -249,7 +253,7 @@
             // trackBar1
             // 
             this.trackBar1.AutoSize = false;
-            this.trackBar1.Location = new System.Drawing.Point(92, 113);
+            this.trackBar1.Location = new System.Drawing.Point(61, 113);
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(154, 35);
             this.trackBar1.TabIndex = 7;
@@ -258,7 +262,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(19, 113);
+            this.label1.Location = new System.Drawing.Point(15, 113);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(47, 13);
             this.label1.TabIndex = 8;
@@ -267,7 +271,7 @@
             // MinPPLabel
             // 
             this.MinPPLabel.AutoSize = true;
-            this.MinPPLabel.Location = new System.Drawing.Point(24, 132);
+            this.MinPPLabel.Location = new System.Drawing.Point(20, 132);
             this.MinPPLabel.Name = "MinPPLabel";
             this.MinPPLabel.Size = new System.Drawing.Size(35, 13);
             this.MinPPLabel.TabIndex = 9;
@@ -275,19 +279,67 @@
             // 
             // UpdateButton
             // 
-            this.UpdateButton.Location = new System.Drawing.Point(255, 113);
+            this.UpdateButton.Location = new System.Drawing.Point(212, 112);
             this.UpdateButton.Name = "UpdateButton";
-            this.UpdateButton.Size = new System.Drawing.Size(89, 40);
+            this.UpdateButton.Size = new System.Drawing.Size(89, 36);
             this.UpdateButton.TabIndex = 10;
             this.UpdateButton.Text = "Update";
             this.UpdateButton.UseVisualStyleBackColor = true;
             this.UpdateButton.Click += new System.EventHandler(this.UpdateButton_Click);
+            // 
+            // DoubletimeCB
+            // 
+            this.DoubletimeCB.AutoSize = true;
+            this.DoubletimeCB.Location = new System.Drawing.Point(312, 114);
+            this.DoubletimeCB.Name = "DoubletimeCB";
+            this.DoubletimeCB.Size = new System.Drawing.Size(79, 17);
+            this.DoubletimeCB.TabIndex = 11;
+            this.DoubletimeCB.Text = "Doubletime";
+            this.DoubletimeCB.UseVisualStyleBackColor = true;
+            this.DoubletimeCB.CheckedChanged += new System.EventHandler(this.DoubletimeCB_CheckedChanged);
+            // 
+            // HardrockCB
+            // 
+            this.HardrockCB.AutoSize = true;
+            this.HardrockCB.Location = new System.Drawing.Point(312, 133);
+            this.HardrockCB.Name = "HardrockCB";
+            this.HardrockCB.Size = new System.Drawing.Size(70, 17);
+            this.HardrockCB.TabIndex = 12;
+            this.HardrockCB.Text = "Hardrock";
+            this.HardrockCB.UseVisualStyleBackColor = true;
+            this.HardrockCB.CheckedChanged += new System.EventHandler(this.HardrockCB_CheckedChanged);
+            // 
+            // HiddenCB
+            // 
+            this.HiddenCB.AutoSize = true;
+            this.HiddenCB.Location = new System.Drawing.Point(397, 113);
+            this.HiddenCB.Name = "HiddenCB";
+            this.HiddenCB.Size = new System.Drawing.Size(60, 17);
+            this.HiddenCB.TabIndex = 13;
+            this.HiddenCB.Text = "Hidden";
+            this.HiddenCB.UseVisualStyleBackColor = true;
+            this.HiddenCB.CheckedChanged += new System.EventHandler(this.HiddenCB_CheckedChanged);
+            // 
+            // FlashlightCB
+            // 
+            this.FlashlightCB.AutoSize = true;
+            this.FlashlightCB.Location = new System.Drawing.Point(397, 133);
+            this.FlashlightCB.Name = "FlashlightCB";
+            this.FlashlightCB.Size = new System.Drawing.Size(70, 17);
+            this.FlashlightCB.TabIndex = 14;
+            this.FlashlightCB.Text = "Flashlight";
+            this.FlashlightCB.UseVisualStyleBackColor = true;
+            this.FlashlightCB.CheckedChanged += new System.EventHandler(this.FlashlightCB_CheckedChanged);
             // 
             // OsuTrainer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(661, 460);
+            this.Controls.Add(this.FlashlightCB);
+            this.Controls.Add(this.HiddenCB);
+            this.Controls.Add(this.HardrockCB);
+            this.Controls.Add(this.DoubletimeCB);
             this.Controls.Add(this.UpdateButton);
             this.Controls.Add(this.MinPPLabel);
             this.Controls.Add(this.label1);
@@ -338,5 +390,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label MinPPLabel;
         private System.Windows.Forms.Button UpdateButton;
+        private System.Windows.Forms.CheckBox DoubletimeCB;
+        private System.Windows.Forms.CheckBox HardrockCB;
+        private System.Windows.Forms.CheckBox HiddenCB;
+        private System.Windows.Forms.CheckBox FlashlightCB;
     }
 }
