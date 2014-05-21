@@ -44,19 +44,39 @@ namespace osuTrainer.Forms
 
             mods = (GlobalVars.Mods)Properties.Settings.Default.Mods;
             FillDataGrid();
+
             switch (mods)
             {
-                case GlobalVars.Mods.Hidden:
-                    HiddenCB.Checked = true;
-                    goto case GlobalVars.Mods.HardRock;
-                case GlobalVars.Mods.HardRock:
-                    HardrockCB.Checked = true;
-                    goto case GlobalVars.Mods.DoubleTime;
                 case GlobalVars.Mods.DoubleTime:
                     DoubletimeCB.Checked = true;
-                    goto case GlobalVars.Mods.Flashlight;
+                    break;
+                case GlobalVars.Mods.DoubleTime | GlobalVars.Mods.Hidden:
+                    DoubletimeCB.Checked = true;
+                    HiddenCB.Checked = true;
+                    break;
+                case GlobalVars.Mods.DoubleTime | GlobalVars.Mods.HardRock:
+                    DoubletimeCB.Checked = true;
+                    HardrockCB.Checked = true;
+                    break;
+                case GlobalVars.Mods.Hidden:
+                    HiddenCB.Checked = true;
+                    break;
+                case GlobalVars.Mods.HardRock:
+                    HardrockCB.Checked = true;
+                    break;
+                case GlobalVars.Mods.HardRock | GlobalVars.Mods.Hidden:
+                    HiddenCB.Checked = true;
+                    HardrockCB.Checked = true;
+                    break;
+                case GlobalVars.Mods.HardRock | GlobalVars.Mods.Hidden | GlobalVars.Mods.DoubleTime:
+                    HiddenCB.Checked = true;
+                    HardrockCB.Checked = true;
+                    DoubletimeCB.Checked = true;
+                    break;
                 case GlobalVars.Mods.Flashlight:
                     FlashlightCB.Checked = true;
+                    break;
+                default:
                     break;
             }
         }
