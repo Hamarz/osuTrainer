@@ -150,7 +150,14 @@ namespace osuTrainer.Forms
                 TotalTimeLbl.Text = TimeSpan.FromSeconds(selected.Total_length).ToString(@"mm\:ss");
                 DrainingTimeLbl.Text = TimeSpan.FromSeconds(selected.Hit_length).ToString(@"mm\:ss");
                 BpmLbl.Text = selected.Bpm.ToString("F2");
-                pictureBox1.Load(selected.ThumbnailUrl);
+                try
+                {
+                    pictureBox1.Load(selected.ThumbnailUrl);
+                }
+                catch (Exception)
+                {
+                    pictureBox1.Image = null;
+                }
             }
         }
 
