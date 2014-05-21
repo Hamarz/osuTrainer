@@ -37,13 +37,25 @@ namespace osuTrainer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Minpp {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIKey {
             get {
-                return ((int)(this["Minpp"]));
+                return ((string)(this["APIKey"]));
             }
             set {
-                this["Minpp"] = value;
+                this["APIKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string UserId {
+            get {
+                return ((string)(this["UserId"]));
+            }
+            set {
+                this["UserId"] = value;
             }
         }
     }

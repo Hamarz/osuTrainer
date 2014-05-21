@@ -1,27 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Resources;
-using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ServiceStack.Text;
 
 namespace osuTrainer.Forms
 {
     public partial class OsuTrainer : Form
     {
+        private CustomWebClient client = new CustomWebClient();
         public User currentUser;
-        public Beatmap currentBeatmap = new Beatmap();
-        // Key = Beatmap Id
-        public Dictionary<int, ScoreInfo> existingScores;
-        public Dictionary<int, ScoreInfo> scoreSuggestions;
-        SortableBindingList<ScoreInfo> sortableScores;
-        int minSuggestions = 20;
-        int maxpp = 9001;
+        public List<UserBest> existingBest = new List<UserBest>();
+        private int minSuggestions = 20;
+        public int[] userids;
+        private SortedSet<UserBest> scoreSuggestions = new SortedSet<UserBest>();
+        private SortableBindingList<ScoreInfo> scoreSugDisplay;
+
+        // Key = Beatmap ID
+        public Dictionary<int, Beatmap> beatmapCache;
+
+        private int currentBeatmap;
 
         public OsuTrainer()
         {
@@ -32,41 +36,98 @@ namespace osuTrainer.Forms
 
         private void OsuTrainer_Load(object sender, EventArgs e)
         {
-            if (!UpdateUser(true))
-            {
-                Close();
-            }
-            MinppTextbox.Text = Convert.ToString(Properties.Settings.Default.Minpp);
+            CheckAPIKey();
+
+            CheckUser();
+
+            LoadUsers();
+
+            FillDataGrid();
         }
 
-
-
-        private void ChangeUserButton_Click(object sender, EventArgs e)
+        private void CheckAPIKey()
         {
-            UpdateUser();
-        }
-
-        private bool UpdateUser(bool start = false)
-        {
-            Forms.Login login = new Forms.Login(start);
-            if (login.ShowDialog() == DialogResult.OK)
+            if (Properties.Settings.Default.APIKey.Length < 1 || client.DownloadString("https://osu.ppy.sh/api/get_user?k=" + Properties.Settings.Default.APIKey + "&u=1").Length > 3)
             {
-                if (currentUser == null || currentUser.Username != login.newUser.Username)
+                using (GetAPIKey getApiKey = new GetAPIKey())
                 {
-                    currentUser = login.newUser;
-                    existingScores = new Dictionary<int, ScoreInfo>();
-                    ScoreParser.GetTopScores(currentUser);
-                    for (int i = 0; i < currentUser.TopScores.Count; i++)
+                    if (getApiKey.ShowDialog() == DialogResult.Cancel)
                     {
-                        existingScores.Add(currentUser.TopScores[i].BeatmapId, currentUser.TopScores[i]);
+                        Close();
                     }
-                    UpdateSuggestions();
                 }
-                return true;
+            }
+        }
+
+        private async void FillDataGrid()
+        {
+            progressBar1.Value = 0;
+            progressBar1.Maximum = minSuggestions * 2 + 5;
+            progressBar1.Value = progressBar1.Value + 2;
+            await Task.Factory.StartNew(() => UpdateSuggestionsAsync());
+            dataGridView1.DataSource = scoreSugDisplay;
+            dataGridView1.Columns[5].Visible = false;
+            dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Sort(dataGridView1.Columns[4], ListSortDirection.Ascending);
+            dataGridView1.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
+            dataGridView1.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
+            dataGridView1.Columns[2].SortMode = DataGridViewColumnSortMode.NotSortable;
+            dataGridView1.Columns[3].SortMode = DataGridViewColumnSortMode.NotSortable;
+            progressBar1.Value = progressBar1.Maximum;
+            if (dataGridView1.Rows.Count == 0)
+            {
+                MessageBox.Show("No suitable maps found.");
+            }
+        }
+
+        private void CheckUser()
+        {
+            if (!User.Exists(Properties.Settings.Default.UserId))
+            {
+                using (Login login = new Login())
+                {
+                    if (login.ShowDialog() == DialogResult.Cancel)
+                    {
+                        Close();
+                    }
+                    currentUser = login.newUser;
+                    Properties.Settings.Default.UserId = currentUser.User_id.ToString();
+                    Properties.Settings.Default.Username = currentUser.Username;
+                    Properties.Settings.Default.Save();
+                }
             }
             else
             {
-                return false;
+                currentUser = new User(Properties.Settings.Default.UserId);
+                Properties.Settings.Default.Username = currentUser.Username;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void LoadUsers()
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            using (FileStream fs = new FileStream("ids", FileMode.Open, FileAccess.Read))
+            {
+                userids = (int[])formatter.Deserialize(fs);
+            }
+        }
+
+        private void ChangeUserButton_Click(object sender, EventArgs e)
+        {
+            using (Login login = new Login())
+            {
+                if (login.ShowDialog() != DialogResult.Cancel)
+                {
+                    currentUser = login.newUser;
+                    Properties.Settings.Default.UserId = currentUser.User_id.ToString();
+                    Properties.Settings.Default.Username = currentUser.Username;
+                    Properties.Settings.Default.Save();
+                    FillDataGrid();
+                }
             }
         }
 
@@ -74,110 +135,154 @@ namespace osuTrainer.Forms
         {
             if (dataGridView1.SelectedRows.Count == 1)
             {
-                BeatmapParser.GetBeatmapFromApi(currentBeatmap, Convert.ToInt32(dataGridView1.SelectedRows[0].Cells[2].Value));
-                BeatmapIdLbl.Text = Convert.ToString(currentBeatmap.Beatmap_id);
-                ArtistLbl.Text = currentBeatmap.Artist;
-                TitleLbl.Text = currentBeatmap.Title;
-                CreatorLbl.Text = currentBeatmap.Creator;
-                TotalTimeLbl.Text = TimeSpan.FromSeconds(currentBeatmap.Total_length).ToString(@"mm\:ss");
-                DrainingTimeLbl.Text = TimeSpan.FromSeconds(currentBeatmap.Hit_length).ToString(@"mm\:ss");
-                BpmLbl.Text = currentBeatmap.Bpm.ToString("F2");
-                pictureBox1.ImageLocation = currentBeatmap.ThumbnailUrl;
+                Beatmap selected;
+                beatmapCache.TryGetValue((int)dataGridView1.SelectedRows[0].Cells[5].Value, out selected);
+                ArtistLbl.Text = selected.Artist;
+                TitleLbl.Text = selected.Title;
+                CreatorLbl.Text = selected.Creator;
+                TotalTimeLbl.Text = TimeSpan.FromSeconds(selected.Total_length).ToString(@"mm\:ss");
+                DrainingTimeLbl.Text = TimeSpan.FromSeconds(selected.Hit_length).ToString(@"mm\:ss");
+                BpmLbl.Text = selected.Bpm.ToString("F2");
+                pictureBox1.Load(selected.ThumbnailUrl);
             }
         }
 
-        private void UpdateRankimages()
+        private int FindStartingUser(double targetpp)
         {
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            int low = 0;
+            int high = userids.Length - 1;
+            int midpoint = 0;
+            while (low < high)
             {
-                switch ((GlobalVars.RankImage)dataGridView1.Rows[i].Cells[5].Value)
+                midpoint = low + (high - low) / 2;
+                User miduser = new User(userids[midpoint].ToString());
+                if (targetpp > miduser.Pp_raw)
                 {
-                    case GlobalVars.RankImage.S_small:
-                        dataGridView1.Rows[i].Cells[0].Value = Properties.Resources.S_small;
-                        break;
-                    case GlobalVars.RankImage.A_small:
-                        dataGridView1.Rows[i].Cells[0].Value = Properties.Resources.A_small;
-                        break;
-                    case GlobalVars.RankImage.X_small:
-                        dataGridView1.Rows[i].Cells[0].Value = Properties.Resources.X_small;
-                        break;
-                    case GlobalVars.RankImage.SH_small:
-                        dataGridView1.Rows[i].Cells[0].Value = Properties.Resources.SH_small;
-                        break;
-                    case GlobalVars.RankImage.XH_small:
-                        dataGridView1.Rows[i].Cells[0].Value = Properties.Resources.XH_small;
-                        break;
-                    case GlobalVars.RankImage.B_small:
-                        dataGridView1.Rows[i].Cells[0].Value = Properties.Resources.B_small;
-                        break;
-                    case GlobalVars.RankImage.C_small:
-                        dataGridView1.Rows[i].Cells[0].Value = Properties.Resources.C_small;
-                        break;
-                    case GlobalVars.RankImage.D_small:
-                        dataGridView1.Rows[i].Cells[0].Value = Properties.Resources.D_small;
-                        break;
-                    default:
-                        break;
+                    high = midpoint - 1;
+                }
+                else if (miduser.Pp_raw - targetpp < 200)
+                {
+                    return midpoint;
+                }
+                else
+                {
+                    low = midpoint - 1;
                 }
             }
+            return midpoint;
         }
 
-        private void UpdateSuggestions()
+        private void UpdateSuggestionsAsync()
         {
-            if (Properties.Settings.Default.Minpp == 0)
+            scoreSugDisplay = new SortableBindingList<ScoreInfo>();
+            int startid = currentUser.Pp_raw < 700 ? 3499 :
+                currentUser.Pp_rank < 51 ? startid = currentUser.Pp_rank - 2 :
+                FindStartingUser(currentUser.Pp_raw);
+            double minPP = (currentUser.BestScores.First().PP + currentUser.BestScores.Skip(1).First().PP) / 2;
+            int foundSuggestions = 0;
+            int noSuggestions = 0;
+            while (foundSuggestions < minSuggestions)
             {
-                Properties.Settings.Default.Minpp = Convert.ToInt32(existingScores.First().Value.ppRaw * .9);
-                MinppTextbox.Text = Convert.ToString(Properties.Settings.Default.Minpp);
-                Properties.Settings.Default.Save();
+                string json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
+                List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
+                for (int j = 0; j < tempList.Count; j++)
+                {
+                    if (tempList[j].PP > minPP)
+                    {
+                        if (!currentUser.BestScores.Any(score => score.Beatmap_Id == tempList[j].Beatmap_Id))
+                        {
+                            if (scoreSuggestions.Add(tempList[j]))
+                            {
+                                foundSuggestions++;
+                                Invoke((MethodInvoker)delegate
+                                {
+                                    progressBar1.Value++;
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (j == 0)
+                        {
+                            noSuggestions++;
+                            startid = startid - 5;
+                        }
+                        break;
+                    }
+                }
+                if (noSuggestions > 4)
+                {
+                    break;
+                }
+                if (startid > 1)
+                {
+                    startid--;
+                }
+                else
+                {
+                    break;
+                }
             }
-            scoreSuggestions = ScoreParser.GetScoreSuggestions(existingScores, currentUser, Properties.Settings.Default.Minpp, maxpp, minSuggestions);
-            sortableScores = new SortableBindingList<ScoreInfo>();
-            sortableScores.Load(scoreSuggestions.Values);
-            dataGridView1.DataSource = sortableScores;
-
-            if (dataGridView1.Columns.Count < 6)
+            beatmapCache = new Dictionary<int, Beatmap>();
+            foreach (var score in scoreSuggestions)
             {
-                dataGridView1.Columns.Insert(0, new DataGridViewImageColumn());
-            }
-            dataGridView1.Columns[2].Visible = false;
-            dataGridView1.Columns[4].Visible = false;
-            dataGridView1.Columns[5].Visible = false;
-            dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridView1.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridView1.Sort(dataGridView1.Columns[3], ListSortDirection.Descending);
-            dataGridView1.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
-            dataGridView1.Columns[3].SortMode = DataGridViewColumnSortMode.NotSortable;
-            dataGridView1.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
-            UpdateRankimages();
-            if (dataGridView1.Rows.Count != 0)
-            {
-                dataGridView1.Rows[1].Selected = true;
-            }
-            else
-            {
-                MessageBox.Show("No suitable maps found.");
+                Beatmap beatmap = new Beatmap(score.Beatmap_Id);
+                beatmapCache.Add(beatmap.Beatmap_id, beatmap);
+                scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Artist = beatmap.Artist, Enabled_Mods = score.Enabled_Mods, ppRaw = (int)Math.Truncate(score.PP), RankImage = GetRankImage(score.Rank), BeatmapId = beatmap.Beatmap_id });
+                Invoke((MethodInvoker)delegate
+                {
+                    if (progressBar1.Value < progressBar1.Maximum)
+                    {
+                        progressBar1.Value++;
+                    }
+                });
             }
         }
 
-        private void MinppTextbox_KeyPress(object sender, KeyPressEventArgs e)
+        private Bitmap GetRankImage(GlobalVars.Rank rank)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            switch (rank)
             {
-                e.Handled = true;
+                case GlobalVars.Rank.S:
+                    return Properties.Resources.S_small;
+
+                case GlobalVars.Rank.A:
+                    return Properties.Resources.A_small;
+
+                case GlobalVars.Rank.X:
+                    return Properties.Resources.X_small;
+
+                case GlobalVars.Rank.SH:
+                    return Properties.Resources.SH_small;
+
+                case GlobalVars.Rank.XH:
+                    return Properties.Resources.XH_small;
+
+                case GlobalVars.Rank.B:
+                    return Properties.Resources.B_small;
+
+                case GlobalVars.Rank.C:
+                    return Properties.Resources.C_small;
+
+                case GlobalVars.Rank.D:
+                    return Properties.Resources.D_small;
+
+                default:
+                    return null;
             }
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Minpp = Convert.ToInt32(MinppTextbox.Text);
-            Properties.Settings.Default.Save();
-            UpdateSuggestions();
+            FillDataGrid();
         }
 
         private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
+                currentBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells[5].Value;
                 dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Selected = true;
                 ContextMenu m = new ContextMenu();
                 MenuItem beatmapPage = new MenuItem("Beatmap Page");
@@ -192,12 +297,12 @@ namespace osuTrainer.Forms
 
         private void beatmapPage_Click(object sender, System.EventArgs e)
         {
-            Process.Start(currentBeatmap.Url);
+            Process.Start(beatmapCache.Single(x => x.Key == currentBeatmap).Value.Url);
         }
+
         private void download_Click(object sender, System.EventArgs e)
         {
-            MessageBox.Show(currentBeatmap.BloodcatUrl);
-            Process.Start(currentBeatmap.BloodcatUrl);
+            Process.Start(beatmapCache.Single(x => x.Key == currentBeatmap).Value.BloodcatUrl);
         }
     }
 }

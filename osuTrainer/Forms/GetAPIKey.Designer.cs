@@ -1,6 +1,6 @@
 ﻿namespace osuTrainer.Forms
 {
-    partial class Login
+    partial class GetAPIKey
     {
         /// <summary>
         /// Required designer variable.
@@ -28,25 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
-            this.label1 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.ConfirmButton = new System.Windows.Forms.Button();
             this.CloseButton = new System.Windows.Forms.Button();
-            this.UsernameTextbox = new System.Windows.Forms.TextBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
-            // label1
+            // textBox1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(57, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(102, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "osu! username or id:";
+            this.textBox1.Location = new System.Drawing.Point(36, 44);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(180, 20);
+            this.textBox1.TabIndex = 0;
             // 
             // ConfirmButton
             // 
-            this.ConfirmButton.Location = new System.Drawing.Point(12, 77);
+            this.ConfirmButton.Location = new System.Drawing.Point(36, 82);
             this.ConfirmButton.Name = "ConfirmButton";
             this.ConfirmButton.Size = new System.Drawing.Size(75, 23);
             this.ConfirmButton.TabIndex = 1;
@@ -57,7 +54,7 @@
             // CloseButton
             // 
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CloseButton.Location = new System.Drawing.Point(130, 77);
+            this.CloseButton.Location = new System.Drawing.Point(141, 82);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(75, 23);
             this.CloseButton.TabIndex = 2;
@@ -65,32 +62,33 @@
             this.CloseButton.UseVisualStyleBackColor = true;
             this.CloseButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // UsernameTextbox
+            // linkLabel1
             // 
-            this.UsernameTextbox.Location = new System.Drawing.Point(39, 42);
-            this.UsernameTextbox.Name = "UsernameTextbox";
-            this.UsernameTextbox.Size = new System.Drawing.Size(139, 20);
-            this.UsernameTextbox.TabIndex = 0;
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(9, 17);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(55, 13);
+            this.linkLabel1.TabIndex = 4;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "linkLabel1";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
-            // Login
+            // GetAPIKey
             // 
             this.AcceptButton = this.ConfirmButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.CloseButton;
-            this.ClientSize = new System.Drawing.Size(217, 109);
-            this.Controls.Add(this.UsernameTextbox);
+            this.ClientSize = new System.Drawing.Size(253, 117);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.ConfirmButton);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.textBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "Login";
+            this.Name = "GetAPIKey";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Login";
-            this.Load += new System.EventHandler(this.Login_Load);
+            this.Text = "API Access";
+            this.Load += new System.EventHandler(this.GetAPIKey_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -98,10 +96,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button ConfirmButton;
         private System.Windows.Forms.Button CloseButton;
-        private System.Windows.Forms.TextBox UsernameTextbox;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }
-

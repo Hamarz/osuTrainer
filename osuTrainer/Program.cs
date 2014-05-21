@@ -6,7 +6,8 @@ namespace osuTrainer
 {
     internal static class Program
     {
-        static readonly Mutex Mutex = new Mutex(false, "osuTrainer");
+        private static readonly Mutex Mutex = new Mutex(false, "osuTrainer");
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using ServiceStack.Text;
 
 namespace osuTrainer
 {
     public class User
     {
+        private static CustomWebClient client = new CustomWebClient();
+
         public int User_id { get; set; }
 
         public string Username { get; set; }
@@ -16,13 +22,36 @@ namespace osuTrainer
 
         public string Country { get; set; }
 
-        public List<ScoreInfo> TopScores { get; set; }
+        public List<UserBest> BestScores { get; set; }
 
-        public int CountryRank { get; set; }
-
-        public User()
+        /// <summary>
+        /// username can be either username or user id
+        /// </summary>
+        public User(string username)
         {
-            TopScores = new List<ScoreInfo>();
+            GetUser(username);
+        }
+
+        private void GetUser(string username)
+        {
+            using (var client = new CustomWebClient())
+            {
+                string json = client.DownloadString(GlobalVars.UserAPI + username);
+                Match match = Regex.Match(json, @"""user_id"":""(.+?)"".+?""username"":""(.+?)"".+?""pp_rank"":""(.+?)"".+?""level"":""(.+?)"".+?""pp_raw"":""(.+?)"".+?""country"":""(.+?)""");
+                User_id = Convert.ToInt32(match.Groups[1].Value);
+                Username = match.Groups[2].Value;
+                Pp_rank = Convert.ToInt32(match.Groups[3].Value);
+                Level = Convert.ToDouble(match.Groups[4].Value, CultureInfo.InvariantCulture);
+                Pp_raw = Convert.ToDouble(match.Groups[5].Value, CultureInfo.InvariantCulture);
+                Country = match.Groups[6].Value;
+                json = client.DownloadString(GlobalVars.UserBestAPI + User_id);
+                BestScores = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
+            }
+        }
+
+        public static bool Exists(string username)
+        {
+            return (client.DownloadString("https://osu.ppy.sh/api/get_user?k=" + Properties.Settings.Default.APIKey + "&u=" + username).Length > 33);
         }
     }
 }
