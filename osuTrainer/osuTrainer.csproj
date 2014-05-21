@@ -51,9 +51,6 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>dll\HtmlAgilityPack.dll</HintPath>
-    </Reference>
     <Reference Include="ServiceStack.Text">
       <HintPath>dll\ServiceStack.Text.dll</HintPath>
     </Reference>
@@ -167,9 +164,6 @@
     <None Include="Resources\osutrainer.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="dll\HtmlAgilityPack.dll" />
-    <Content Include="dll\HtmlAgilityPack.pdb" />
-    <Content Include="dll\HtmlAgilityPack.XML" />
     <Content Include="dll\ServiceStack.Text.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
