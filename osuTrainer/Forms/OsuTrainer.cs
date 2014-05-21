@@ -63,7 +63,6 @@ namespace osuTrainer.Forms
         {
             trackBar1.Minimum = (int)currentUser.BestScores.Last().PP;
             trackBar1.Maximum = (int)currentUser.BestScores.First().PP + 1;
-            trackBar1.Value = trackBar1.Minimum;
             double minPP = (double)trackBar1.Value;
             MinPPLabel.Text = Convert.ToString(trackBar1.Value);
             progressBar1.Value = 0;
