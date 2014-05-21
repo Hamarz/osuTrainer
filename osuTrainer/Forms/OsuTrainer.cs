@@ -71,16 +71,18 @@ namespace osuTrainer.Forms
             await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPP));
             dataGridView1.DataSource = scoreSugDisplay;
             dataGridView1.Columns[6].Visible = false;
+            dataGridView1.Columns[0].HeaderText = "";
             dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridView1.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             dataGridView1.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridView1.Sort(dataGridView1.Columns[5], ListSortDirection.Ascending);
             dataGridView1.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
             dataGridView1.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
             dataGridView1.Columns[2].SortMode = DataGridViewColumnSortMode.NotSortable;
             dataGridView1.Columns[3].SortMode = DataGridViewColumnSortMode.NotSortable;
+            dataGridView1.Columns[4].SortMode = DataGridViewColumnSortMode.NotSortable;
             progressBar1.Value = progressBar1.Maximum;
             if (dataGridView1.Rows.Count == 0)
             {
