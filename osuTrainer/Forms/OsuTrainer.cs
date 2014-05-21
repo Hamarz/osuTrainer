@@ -126,6 +126,7 @@ namespace osuTrainer.Forms
                     Properties.Settings.Default.UserId = currentUser.User_id.ToString();
                     Properties.Settings.Default.Username = currentUser.Username;
                     Properties.Settings.Default.Save();
+                    scoreSugDisplay = null;
                     FillDataGrid();
                 }
             }
@@ -211,7 +212,7 @@ namespace osuTrainer.Forms
                         break;
                     }
                 }
-                if (noSuggestions > 4)
+                if (noSuggestions > 8)
                 {
                     break;
                 }
