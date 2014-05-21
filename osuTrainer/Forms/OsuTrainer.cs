@@ -27,6 +27,7 @@ namespace osuTrainer.Forms
         private int currentBeatmap;
         private GlobalVars.Mods mods;
         int skippedIds;
+        int maxTries = 10;
 
         public OsuTrainer()
         {
@@ -256,9 +257,8 @@ namespace osuTrainer.Forms
                 currentUser.Pp_rank < 51 ? startid = currentUser.Pp_rank - 2 :
                 FindStartingUser(currentUser.Pp_raw);
             int foundSuggestions = 0;
-            int noSuggestions = 0;
-
-            while (foundSuggestions < minSuggestions)
+            int failedTry = 0;
+            while (foundSuggestions < minSuggestions && failedTry < maxTries)
             {
                 string json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
                 List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
@@ -281,16 +281,16 @@ namespace osuTrainer.Forms
                             }
                         }
                     }
+                    else if (j == 9)
+                    {
+                        failedTry++;
+                    }
                     else
                     {
-                        noSuggestions++;
+                        failedTry++;
                         startid -= skippedIds;
                         break;
                     }
-                }
-                if (noSuggestions > 5)
-                {
-                    break;
                 }
                 if (startid > 1)
                 {
