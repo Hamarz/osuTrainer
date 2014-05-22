@@ -258,8 +258,8 @@ namespace osuTrainer.Forms
         {
             scoreSugDisplay = new SortableBindingList<ScoreInfo>();
             scoreSuggestions = new SortedSet<UserBest>();
-            int startid = currentUser.Pp_raw < 700 ? 3499 :
-                currentUser.Pp_rank < 1001 ? startid = currentUser.Pp_rank - 2 :
+            int startid = currentUser.Pp_raw < 200 ? 12849 :
+                currentUser.Pp_rank < 5001 ? startid = currentUser.Pp_rank - 2 :
                 FindStartingUser(currentUser.Pp_raw);
             int foundSuggestions = 0;
             Stopwatch sw = Stopwatch.StartNew();
