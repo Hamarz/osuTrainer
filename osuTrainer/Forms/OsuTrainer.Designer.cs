@@ -352,7 +352,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "OsuTrainer";
-            this.Text = "osu! Trainer";
             this.Load += new System.EventHandler(this.OsuTrainer_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);

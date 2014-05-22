@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -43,6 +44,8 @@ namespace osuTrainer.Forms
             CheckAPIKey();
 
             CheckUser();
+
+            this.Text = "osu! Trainer " + Assembly.GetExecutingAssembly().GetName().Version;
 
             LoadUsers();
 
