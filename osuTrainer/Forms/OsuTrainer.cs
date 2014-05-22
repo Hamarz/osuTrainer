@@ -32,7 +32,6 @@ namespace osuTrainer.Forms
         private const int pbMax = 50;
         private const int pbMaxhalf = 25;
         private Object thisLock = new Object();
-        private Queue<string> scoreQueue;
 
         public OsuTrainer()
         {
@@ -271,10 +270,9 @@ namespace osuTrainer.Forms
             {
                 addedScores.Add(score.Beatmap_Id);
             }
-            scoreQueue = new Queue<string>();
+            int psearched = 0;
             Stopwatch sw = Stopwatch.StartNew();
-
-            Parallel.For(0, 1, (i, state) =>
+            Parallel.For(0, 999, (i, state) =>
             {
                 while (sw.Elapsed < maxDuration)
                 {
@@ -286,6 +284,11 @@ namespace osuTrainer.Forms
                         {
                             startid--;
                         }
+                        psearched++;
+                        Invoke((MethodInvoker)delegate
+                        {
+                            PlayersSearchedLbl.Text = psearched.ToString();
+                        });
                     }
                     List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
                     for (int j = 0; j < tempList.Count; j++)
@@ -339,6 +342,7 @@ namespace osuTrainer.Forms
                     {
                         progressBar1.Value++;
                     }
+                    ScoresAddedLbl.Text = Convert.ToString(scoreSugDisplay.Count);
                 });
                 if (counter < maxSuggestions)
                 {
@@ -386,6 +390,8 @@ namespace osuTrainer.Forms
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
+            PlayersSearchedLbl.Text = "0";
+            ScoresAddedLbl.Text = "0";
             UpdateDataGrid();
         }
 

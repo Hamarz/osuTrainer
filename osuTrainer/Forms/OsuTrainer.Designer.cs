@@ -59,12 +59,19 @@
             this.FlashlightCB = new System.Windows.Forms.CheckBox();
             this.SearchtimeTB = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.psearch = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.PlayersSearchedLbl = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ScoresAddedLbl = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SearchtimeTB)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -86,7 +93,7 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(626, 276);
+            this.dataGridView1.Size = new System.Drawing.Size(625, 256);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             this.dataGridView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseClick);
@@ -248,7 +255,7 @@
             this.groupBox2.Controls.Add(this.dataGridView1);
             this.groupBox2.Location = new System.Drawing.Point(12, 154);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(638, 301);
+            this.groupBox2.Size = new System.Drawing.Size(637, 281);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Recommended Scores";
@@ -361,11 +368,56 @@
             this.label2.TabIndex = 16;
             this.label2.Text = "Search duration (s)";
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.psearch,
+            this.PlayersSearchedLbl,
+            this.toolStripStatusLabel2,
+            this.ScoresAddedLbl});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 438);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(661, 22);
+            this.statusStrip1.TabIndex = 17;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(412, 17);
+            this.toolStripStatusLabel1.Spring = true;
+            // 
+            // psearch
+            // 
+            this.psearch.Name = "psearch";
+            this.psearch.Size = new System.Drawing.Size(97, 17);
+            this.psearch.Text = "Players searched:";
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(80, 17);
+            this.toolStripStatusLabel2.Text = "Scores added:";
+            // 
+            // PlayersSearchedLbl
+            // 
+            this.PlayersSearchedLbl.Name = "PlayersSearchedLbl";
+            this.PlayersSearchedLbl.Size = new System.Drawing.Size(13, 17);
+            this.PlayersSearchedLbl.Text = "0";
+            // 
+            // ScoresAddedLbl
+            // 
+            this.ScoresAddedLbl.Name = "ScoresAddedLbl";
+            this.ScoresAddedLbl.Size = new System.Drawing.Size(13, 17);
+            this.ScoresAddedLbl.Text = "0";
+            // 
             // OsuTrainer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(661, 460);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.SearchtimeTB);
             this.Controls.Add(this.FlashlightCB);
@@ -392,6 +444,8 @@
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SearchtimeTB)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -428,5 +482,11 @@
         private System.Windows.Forms.CheckBox FlashlightCB;
         private System.Windows.Forms.TrackBar SearchtimeTB;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel psearch;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ToolStripStatusLabel PlayersSearchedLbl;
+        private System.Windows.Forms.ToolStripStatusLabel ScoresAddedLbl;
     }
 }
