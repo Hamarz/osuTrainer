@@ -28,6 +28,7 @@ namespace osuTrainer.Forms
         private GlobalVars.Mods mods;
         int skippedIds;
         int maxTries = 10;
+        TimeSpan maxDuration = TimeSpan.FromSeconds(2);
 
         public OsuTrainer()
         {
@@ -257,13 +258,15 @@ namespace osuTrainer.Forms
                 currentUser.Pp_rank < 51 ? startid = currentUser.Pp_rank - 2 :
                 FindStartingUser(currentUser.Pp_raw);
             int foundSuggestions = 0;
-            int failedTry = 0;
-            while (foundSuggestions < minSuggestions && failedTry < maxTries)
+            Stopwatch sw = Stopwatch.StartNew();
+            while (sw.Elapsed < maxDuration)
             {
+                Debug.WriteLine("Startid: " + startid + "Userid: " + userids[startid]);
                 string json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
                 List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
                 for (int j = 0; j < tempList.Count; j++)
                 {
+                    Debug.WriteLine(j);
                     if (tempList[j].PP > minPP)
                     {
                         if ((tempList[j].Enabled_Mods == (mods | GlobalVars.Mods.NoVideo) || tempList[j].Enabled_Mods == mods))
@@ -273,21 +276,16 @@ namespace osuTrainer.Forms
                                 if (scoreSuggestions.Add(tempList[j]))
                                 {
                                     foundSuggestions++;
-                                    Invoke((MethodInvoker)delegate
-                                    {
-                                        progressBar1.Value++;
-                                    });
+                                    //Invoke((MethodInvoker)delegate
+                                    //{
+                                    //    progressBar1.Value++;
+                                    //});
                                 }
                             }
                         }
                     }
-                    else if (j == 9)
-                    {
-                        failedTry++;
-                    }
                     else
                     {
-                        failedTry++;
                         startid -= skippedIds;
                         break;
                     }
@@ -301,6 +299,7 @@ namespace osuTrainer.Forms
                     break;
                 }
             }
+            Debug.WriteLine(scoreSuggestions.Count);
             beatmapCache = new Dictionary<int, Beatmap>();
             foreach (var score in scoreSuggestions)
             {
