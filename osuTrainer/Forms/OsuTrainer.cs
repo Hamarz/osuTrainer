@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -19,18 +20,18 @@ namespace osuTrainer.Forms
         public User currentUser;
         public List<UserBest> existingBest = new List<UserBest>();
         public int[] userids;
-        private SortedSet<UserBest> scoreSuggestions;
         private SortableBindingList<ScoreInfo> scoreSugDisplay;
 
         // Key = Beatmap ID
         public Dictionary<int, Beatmap> beatmapCache;
+
         private int currentBeatmap;
         private GlobalVars.Mods mods;
-        int skippedIds;
-        int maxTries = 10;
-        TimeSpan maxDuration = TimeSpan.FromSeconds(4);
+        private int skippedIds;
+        private TimeSpan maxDuration = TimeSpan.FromSeconds(2);
         private const int pbMax = 50;
         private const int pbMaxhalf = 25;
+        private Object thisLock = new Object();
 
         public OsuTrainer()
         {
@@ -57,32 +58,40 @@ namespace osuTrainer.Forms
                 case GlobalVars.Mods.DoubleTime:
                     DoubletimeCB.Checked = true;
                     break;
+
                 case GlobalVars.Mods.DoubleTime | GlobalVars.Mods.Hidden:
                     DoubletimeCB.Checked = true;
                     HiddenCB.Checked = true;
                     break;
+
                 case GlobalVars.Mods.DoubleTime | GlobalVars.Mods.HardRock:
                     DoubletimeCB.Checked = true;
                     HardrockCB.Checked = true;
                     break;
+
                 case GlobalVars.Mods.Hidden:
                     HiddenCB.Checked = true;
                     break;
+
                 case GlobalVars.Mods.HardRock:
                     HardrockCB.Checked = true;
                     break;
+
                 case GlobalVars.Mods.HardRock | GlobalVars.Mods.Hidden:
                     HiddenCB.Checked = true;
                     HardrockCB.Checked = true;
                     break;
+
                 case GlobalVars.Mods.HardRock | GlobalVars.Mods.Hidden | GlobalVars.Mods.DoubleTime:
                     HiddenCB.Checked = true;
                     HardrockCB.Checked = true;
                     DoubletimeCB.Checked = true;
                     break;
+
                 case GlobalVars.Mods.Flashlight:
                     FlashlightCB.Checked = true;
                     break;
+
                 default:
                     break;
             }
@@ -104,7 +113,6 @@ namespace osuTrainer.Forms
 
         private async void FillDataGrid()
         {
-
             if (currentUser.Pp_rank > 50000)
             {
                 skippedIds = 10;
@@ -260,27 +268,37 @@ namespace osuTrainer.Forms
         private void UpdateSuggestionsAsync(double minPP)
         {
             scoreSugDisplay = new SortableBindingList<ScoreInfo>();
-            scoreSuggestions = new SortedSet<UserBest>();
+            ConcurrentBag<UserBest> scoreSuggestions = new ConcurrentBag<UserBest>();
+            ConcurrentBag<int> addedScores = new ConcurrentBag<int>();
             int startid = currentUser.Pp_raw < 200 ? 12849 :
                 currentUser.Pp_rank < 5001 ? startid = currentUser.Pp_rank - 2 :
                 FindStartingUser(currentUser.Pp_raw);
-            int foundSuggestions = 0;
-            Stopwatch sw = Stopwatch.StartNew();
-            while (sw.Elapsed < maxDuration)
+            foreach (var score in currentUser.BestScores)
             {
-                string json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
-                List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
-                for (int j = 0; j < tempList.Count; j++)
+                addedScores.Add(score.Beatmap_Id);
+            }
+            Stopwatch sw = Stopwatch.StartNew();
+
+            Parallel.For(0, 16, (i, state) =>
+            {
+                while (sw.Elapsed < maxDuration)
                 {
-                    if (tempList[j].PP > minPP)
+                    string json = "";
+                    lock (thisLock)
                     {
-                        if ((tempList[j].Enabled_Mods == (mods | GlobalVars.Mods.NoVideo) || tempList[j].Enabled_Mods == mods))
+                        json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
+                    }
+                    List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
+                    for (int j = 0; j < tempList.Count; j++)
+                    {
+                        if (tempList[j].PP > minPP)
                         {
-                            if (!currentUser.BestScores.Any(score => score.Beatmap_Id == tempList[j].Beatmap_Id))
+                            if ((tempList[j].Enabled_Mods == (mods | GlobalVars.Mods.NoVideo) || tempList[j].Enabled_Mods == mods))
                             {
-                                if (scoreSuggestions.Add(tempList[j]))
+                                if (!addedScores.Contains(tempList[j].Beatmap_Id))
                                 {
-                                    foundSuggestions++;
+                                    scoreSuggestions.Add(tempList[j]);
+                                    addedScores.Add(tempList[j].Beatmap_Id);
                                     Invoke((MethodInvoker)delegate
                                     {
                                         if (progressBar1.Value < pbMaxhalf)
@@ -291,22 +309,24 @@ namespace osuTrainer.Forms
                                 }
                             }
                         }
+                        else
+                        {
+                            startid -= skippedIds;
+                            break;
+                        }
+                    }
+                    if (startid > 0)
+                    {
+                        startid--;
                     }
                     else
                     {
-                        startid -= skippedIds;
                         break;
                     }
                 }
-                if (startid > 0)
-                {
-                    startid--;
-                }
-                else
-                {
-                    break;
-                }
-            }
+                state.Break();
+            });
+
             Invoke((MethodInvoker)delegate
             {
                 progressBar1.Value = pbMaxhalf;
