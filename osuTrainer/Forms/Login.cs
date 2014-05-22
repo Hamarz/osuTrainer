@@ -6,10 +6,12 @@ namespace osuTrainer.Forms
     public partial class Login : Form
     {
         public User newUser;
+        private bool changeUser;
 
-        public Login()
+        public Login(bool changeUser)
         {
             InitializeComponent();
+            this.changeUser = changeUser;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -35,6 +37,13 @@ namespace osuTrainer.Forms
         private void Login_Load(object sender, EventArgs e)
         {
             UsernameTextbox.Text = Properties.Settings.Default.Username;
+            if (!changeUser)
+            {
+                if (UsernameTextbox.Text.Length > 0)
+                {
+                    ConfirmButton_Click(sender,e);
+                }
+            }
         }
     }
 }

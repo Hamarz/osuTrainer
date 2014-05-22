@@ -18,13 +18,11 @@ namespace osuTrainer.Forms
     {
         private CustomWebClient client = new CustomWebClient();
         public User currentUser;
-        public List<UserBest> existingBest = new List<UserBest>();
         public int[] userids;
         private SortableBindingList<ScoreInfo> scoreSugDisplay;
 
         // Key = Beatmap ID
         public Dictionary<int, Beatmap> beatmapCache;
-
         private int currentBeatmap;
         private GlobalVars.Mods mods;
         private int skippedIds;
@@ -167,23 +165,14 @@ namespace osuTrainer.Forms
 
         private void CheckUser()
         {
-            if (!User.Exists(Properties.Settings.Default.UserId))
+            using (Login login = new Login(false))
             {
-                using (Login login = new Login())
+                if (login.ShowDialog() == DialogResult.Cancel)
                 {
-                    if (login.ShowDialog() == DialogResult.Cancel)
-                    {
-                        Close();
-                    }
-                    currentUser = login.newUser;
-                    Properties.Settings.Default.UserId = currentUser.User_id.ToString();
-                    Properties.Settings.Default.Username = currentUser.Username;
-                    Properties.Settings.Default.Save();
+                    Close();
                 }
-            }
-            else
-            {
-                currentUser = new User(Properties.Settings.Default.UserId);
+                currentUser = login.newUser;
+                Properties.Settings.Default.UserId = currentUser.User_id.ToString();
                 Properties.Settings.Default.Username = currentUser.Username;
                 Properties.Settings.Default.Save();
             }
@@ -200,7 +189,7 @@ namespace osuTrainer.Forms
 
         private void ChangeUserButton_Click(object sender, EventArgs e)
         {
-            using (Login login = new Login())
+            using (Login login = new Login(true))
             {
                 if (login.ShowDialog() != DialogResult.Cancel)
                 {
