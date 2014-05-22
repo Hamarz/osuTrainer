@@ -27,7 +27,7 @@ namespace osuTrainer.Forms
         private GlobalVars.Mods mods;
         int skippedIds;
         int maxTries = 10;
-        TimeSpan maxDuration = TimeSpan.FromSeconds(2);
+        TimeSpan maxDuration = TimeSpan.FromSeconds(4);
         private const int pbMax = 50;
         private const int pbMaxhalf = 25;
 
@@ -104,15 +104,15 @@ namespace osuTrainer.Forms
 
             if (currentUser.Pp_rank > 50000)
             {
-                skippedIds = 20;
+                skippedIds = 10;
             }
             else if (currentUser.Pp_rank > 10000)
             {
-                skippedIds = 10;
+                skippedIds = 5;
             }
             else if (currentUser.Pp_rank > 1000)
             {
-                skippedIds = 5;
+                skippedIds = 2;
             }
             else if (currentUser.Pp_rank > 200)
             {
@@ -269,7 +269,6 @@ namespace osuTrainer.Forms
                 List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
                 for (int j = 0; j < tempList.Count; j++)
                 {
-                    Debug.WriteLine(j);
                     if (tempList[j].PP > minPP)
                     {
                         if ((tempList[j].Enabled_Mods == (mods | GlobalVars.Mods.NoVideo) || tempList[j].Enabled_Mods == mods))
