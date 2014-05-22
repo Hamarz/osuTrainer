@@ -30,6 +30,7 @@ namespace osuTrainer.Forms
         private const int pbMax = 50;
         private const int pbMaxhalf = 25;
         private Object thisLock = new Object();
+        private Queue<string> scoreQueue;
 
         public OsuTrainer()
         {
@@ -46,6 +47,7 @@ namespace osuTrainer.Forms
 
             LoadUsers();
 
+            SearchtimeTB.Value = Properties.Settings.Default.Searchduration;
             mods = (GlobalVars.Mods)Properties.Settings.Default.Mods;
             FillDataGrid();
 
@@ -115,7 +117,7 @@ namespace osuTrainer.Forms
             {
                 skippedIds = 0;
             }
-
+            Properties.Settings.Default.Searchduration = SearchtimeTB.Value;
             Properties.Settings.Default.Mods = (int)mods;
             Properties.Settings.Default.Save();
             trackBar1.Minimum = (int)currentUser.BestScores.Last().PP;
@@ -250,6 +252,7 @@ namespace osuTrainer.Forms
             {
                 addedScores.Add(score.Beatmap_Id);
             }
+            scoreQueue = new Queue<string>();
             Stopwatch sw = Stopwatch.StartNew();
 
             Parallel.For(0, 1, (i, state) =>
@@ -260,6 +263,10 @@ namespace osuTrainer.Forms
                     lock (thisLock)
                     {
                         json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
+                        if (startid > 0)
+                        {
+                            startid--;
+                        }
                     }
                     List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
                     for (int j = 0; j < tempList.Count; j++)
@@ -288,11 +295,7 @@ namespace osuTrainer.Forms
                             break;
                         }
                     }
-                    if (startid > 0)
-                    {
-                        startid--;
-                    }
-                    else
+                    if (startid == 0)
                     {
                         break;
                     }

@@ -70,5 +70,17 @@ namespace osuTrainer.Properties {
                 this["Mods"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int Searchduration {
+            get {
+                return ((int)(this["Searchduration"]));
+            }
+            set {
+                this["Searchduration"] = value;
+            }
+        }
     }
 }

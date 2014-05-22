@@ -344,7 +344,7 @@
             // 
             this.SearchtimeTB.AutoSize = false;
             this.SearchtimeTB.Location = new System.Drawing.Point(523, 84);
-            this.SearchtimeTB.Maximum = 5;
+            this.SearchtimeTB.Maximum = 7;
             this.SearchtimeTB.Minimum = 2;
             this.SearchtimeTB.Name = "SearchtimeTB";
             this.SearchtimeTB.Size = new System.Drawing.Size(126, 28);
