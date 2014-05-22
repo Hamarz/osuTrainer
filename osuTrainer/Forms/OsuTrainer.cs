@@ -279,7 +279,7 @@ namespace osuTrainer.Forms
             }
             Stopwatch sw = Stopwatch.StartNew();
 
-            Parallel.For(0, 16, (i, state) =>
+            Parallel.For(0, 1, (i, state) =>
             {
                 while (sw.Elapsed < maxDuration)
                 {
@@ -488,6 +488,12 @@ namespace osuTrainer.Forms
                     mods -= GlobalVars.Mods.HardRock;
                 }
             }
+        }
+
+        private void SearchtimeTB_Scroll(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(SearchtimeTB, (SearchtimeTB.Value * 2).ToString());
+            maxDuration = TimeSpan.FromSeconds(SearchtimeTB.Value);
         }
     }
 }

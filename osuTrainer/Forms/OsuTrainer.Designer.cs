@@ -57,11 +57,14 @@
             this.HardrockCB = new System.Windows.Forms.CheckBox();
             this.HiddenCB = new System.Windows.Forms.CheckBox();
             this.FlashlightCB = new System.Windows.Forms.CheckBox();
+            this.SearchtimeTB = new System.Windows.Forms.TrackBar();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SearchtimeTB)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -215,7 +218,7 @@
             // 
             this.ChangerUserButton.Location = new System.Drawing.Point(523, 12);
             this.ChangerUserButton.Name = "ChangerUserButton";
-            this.ChangerUserButton.Size = new System.Drawing.Size(127, 95);
+            this.ChangerUserButton.Size = new System.Drawing.Size(127, 51);
             this.ChangerUserButton.TabIndex = 3;
             this.ChangerUserButton.Text = "Change User";
             this.ChangerUserButton.UseVisualStyleBackColor = true;
@@ -258,6 +261,12 @@
             this.trackBar1.Size = new System.Drawing.Size(154, 35);
             this.trackBar1.TabIndex = 7;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.AutoPopDelay = 5000;
+            this.toolTip1.InitialDelay = 100;
+            this.toolTip1.ReshowDelay = 50;
             // 
             // label1
             // 
@@ -331,11 +340,34 @@
             this.FlashlightCB.UseVisualStyleBackColor = true;
             this.FlashlightCB.CheckedChanged += new System.EventHandler(this.FlashlightCB_CheckedChanged);
             // 
+            // SearchtimeTB
+            // 
+            this.SearchtimeTB.AutoSize = false;
+            this.SearchtimeTB.Location = new System.Drawing.Point(523, 84);
+            this.SearchtimeTB.Maximum = 5;
+            this.SearchtimeTB.Minimum = 2;
+            this.SearchtimeTB.Name = "SearchtimeTB";
+            this.SearchtimeTB.Size = new System.Drawing.Size(126, 28);
+            this.SearchtimeTB.TabIndex = 15;
+            this.SearchtimeTB.Value = 2;
+            this.SearchtimeTB.Scroll += new System.EventHandler(this.SearchtimeTB_Scroll);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(538, 69);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(96, 13);
+            this.label2.TabIndex = 16;
+            this.label2.Text = "Search duration (s)";
+            // 
             // OsuTrainer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(661, 460);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.SearchtimeTB);
             this.Controls.Add(this.FlashlightCB);
             this.Controls.Add(this.HiddenCB);
             this.Controls.Add(this.HardrockCB);
@@ -359,6 +391,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SearchtimeTB)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -393,5 +426,7 @@
         private System.Windows.Forms.CheckBox HardrockCB;
         private System.Windows.Forms.CheckBox HiddenCB;
         private System.Windows.Forms.CheckBox FlashlightCB;
+        private System.Windows.Forms.TrackBar SearchtimeTB;
+        private System.Windows.Forms.Label label2;
     }
 }
