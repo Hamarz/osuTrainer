@@ -27,6 +27,8 @@ namespace osuTrainer.Forms
         private GlobalVars.Mods mods;
         private int skippedIds;
         private TimeSpan maxDuration;
+        // Too many suggestions = too long to draw in grid
+        private const int maxSuggestions = 30;
         private const int pbMax = 50;
         private const int pbMaxhalf = 25;
         private Object thisLock = new Object();
@@ -47,10 +49,22 @@ namespace osuTrainer.Forms
 
             LoadUsers();
 
+            LoadSettings();
+
+            UpdateDataGrid();
+
+            UpdateCB();
+        }
+
+        private void LoadSettings()
+        {
+            maxDuration = TimeSpan.FromSeconds(Properties.Settings.Default.Searchduration);
             SearchtimeTB.Value = Properties.Settings.Default.Searchduration;
             mods = (GlobalVars.Mods)Properties.Settings.Default.Mods;
-            FillDataGrid();
+        }
 
+        private void UpdateCB()
+        {
             switch (mods)
             {
                 case GlobalVars.Mods.DoubleTime:
@@ -95,7 +109,14 @@ namespace osuTrainer.Forms
             }
         }
 
-        private async void FillDataGrid()
+        private void SaveSettings()
+        {
+            Properties.Settings.Default.Searchduration = SearchtimeTB.Value;
+            Properties.Settings.Default.Mods = (int)mods;
+            Properties.Settings.Default.Save();
+        }
+
+        private async void UpdateDataGrid()
         {
             if (currentUser.Pp_rank > 50000)
             {
@@ -117,10 +138,6 @@ namespace osuTrainer.Forms
             {
                 skippedIds = 0;
             }
-            Properties.Settings.Default.Searchduration = SearchtimeTB.Value;
-            maxDuration = TimeSpan.FromSeconds(Properties.Settings.Default.Searchduration);
-            Properties.Settings.Default.Mods = (int)mods;
-            Properties.Settings.Default.Save();
             trackBar1.Minimum = (int)currentUser.BestScores.Last().PP;
             trackBar1.Maximum = (int)currentUser.BestScores.First().PP + 1;
             double minPP = (double)trackBar1.Value;
@@ -148,6 +165,7 @@ namespace osuTrainer.Forms
             {
                 MessageBox.Show("No suitable maps found.");
             }
+            SaveSettings();
         }
 
         private void CheckUser()
@@ -186,7 +204,7 @@ namespace osuTrainer.Forms
                     Properties.Settings.Default.Save();
                     scoreSugDisplay = null;
                     trackBar1.Value = trackBar1.Minimum;
-                    FillDataGrid();
+                    UpdateDataGrid();
                 }
             }
         }
@@ -309,6 +327,7 @@ namespace osuTrainer.Forms
                 progressBar1.Value = pbMaxhalf;
             });
             beatmapCache = new Dictionary<int, Beatmap>();
+            int counter = 0;
             foreach (var score in scoreSuggestions)
             {
                 Beatmap beatmap = new Beatmap(score.Beatmap_Id);
@@ -321,6 +340,14 @@ namespace osuTrainer.Forms
                         progressBar1.Value++;
                     }
                 });
+                if (counter < maxSuggestions)
+                {
+                    counter++;
+                }
+                else
+                {
+                    break;
+                }
             }
         }
 
@@ -359,7 +386,7 @@ namespace osuTrainer.Forms
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            FillDataGrid();
+            UpdateDataGrid();
         }
 
         private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
@@ -470,6 +497,7 @@ namespace osuTrainer.Forms
         private void SearchtimeTB_Scroll(object sender, EventArgs e)
         {
             toolTip1.SetToolTip(SearchtimeTB, (SearchtimeTB.Value * 2).ToString());
+            maxDuration = TimeSpan.FromSeconds(SearchtimeTB.Value);
         }
     }
 }
