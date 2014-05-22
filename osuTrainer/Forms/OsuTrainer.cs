@@ -17,7 +17,6 @@ namespace osuTrainer.Forms
         private CustomWebClient client = new CustomWebClient();
         public User currentUser;
         public List<UserBest> existingBest = new List<UserBest>();
-        private int minSuggestions = 20;
         public int[] userids;
         private SortedSet<UserBest> scoreSuggestions;
         private SortableBindingList<ScoreInfo> scoreSugDisplay;
@@ -29,6 +28,8 @@ namespace osuTrainer.Forms
         int skippedIds;
         int maxTries = 10;
         TimeSpan maxDuration = TimeSpan.FromSeconds(2);
+        private const int pbMax = 50;
+        private const int pbMaxhalf = 25;
 
         public OsuTrainer()
         {
@@ -129,7 +130,7 @@ namespace osuTrainer.Forms
             double minPP = (double)trackBar1.Value;
             MinPPLabel.Text = Convert.ToString(trackBar1.Value);
             progressBar1.Value = 0;
-            progressBar1.Maximum = minSuggestions * 2 + 5;
+            progressBar1.Maximum = pbMax;
             progressBar1.Value = progressBar1.Value + 2;
             await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPP));
             dataGridView1.DataSource = scoreSugDisplay;
@@ -197,6 +198,7 @@ namespace osuTrainer.Forms
                     Properties.Settings.Default.Username = currentUser.Username;
                     Properties.Settings.Default.Save();
                     scoreSugDisplay = null;
+                    trackBar1.Value = trackBar1.Minimum;
                     FillDataGrid();
                 }
             }
@@ -230,7 +232,8 @@ namespace osuTrainer.Forms
             int low = 0;
             int high = userids.Length - 1;
             int midpoint = 0;
-            while (low < high)
+            int iterations = 0;
+            while (low < high && iterations < 7)
             {
                 midpoint = low + (high - low) / 2;
                 User miduser = new User(userids[midpoint].ToString());
@@ -238,7 +241,7 @@ namespace osuTrainer.Forms
                 {
                     high = midpoint - 1;
                 }
-                else if (miduser.Pp_raw - targetpp < 200)
+                else if (miduser.Pp_raw - targetpp < 100)
                 {
                     return midpoint;
                 }
@@ -246,6 +249,7 @@ namespace osuTrainer.Forms
                 {
                     low = midpoint - 1;
                 }
+                iterations++;
             }
             return midpoint;
         }
@@ -255,13 +259,12 @@ namespace osuTrainer.Forms
             scoreSugDisplay = new SortableBindingList<ScoreInfo>();
             scoreSuggestions = new SortedSet<UserBest>();
             int startid = currentUser.Pp_raw < 700 ? 3499 :
-                currentUser.Pp_rank < 51 ? startid = currentUser.Pp_rank - 2 :
+                currentUser.Pp_rank < 1001 ? startid = currentUser.Pp_rank - 2 :
                 FindStartingUser(currentUser.Pp_raw);
             int foundSuggestions = 0;
             Stopwatch sw = Stopwatch.StartNew();
             while (sw.Elapsed < maxDuration)
             {
-                Debug.WriteLine("Startid: " + startid + "Userid: " + userids[startid]);
                 string json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
                 List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
                 for (int j = 0; j < tempList.Count; j++)
@@ -276,10 +279,13 @@ namespace osuTrainer.Forms
                                 if (scoreSuggestions.Add(tempList[j]))
                                 {
                                     foundSuggestions++;
-                                    //Invoke((MethodInvoker)delegate
-                                    //{
-                                    //    progressBar1.Value++;
-                                    //});
+                                    Invoke((MethodInvoker)delegate
+                                    {
+                                        if (progressBar1.Value < pbMaxhalf)
+                                        {
+                                            progressBar1.Value++;
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -299,7 +305,10 @@ namespace osuTrainer.Forms
                     break;
                 }
             }
-            Debug.WriteLine(scoreSuggestions.Count);
+            Invoke((MethodInvoker)delegate
+            {
+                progressBar1.Value = pbMaxhalf;
+            });
             beatmapCache = new Dictionary<int, Beatmap>();
             foreach (var score in scoreSuggestions)
             {
@@ -308,7 +317,7 @@ namespace osuTrainer.Forms
                 scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Version = beatmap.Version, Artist = beatmap.Artist, Enabled_Mods = score.Enabled_Mods, ppRaw = (int)Math.Truncate(score.PP), RankImage = GetRankImage(score.Rank), BeatmapId = beatmap.Beatmap_id });
                 Invoke((MethodInvoker)delegate
                 {
-                    if (progressBar1.Value < progressBar1.Maximum)
+                    if (progressBar1.Value < pbMax)
                     {
                         progressBar1.Value++;
                     }

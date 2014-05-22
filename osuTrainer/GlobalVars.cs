@@ -4,15 +4,15 @@ namespace osuTrainer
 {
     public static class GlobalVars
     {
-        public static string Beatmap = @"http://osu.ppy.sh/b/";
+        public static readonly string Beatmap = @"http://osu.ppy.sh/b/";
         public static string BeatmapAPI = @"http://osu.ppy.sh/api/get_beatmaps?k=" + Properties.Settings.Default.APIKey + "&b=";
         public static string UserAPI = @"http://osu.ppy.sh/api/get_user?k=" + Properties.Settings.Default.APIKey + "&u=";
-        public static string Bloodcat = @"http://bloodcat.com/osu/m/";
+        public static readonly string Bloodcat = @"http://bloodcat.com/osu/m/";
         public static string UserBestAPI = @"https://osu.ppy.sh/api/get_user_best?k=" + Properties.Settings.Default.APIKey + "&u=";
-        public static string ThumbUrl = "https://b.ppy.sh/thumb/40924l.jpg";
+        public static readonly string ThumbUrl = "https://b.ppy.sh/thumb/40924l.jpg";
 
         // 0 = osu! 1 = Taiko 2 = CtB 3 = osu!mania
-        public static string Mode = @"m=";
+        public static readonly string Mode = @"m=";
 
         public enum RankImage
         {
