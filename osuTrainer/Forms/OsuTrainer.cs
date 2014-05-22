@@ -26,7 +26,7 @@ namespace osuTrainer.Forms
         private int currentBeatmap;
         private GlobalVars.Mods mods;
         private int skippedIds;
-        private TimeSpan maxDuration = TimeSpan.FromSeconds(2);
+        private TimeSpan maxDuration;
         private const int pbMax = 50;
         private const int pbMaxhalf = 25;
         private Object thisLock = new Object();
@@ -118,6 +118,7 @@ namespace osuTrainer.Forms
                 skippedIds = 0;
             }
             Properties.Settings.Default.Searchduration = SearchtimeTB.Value;
+            maxDuration = TimeSpan.FromSeconds(Properties.Settings.Default.Searchduration);
             Properties.Settings.Default.Mods = (int)mods;
             Properties.Settings.Default.Save();
             trackBar1.Minimum = (int)currentUser.BestScores.Last().PP;
@@ -469,7 +470,6 @@ namespace osuTrainer.Forms
         private void SearchtimeTB_Scroll(object sender, EventArgs e)
         {
             toolTip1.SetToolTip(SearchtimeTB, (SearchtimeTB.Value * 2).ToString());
-            maxDuration = TimeSpan.FromSeconds(SearchtimeTB.Value);
         }
     }
 }
