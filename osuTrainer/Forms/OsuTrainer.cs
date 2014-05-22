@@ -127,11 +127,11 @@ namespace osuTrainer.Forms
             }
             else if (currentUser.Pp_rank > 1000)
             {
-                skippedIds = 2;
+                skippedIds = 3;
             }
-            else if (currentUser.Pp_rank > 200)
+            else if (currentUser.Pp_rank > 150)
             {
-                skippedIds = 1;
+                skippedIds = 2;
             }
             else
             {
@@ -280,10 +280,7 @@ namespace osuTrainer.Forms
                     lock (thisLock)
                     {
                         json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
-                        if (startid > 0)
-                        {
-                            startid--;
-                        }
+                        startid--;
                         psearched++;
                         Invoke((MethodInvoker)delegate
                         {
@@ -313,11 +310,14 @@ namespace osuTrainer.Forms
                         }
                         else
                         {
-                            startid -= skippedIds;
+                            lock (thisLock)
+                            {
+                                startid -= skippedIds;
+                            }
                             break;
                         }
                     }
-                    if (startid == 0)
+                    if (startid <= 0)
                     {
                         break;
                     }
