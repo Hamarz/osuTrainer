@@ -40,8 +40,6 @@ namespace osuTrainer.Forms
 
         private void OsuTrainer_Load(object sender, EventArgs e)
         {
-            CheckAPIKey();
-
             CheckUser();
 
             this.Text = "osu! Trainer " + Assembly.GetExecutingAssembly().GetName().Version;
@@ -92,20 +90,6 @@ namespace osuTrainer.Forms
 
                 default:
                     break;
-            }
-        }
-
-        private void CheckAPIKey()
-        {
-            if (Properties.Settings.Default.APIKey.Length < 1 || client.DownloadString("https://osu.ppy.sh/api/get_user?k=" + Properties.Settings.Default.APIKey + "&u=1").Length > 3)
-            {
-                using (GetAPIKey getApiKey = new GetAPIKey())
-                {
-                    if (getApiKey.ShowDialog() == DialogResult.Cancel)
-                    {
-                        Close();
-                    }
-                }
             }
         }
 

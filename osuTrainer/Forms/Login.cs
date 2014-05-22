@@ -22,15 +22,27 @@ namespace osuTrainer.Forms
 
         private void ConfirmButton_Click(object sender, EventArgs e)
         {
-            if (User.Exists(UsernameTextbox.Text))
+            string json = User.UserString(UsernameTextbox.Text);
+            if (json.Length>33)
             {
-                newUser = new User(UsernameTextbox.Text);
+                newUser = new User(json,true);
                 Close();
                 DialogResult = DialogResult.OK;
             }
-            else
+            else if (json.Length < 3)
             {
                 MessageBox.Show("User not found!");
+            }
+            else
+            {
+                MessageBox.Show(json);
+                using (GetAPIKey getApiKey = new GetAPIKey())
+                {
+                    if (getApiKey.ShowDialog() == DialogResult.Cancel)
+                    {
+                        Close();
+                    }
+                }
             }
         }
 
@@ -42,6 +54,16 @@ namespace osuTrainer.Forms
                 if (UsernameTextbox.Text.Length > 0)
                 {
                     ConfirmButton_Click(sender,e);
+                }
+                else
+                {
+                    using (GetAPIKey getApiKey = new GetAPIKey())
+                    {
+                        if (getApiKey.ShowDialog() == DialogResult.Cancel)
+                        {
+                            Close();
+                        }
+                    }
                 }
             }
         }
