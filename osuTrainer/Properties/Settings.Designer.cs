@@ -82,5 +82,17 @@ namespace osuTrainer.Properties {
                 this["Searchduration"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Exclusive {
+            get {
+                return ((bool)(this["Exclusive"]));
+            }
+            set {
+                this["Exclusive"] = value;
+            }
+        }
     }
 }

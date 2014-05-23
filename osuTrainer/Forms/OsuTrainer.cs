@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ServiceStack.Text;
@@ -20,22 +21,22 @@ namespace osuTrainer.Forms
         public User currentUser;
         public int[] userids;
         private SortableBindingList<ScoreInfo> scoreSugDisplay;
-
         // Key = Beatmap ID
         public Dictionary<int, Beatmap> beatmapCache;
         private int currentBeatmap;
         private GlobalVars.Mods mods;
         private int skippedIds;
         private TimeSpan maxDuration;
-        // Too many suggestions = too long to draw in grid
-        private const int maxSuggestions = 30;
-        private const int pbMax = 50;
-        private const int pbMaxhalf = 25;
-        private Object thisLock = new Object();
-
+        private const int pbMax = 60;
+        private const int pbMaxhalf = 30;
+        private Object firstLock = new Object();
+        private Object secondLock = new Object();
+        private Object thirdLock = new Object();
         public OsuTrainer()
         {
             InitializeComponent();
+            comboBox1.SelectedIndex = 0;
+            progressBar1.Maximum = pbMax;
             this.Location = new Point(Screen.GetWorkingArea(this).Right - Convert.ToInt32(Size.Width * 1.5),
                           Screen.GetWorkingArea(this).Bottom - Convert.ToInt32(Size.Height * 1.3));
         }
@@ -60,6 +61,7 @@ namespace osuTrainer.Forms
             maxDuration = TimeSpan.FromSeconds(Properties.Settings.Default.Searchduration);
             SearchtimeTB.Value = Properties.Settings.Default.Searchduration;
             mods = (GlobalVars.Mods)Properties.Settings.Default.Mods;
+            ExclusiveCB.Checked = Properties.Settings.Default.Exclusive;
         }
 
         private void UpdateCB()
@@ -112,38 +114,14 @@ namespace osuTrainer.Forms
         {
             Properties.Settings.Default.Searchduration = SearchtimeTB.Value;
             Properties.Settings.Default.Mods = (int)mods;
+            Properties.Settings.Default.Exclusive = ExclusiveCB.Checked;
             Properties.Settings.Default.Save();
         }
 
         private async void UpdateDataGrid()
         {
-            if (currentUser.Pp_rank > 50000)
-            {
-                skippedIds = 10;
-            }
-            else if (currentUser.Pp_rank > 10000)
-            {
-                skippedIds = 5;
-            }
-            else if (currentUser.Pp_rank > 1000)
-            {
-                skippedIds = 3;
-            }
-            else if (currentUser.Pp_rank > 150)
-            {
-                skippedIds = 2;
-            }
-            else
-            {
-                skippedIds = 0;
-            }
-            trackBar1.Minimum = (int)currentUser.BestScores.Last().PP;
-            trackBar1.Maximum = (int)currentUser.BestScores.First().PP + 1;
-            double minPP = (double)trackBar1.Value;
-            MinPPLabel.Text = Convert.ToString(trackBar1.Value);
-            progressBar1.Value = 0;
-            progressBar1.Maximum = pbMax;
-            progressBar1.Value = progressBar1.Value + 2;
+            double minPP = (double)MinPPTB.Value;
+            progressBar1.Value = progressBar1.Minimum + 2;
             await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPP));
             dataGridView1.DataSource = scoreSugDisplay;
             dataGridView1.Columns[6].Visible = false;
@@ -180,6 +158,7 @@ namespace osuTrainer.Forms
                 Properties.Settings.Default.Username = currentUser.Username;
                 Properties.Settings.Default.Save();
             }
+            LoadUserSettings();
         }
 
         private void LoadUsers()
@@ -201,11 +180,38 @@ namespace osuTrainer.Forms
                     Properties.Settings.Default.UserId = currentUser.User_id.ToString();
                     Properties.Settings.Default.Username = currentUser.Username;
                     Properties.Settings.Default.Save();
-                    scoreSugDisplay = null;
-                    trackBar1.Value = trackBar1.Minimum;
                     UpdateDataGrid();
                 }
             }
+            LoadUserSettings();
+        }
+
+        private void LoadUserSettings()
+        {
+            if (currentUser.Pp_rank > 50000)
+            {
+                skippedIds = 10;
+            }
+            else if (currentUser.Pp_rank > 10000)
+            {
+                skippedIds = 5;
+            }
+            else if (currentUser.Pp_rank > 1000)
+            {
+                skippedIds = 3;
+            }
+            else if (currentUser.Pp_rank > 200)
+            {
+                skippedIds = 2;
+            }
+            else
+            {
+                skippedIds = 0;
+            }
+            MinPPTB.Minimum = (int)currentUser.BestScores.Last().PP;
+            MinPPTB.Maximum = (int)currentUser.BestScores.First().PP + 1;
+            MinPPTB.Value = MinPPTB.Minimum;
+            MinPPLabel.Text = Convert.ToString(MinPPTB.Value);
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -263,96 +269,73 @@ namespace osuTrainer.Forms
             scoreSugDisplay = new SortableBindingList<ScoreInfo>();
             ConcurrentBag<UserBest> scoreSuggestions = new ConcurrentBag<UserBest>();
             ConcurrentBag<int> addedScores = new ConcurrentBag<int>();
+            beatmapCache = new Dictionary<int, Beatmap>();
             int startid = currentUser.Pp_raw < 200 ? 12849 :
                 currentUser.Pp_rank < 5001 ? startid = currentUser.Pp_rank - 2 :
                 FindStartingUser(currentUser.Pp_raw);
+            GlobalVars.Mods ModsAndNV = mods | GlobalVars.Mods.NoVideo;
             foreach (var score in currentUser.BestScores)
             {
                 addedScores.Add(score.Beatmap_Id);
             }
-            int psearched = 0;
+            int pChecked = 0;
             Stopwatch sw = Stopwatch.StartNew();
             Parallel.For(0, 999, (i, state) =>
             {
                 while (sw.Elapsed < maxDuration)
                 {
+                    if (startid <= 0)
+                    {
+                        break;
+                    }
                     string json = "";
-                    lock (thisLock)
+                    lock (firstLock)
                     {
                         json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
-                        startid--;
-                        psearched++;
+                        startid -= skippedIds;
+                        pChecked++;
                         Invoke((MethodInvoker)delegate
                         {
-                            PlayersSearchedLbl.Text = psearched.ToString();
+                            PlayersCheckedLbl.Text = pChecked.ToString();
                         });
                     }
-                    List<UserBest> tempList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
-                    for (int j = 0; j < tempList.Count; j++)
+                    List<UserBest> userBestList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
+                    for (int j = 0; j < userBestList.Count; j++)
                     {
-                        if (tempList[j].PP > minPP)
+                        if (userBestList[j].PP < minPP)
                         {
-                            if ((tempList[j].Enabled_Mods == (mods | GlobalVars.Mods.NoVideo) || tempList[j].Enabled_Mods == mods))
-                            {
-                                if (!addedScores.Contains(tempList[j].Beatmap_Id))
-                                {
-                                    scoreSuggestions.Add(tempList[j]);
-                                    addedScores.Add(tempList[j].Beatmap_Id);
-                                    Invoke((MethodInvoker)delegate
-                                    {
-                                        if (progressBar1.Value < pbMaxhalf)
-                                        {
-                                            progressBar1.Value++;
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                        else
-                        {
-                            lock (thisLock)
+                            lock (secondLock)
                             {
                                 startid -= skippedIds;
                             }
                             break;
                         }
-                    }
-                    if (startid <= 0)
-                    {
-                        break;
+                        if ((ExclusiveCB.Checked && (userBestList[j].Enabled_Mods == ModsAndNV || userBestList[j].Enabled_Mods == mods)) || (!ExclusiveCB.Checked && userBestList[j].Enabled_Mods.HasFlag(mods)))
+                        {
+                            lock (thirdLock)
+                            {
+                                if (!addedScores.Contains(userBestList[j].Beatmap_Id))
+                                {
+                                    Beatmap beatmap = new Beatmap(userBestList[j].Beatmap_Id);
+                                    Debug.WriteLine(beatmap.Beatmap_id);
+                                    beatmapCache.Add(beatmap.Beatmap_id, beatmap);
+                                    scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Version = beatmap.Version, Artist = beatmap.Artist, Enabled_Mods = userBestList[j].Enabled_Mods, ppRaw = (int)Math.Truncate(userBestList[j].PP), RankImage = GetRankImage(userBestList[j].Rank), BeatmapId = beatmap.Beatmap_id });
+                                    addedScores.Add(userBestList[j].Beatmap_Id);
+                                    Invoke((MethodInvoker)delegate
+                                    {
+                                        if (progressBar1.Value < pbMax)
+                                        {
+                                            progressBar1.Value++;
+                                        }
+                                        ScoresAddedLbl.Text = Convert.ToString(scoreSugDisplay.Count);
+                                    });
+                                }
+                            }
+                        }
                     }
                 }
                 state.Break();
             });
-
-            Invoke((MethodInvoker)delegate
-            {
-                progressBar1.Value = pbMaxhalf;
-            });
-            beatmapCache = new Dictionary<int, Beatmap>();
-            int counter = 0;
-            foreach (var score in scoreSuggestions)
-            {
-                Beatmap beatmap = new Beatmap(score.Beatmap_Id);
-                beatmapCache.Add(beatmap.Beatmap_id, beatmap);
-                scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Version = beatmap.Version, Artist = beatmap.Artist, Enabled_Mods = score.Enabled_Mods, ppRaw = (int)Math.Truncate(score.PP), RankImage = GetRankImage(score.Rank), BeatmapId = beatmap.Beatmap_id });
-                Invoke((MethodInvoker)delegate
-                {
-                    if (progressBar1.Value < pbMax)
-                    {
-                        progressBar1.Value++;
-                    }
-                    ScoresAddedLbl.Text = Convert.ToString(scoreSugDisplay.Count);
-                });
-                if (counter < maxSuggestions)
-                {
-                    counter++;
-                }
-                else
-                {
-                    break;
-                }
-            }
         }
 
         private Bitmap GetRankImage(GlobalVars.Rank rank)
@@ -390,9 +373,9 @@ namespace osuTrainer.Forms
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            PlayersSearchedLbl.Text = "0";
-            ScoresAddedLbl.Text = "0";
-            UpdateDataGrid();
+                PlayersCheckedLbl.Text = "0";
+                ScoresAddedLbl.Text = "0";
+                UpdateDataGrid();
         }
 
         private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
@@ -422,27 +405,21 @@ namespace osuTrainer.Forms
             Process.Start(beatmapCache.Single(x => x.Key == currentBeatmap).Value.BloodcatUrl);
         }
 
-        private void trackBar1_Scroll(object sender, EventArgs e)
+        private void MinPPTB_Scroll(object sender, EventArgs e)
         {
-            toolTip1.SetToolTip(trackBar1, trackBar1.Value.ToString());
-            MinPPLabel.Text = Convert.ToString(trackBar1.Value);
+            toolTip1.SetToolTip(MinPPTB, MinPPTB.Value.ToString());
+            MinPPLabel.Text = Convert.ToString(MinPPTB.Value);
         }
 
         private void HiddenCB_CheckedChanged(object sender, EventArgs e)
         {
             if (HiddenCB.Checked)
             {
-                if (!mods.HasFlag(GlobalVars.Mods.Hidden))
-                {
-                    mods |= GlobalVars.Mods.Hidden;
-                }
+                mods |= GlobalVars.Mods.Hidden;
             }
             else
             {
-                if (mods.HasFlag(GlobalVars.Mods.Hidden))
-                {
-                    mods -= GlobalVars.Mods.Hidden;
-                }
+                mods &= ~GlobalVars.Mods.Hidden;
             }
         }
 
@@ -450,17 +427,11 @@ namespace osuTrainer.Forms
         {
             if (DoubletimeCB.Checked)
             {
-                if (!mods.HasFlag(GlobalVars.Mods.DoubleTime))
-                {
-                    mods |= GlobalVars.Mods.DoubleTime;
-                }
+                mods |= GlobalVars.Mods.DoubleTime;
             }
             else
             {
-                if (mods.HasFlag(GlobalVars.Mods.DoubleTime))
-                {
-                    mods -= GlobalVars.Mods.DoubleTime;
-                }
+                mods &= ~GlobalVars.Mods.DoubleTime;
             }
         }
 
@@ -468,17 +439,11 @@ namespace osuTrainer.Forms
         {
             if (FlashlightCB.Checked)
             {
-                if (!mods.HasFlag(GlobalVars.Mods.Flashlight))
-                {
-                    mods |= GlobalVars.Mods.Flashlight;
-                }
+                mods |= GlobalVars.Mods.Flashlight;
             }
             else
             {
-                if (mods.HasFlag(GlobalVars.Mods.Flashlight))
-                {
-                    mods -= GlobalVars.Mods.Flashlight;
-                }
+                mods &= ~GlobalVars.Mods.Flashlight;
             }
         }
 
@@ -486,17 +451,11 @@ namespace osuTrainer.Forms
         {
             if (HardrockCB.Checked)
             {
-                if (!mods.HasFlag(GlobalVars.Mods.HardRock))
-                {
-                    mods |= GlobalVars.Mods.HardRock;
-                }
+                mods |= GlobalVars.Mods.HardRock;
             }
             else
             {
-                if (mods.HasFlag(GlobalVars.Mods.HardRock))
-                {
-                    mods -= GlobalVars.Mods.HardRock;
-                }
+                mods &= ~GlobalVars.Mods.HardRock;
             }
         }
 

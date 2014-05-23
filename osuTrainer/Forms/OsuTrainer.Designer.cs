@@ -46,9 +46,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.ChangerUserButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.MinPPTB = new System.Windows.Forms.TrackBar();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.MinPPLabel = new System.Windows.Forms.Label();
@@ -60,16 +59,20 @@
             this.SearchtimeTB = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.progressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.psearch = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.PlayersCheckedLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.PlayersSearchedLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.ScoresAddedLbl = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ExclusiveCB = new System.Windows.Forms.CheckBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MinPPTB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SearchtimeTB)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -93,7 +96,7 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(625, 256);
+            this.dataGridView1.Size = new System.Drawing.Size(626, 266);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             this.dataGridView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseClick);
@@ -112,7 +115,7 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Location = new System.Drawing.Point(6, 9);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(379, 94);
             this.groupBox1.TabIndex = 2;
@@ -223,7 +226,7 @@
             // 
             // ChangerUserButton
             // 
-            this.ChangerUserButton.Location = new System.Drawing.Point(523, 12);
+            this.ChangerUserButton.Location = new System.Drawing.Point(517, 9);
             this.ChangerUserButton.Name = "ChangerUserButton";
             this.ChangerUserButton.Size = new System.Drawing.Size(127, 51);
             this.ChangerUserButton.TabIndex = 3;
@@ -233,19 +236,12 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(397, 16);
+            this.pictureBox1.Location = new System.Drawing.Point(391, 13);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(120, 90);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 4;
             this.pictureBox1.TabStop = false;
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(476, 113);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(174, 40);
-            this.progressBar1.TabIndex = 5;
             // 
             // groupBox2
             // 
@@ -253,21 +249,21 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.dataGridView1);
-            this.groupBox2.Location = new System.Drawing.Point(12, 154);
+            this.groupBox2.Location = new System.Drawing.Point(6, 151);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(637, 281);
+            this.groupBox2.Size = new System.Drawing.Size(638, 291);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Recommended Scores";
             // 
-            // trackBar1
+            // MinPPTB
             // 
-            this.trackBar1.AutoSize = false;
-            this.trackBar1.Location = new System.Drawing.Point(61, 113);
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(154, 35);
-            this.trackBar1.TabIndex = 7;
-            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            this.MinPPTB.AutoSize = false;
+            this.MinPPTB.Location = new System.Drawing.Point(51, 110);
+            this.MinPPTB.Name = "MinPPTB";
+            this.MinPPTB.Size = new System.Drawing.Size(149, 35);
+            this.MinPPTB.TabIndex = 7;
+            this.MinPPTB.Scroll += new System.EventHandler(this.MinPPTB_Scroll);
             // 
             // toolTip1
             // 
@@ -278,7 +274,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 113);
+            this.label1.Location = new System.Drawing.Point(7, 110);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(47, 13);
             this.label1.TabIndex = 8;
@@ -287,7 +283,7 @@
             // MinPPLabel
             // 
             this.MinPPLabel.AutoSize = true;
-            this.MinPPLabel.Location = new System.Drawing.Point(20, 132);
+            this.MinPPLabel.Location = new System.Drawing.Point(12, 129);
             this.MinPPLabel.Name = "MinPPLabel";
             this.MinPPLabel.Size = new System.Drawing.Size(35, 13);
             this.MinPPLabel.TabIndex = 9;
@@ -295,9 +291,9 @@
             // 
             // UpdateButton
             // 
-            this.UpdateButton.Location = new System.Drawing.Point(212, 112);
+            this.UpdateButton.Location = new System.Drawing.Point(202, 110);
             this.UpdateButton.Name = "UpdateButton";
-            this.UpdateButton.Size = new System.Drawing.Size(89, 36);
+            this.UpdateButton.Size = new System.Drawing.Size(89, 39);
             this.UpdateButton.TabIndex = 10;
             this.UpdateButton.Text = "Update";
             this.UpdateButton.UseVisualStyleBackColor = true;
@@ -306,7 +302,7 @@
             // DoubletimeCB
             // 
             this.DoubletimeCB.AutoSize = true;
-            this.DoubletimeCB.Location = new System.Drawing.Point(312, 114);
+            this.DoubletimeCB.Location = new System.Drawing.Point(303, 113);
             this.DoubletimeCB.Name = "DoubletimeCB";
             this.DoubletimeCB.Size = new System.Drawing.Size(79, 17);
             this.DoubletimeCB.TabIndex = 11;
@@ -317,7 +313,7 @@
             // HardrockCB
             // 
             this.HardrockCB.AutoSize = true;
-            this.HardrockCB.Location = new System.Drawing.Point(312, 133);
+            this.HardrockCB.Location = new System.Drawing.Point(303, 133);
             this.HardrockCB.Name = "HardrockCB";
             this.HardrockCB.Size = new System.Drawing.Size(70, 17);
             this.HardrockCB.TabIndex = 12;
@@ -328,7 +324,7 @@
             // HiddenCB
             // 
             this.HiddenCB.AutoSize = true;
-            this.HiddenCB.Location = new System.Drawing.Point(397, 113);
+            this.HiddenCB.Location = new System.Drawing.Point(378, 113);
             this.HiddenCB.Name = "HiddenCB";
             this.HiddenCB.Size = new System.Drawing.Size(60, 17);
             this.HiddenCB.TabIndex = 13;
@@ -339,7 +335,7 @@
             // FlashlightCB
             // 
             this.FlashlightCB.AutoSize = true;
-            this.FlashlightCB.Location = new System.Drawing.Point(397, 133);
+            this.FlashlightCB.Location = new System.Drawing.Point(378, 133);
             this.FlashlightCB.Name = "FlashlightCB";
             this.FlashlightCB.Size = new System.Drawing.Size(70, 17);
             this.FlashlightCB.TabIndex = 14;
@@ -350,7 +346,7 @@
             // SearchtimeTB
             // 
             this.SearchtimeTB.AutoSize = false;
-            this.SearchtimeTB.Location = new System.Drawing.Point(523, 84);
+            this.SearchtimeTB.Location = new System.Drawing.Point(517, 81);
             this.SearchtimeTB.Maximum = 7;
             this.SearchtimeTB.Minimum = 2;
             this.SearchtimeTB.Name = "SearchtimeTB";
@@ -362,7 +358,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(538, 69);
+            this.label2.Location = new System.Drawing.Point(532, 66);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(96, 13);
             this.label2.TabIndex = 16;
@@ -371,28 +367,40 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.progressBar1,
             this.toolStripStatusLabel1,
-            this.psearch,
-            this.PlayersSearchedLbl,
+            this.toolStripStatusLabel3,
+            this.PlayersCheckedLbl,
             this.toolStripStatusLabel2,
             this.ScoresAddedLbl});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 438);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 445);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(661, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(650, 22);
             this.statusStrip1.TabIndex = 17;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(100, 16);
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(412, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(333, 17);
             this.toolStripStatusLabel1.Spring = true;
             // 
-            // psearch
+            // toolStripStatusLabel3
             // 
-            this.psearch.Name = "psearch";
-            this.psearch.Size = new System.Drawing.Size(97, 17);
-            this.psearch.Text = "Players searched:";
+            this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
+            this.toolStripStatusLabel3.Size = new System.Drawing.Size(94, 17);
+            this.toolStripStatusLabel3.Text = "Players checked:";
+            // 
+            // PlayersCheckedLbl
+            // 
+            this.PlayersCheckedLbl.Name = "PlayersCheckedLbl";
+            this.PlayersCheckedLbl.Size = new System.Drawing.Size(13, 17);
+            this.PlayersCheckedLbl.Text = "0";
             // 
             // toolStripStatusLabel2
             // 
@@ -400,23 +408,50 @@
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(80, 17);
             this.toolStripStatusLabel2.Text = "Scores added:";
             // 
-            // PlayersSearchedLbl
-            // 
-            this.PlayersSearchedLbl.Name = "PlayersSearchedLbl";
-            this.PlayersSearchedLbl.Size = new System.Drawing.Size(13, 17);
-            this.PlayersSearchedLbl.Text = "0";
-            // 
             // ScoresAddedLbl
             // 
             this.ScoresAddedLbl.Name = "ScoresAddedLbl";
             this.ScoresAddedLbl.Size = new System.Drawing.Size(13, 17);
             this.ScoresAddedLbl.Text = "0";
             // 
+            // ExclusiveCB
+            // 
+            this.ExclusiveCB.AutoSize = true;
+            this.ExclusiveCB.Location = new System.Drawing.Point(444, 133);
+            this.ExclusiveCB.Name = "ExclusiveCB";
+            this.ExclusiveCB.Size = new System.Drawing.Size(71, 17);
+            this.ExclusiveCB.TabIndex = 19;
+            this.ExclusiveCB.Text = "Exclusive";
+            this.ExclusiveCB.UseVisualStyleBackColor = true;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Standard"});
+            this.comboBox1.Location = new System.Drawing.Point(521, 128);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(117, 21);
+            this.comboBox1.TabIndex = 20;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(520, 113);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(65, 13);
+            this.label6.TabIndex = 21;
+            this.label6.Text = "Game Mode";
+            // 
             // OsuTrainer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(661, 460);
+            this.ClientSize = new System.Drawing.Size(650, 467);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.ExclusiveCB);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.SearchtimeTB);
@@ -427,9 +462,8 @@
             this.Controls.Add(this.UpdateButton);
             this.Controls.Add(this.MinPPLabel);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.trackBar1);
+            this.Controls.Add(this.MinPPTB);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.ChangerUserButton);
             this.Controls.Add(this.groupBox1);
@@ -442,7 +476,7 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MinPPTB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SearchtimeTB)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -469,9 +503,8 @@
         private System.Windows.Forms.Label DrainingTimeLbl;
         private System.Windows.Forms.Label TotalTimeLbl;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.TrackBar MinPPTB;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label MinPPLabel;
@@ -483,10 +516,14 @@
         private System.Windows.Forms.TrackBar SearchtimeTB;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripStatusLabel psearch;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
-        private System.Windows.Forms.ToolStripStatusLabel PlayersSearchedLbl;
+        private System.Windows.Forms.ToolStripStatusLabel PlayersCheckedLbl;
         private System.Windows.Forms.ToolStripStatusLabel ScoresAddedLbl;
+        private System.Windows.Forms.ToolStripProgressBar progressBar1;
+        private System.Windows.Forms.CheckBox ExclusiveCB;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label6;
     }
 }
