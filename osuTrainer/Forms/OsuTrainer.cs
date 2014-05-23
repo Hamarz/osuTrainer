@@ -180,10 +180,10 @@ namespace osuTrainer.Forms
                     Properties.Settings.Default.UserId = currentUser.User_id.ToString();
                     Properties.Settings.Default.Username = currentUser.Username;
                     Properties.Settings.Default.Save();
-                    UpdateDataGrid();
                 }
             }
             LoadUserSettings();
+            UpdateDataGrid();
         }
 
         private void LoadUserSettings()
