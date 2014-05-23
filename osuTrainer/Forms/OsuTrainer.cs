@@ -19,13 +19,16 @@ namespace osuTrainer.Forms
     {
         private CustomWebClient client = new CustomWebClient();
         public User currentUser;
-        public int[] userids;
+        public int[] standardids;
+        public int[] taikoids;
+        public int[] ctbids;
+        public int[] maniaids;
         private SortableBindingList<ScoreInfo> scoreSugDisplay;
         // Key = Beatmap ID
         public Dictionary<int, Beatmap> beatmapCache;
         private int currentBeatmap;
         private GlobalVars.Mods mods;
-        private int skippedIds;
+        private int skippedIds = 1;
         private TimeSpan maxDuration;
         private const int pbMax = 60;
         private const int pbMaxhalf = 30;
@@ -35,10 +38,10 @@ namespace osuTrainer.Forms
         public OsuTrainer()
         {
             InitializeComponent();
-            comboBox1.SelectedIndex = 0;
             progressBar1.Maximum = pbMax;
             this.Location = new Point(Screen.GetWorkingArea(this).Right - Convert.ToInt32(Size.Width * 1.5),
                           Screen.GetWorkingArea(this).Bottom - Convert.ToInt32(Size.Height * 1.3));
+            GameModeCB.DataSource = Enum.GetValues(typeof(GlobalVars.GameMode));
         }
 
         private void OsuTrainer_Load(object sender, EventArgs e)
@@ -62,6 +65,7 @@ namespace osuTrainer.Forms
             SearchtimeTB.Value = Properties.Settings.Default.Searchduration;
             mods = (GlobalVars.Mods)Properties.Settings.Default.Mods;
             ExclusiveCB.Checked = Properties.Settings.Default.Exclusive;
+            GameModeCB.SelectedIndex = Properties.Settings.Default.GameMode;
         }
 
         private void UpdateCB()
@@ -115,6 +119,7 @@ namespace osuTrainer.Forms
             Properties.Settings.Default.Searchduration = SearchtimeTB.Value;
             Properties.Settings.Default.Mods = (int)mods;
             Properties.Settings.Default.Exclusive = ExclusiveCB.Checked;
+            Properties.Settings.Default.GameMode = GameModeCB.SelectedIndex;
             Properties.Settings.Default.Save();
         }
 
@@ -164,9 +169,21 @@ namespace osuTrainer.Forms
         private void LoadUsers()
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            using (FileStream fs = new FileStream("ids", FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream("standard", FileMode.Open, FileAccess.Read))
             {
-                userids = (int[])formatter.Deserialize(fs);
+                standardids = (int[])formatter.Deserialize(fs);
+            }
+            using (FileStream fs = new FileStream("taiko", FileMode.Open, FileAccess.Read))
+            {
+                taikoids = (int[])formatter.Deserialize(fs);
+            }
+            using (FileStream fs = new FileStream("ctb", FileMode.Open, FileAccess.Read))
+            {
+                ctbids = (int[])formatter.Deserialize(fs);
+            }
+            using (FileStream fs = new FileStream("mnania", FileMode.Open, FileAccess.Read))
+            {
+                maniaids = (int[])formatter.Deserialize(fs);
             }
         }
 
@@ -188,26 +205,6 @@ namespace osuTrainer.Forms
 
         private void LoadUserSettings()
         {
-            if (currentUser.Pp_rank > 50000)
-            {
-                skippedIds = 10;
-            }
-            else if (currentUser.Pp_rank > 10000)
-            {
-                skippedIds = 5;
-            }
-            else if (currentUser.Pp_rank > 1000)
-            {
-                skippedIds = 3;
-            }
-            else if (currentUser.Pp_rank > 200)
-            {
-                skippedIds = 2;
-            }
-            else
-            {
-                skippedIds = 0;
-            }
             MinPPTB.Minimum = (int)currentUser.BestScores.Last().PP;
             MinPPTB.Maximum = (int)currentUser.BestScores.First().PP + 1;
             MinPPTB.Value = MinPPTB.Minimum;
@@ -240,13 +237,13 @@ namespace osuTrainer.Forms
         private int FindStartingUser(double targetpp)
         {
             int low = 0;
-            int high = userids.Length - 1;
+            int high = standardids.Length - 1;
             int midpoint = 0;
             int iterations = 0;
             while (low < high && iterations < 7)
             {
                 midpoint = low + (high - low) / 2;
-                User miduser = new User(userids[midpoint].ToString());
+                User miduser = new User(standardids[midpoint].ToString());
                 if (targetpp > miduser.Pp_raw)
                 {
                     high = midpoint - 1;
@@ -284,15 +281,15 @@ namespace osuTrainer.Forms
             {
                 while (sw.Elapsed < maxDuration)
                 {
-                    if (startid <= 0)
-                    {
-                        break;
-                    }
                     string json = "";
                     lock (firstLock)
                     {
-                        json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
+                        json = client.DownloadString(GlobalVars.UserBestAPI + standardids[startid]);
                         startid -= skippedIds;
+                        if (startid <= 0)
+                        {
+                            break;
+                        }
                         pChecked++;
                         Invoke((MethodInvoker)delegate
                         {

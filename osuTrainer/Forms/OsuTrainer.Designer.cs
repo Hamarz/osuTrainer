@@ -66,7 +66,7 @@
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ScoresAddedLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.ExclusiveCB = new System.Windows.Forms.CheckBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.GameModeCB = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -424,16 +424,14 @@
             this.ExclusiveCB.Text = "Exclusive";
             this.ExclusiveCB.UseVisualStyleBackColor = true;
             // 
-            // comboBox1
+            // GameModeCB
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Standard"});
-            this.comboBox1.Location = new System.Drawing.Point(521, 128);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(117, 21);
-            this.comboBox1.TabIndex = 20;
+            this.GameModeCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GameModeCB.FormattingEnabled = true;
+            this.GameModeCB.Location = new System.Drawing.Point(521, 128);
+            this.GameModeCB.Name = "GameModeCB";
+            this.GameModeCB.Size = new System.Drawing.Size(117, 21);
+            this.GameModeCB.TabIndex = 20;
             // 
             // label6
             // 
@@ -450,7 +448,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(650, 467);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.GameModeCB);
             this.Controls.Add(this.ExclusiveCB);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label2);
@@ -523,7 +521,7 @@
         private System.Windows.Forms.ToolStripProgressBar progressBar1;
         private System.Windows.Forms.CheckBox ExclusiveCB;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox GameModeCB;
         private System.Windows.Forms.Label label6;
     }
 }
