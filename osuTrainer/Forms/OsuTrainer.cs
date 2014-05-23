@@ -25,7 +25,7 @@ namespace osuTrainer.Forms
         public Dictionary<int, Beatmap> beatmapCache;
         private int currentBeatmap;
         private GlobalVars.Mods mods;
-        private int skippedIds;
+        private int skippedIds = 1;
         private TimeSpan maxDuration;
         private const int pbMax = 60;
         private const int pbMaxhalf = 30;
@@ -188,26 +188,6 @@ namespace osuTrainer.Forms
 
         private void LoadUserSettings()
         {
-            if (currentUser.Pp_rank > 50000)
-            {
-                skippedIds = 10;
-            }
-            else if (currentUser.Pp_rank > 10000)
-            {
-                skippedIds = 5;
-            }
-            else if (currentUser.Pp_rank > 1000)
-            {
-                skippedIds = 3;
-            }
-            else if (currentUser.Pp_rank > 200)
-            {
-                skippedIds = 2;
-            }
-            else
-            {
-                skippedIds = 0;
-            }
             MinPPTB.Minimum = (int)currentUser.BestScores.Last().PP;
             MinPPTB.Maximum = (int)currentUser.BestScores.First().PP + 1;
             MinPPTB.Value = MinPPTB.Minimum;
@@ -284,13 +264,14 @@ namespace osuTrainer.Forms
             {
                 while (sw.Elapsed < maxDuration)
                 {
-                    if (startid <= 0)
-                    {
-                        break;
-                    }
                     string json = "";
                     lock (firstLock)
                     {
+                        if (startid < 0)
+                        {
+                            state.Break();
+                            return;
+                        }
                         json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
                         startid -= skippedIds;
                         pChecked++;
@@ -317,7 +298,6 @@ namespace osuTrainer.Forms
                                 if (!addedScores.Contains(userBestList[j].Beatmap_Id))
                                 {
                                     Beatmap beatmap = new Beatmap(userBestList[j].Beatmap_Id);
-                                    Debug.WriteLine(beatmap.Beatmap_id);
                                     beatmapCache.Add(beatmap.Beatmap_id, beatmap);
                                     scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Version = beatmap.Version, Artist = beatmap.Artist, Enabled_Mods = userBestList[j].Enabled_Mods, ppRaw = (int)Math.Truncate(userBestList[j].PP), RankImage = GetRankImage(userBestList[j].Rank), BeatmapId = beatmap.Beatmap_id });
                                     addedScores.Add(userBestList[j].Beatmap_Id);
