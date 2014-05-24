@@ -34,7 +34,6 @@ namespace osuTrainer.Forms
         private const int pbMaxhalf = 30;
         private Object firstLock = new Object();
         private Object secondLock = new Object();
-        private Object thirdLock = new Object();
         public OsuTrainer()
         {
             InitializeComponent();
@@ -64,54 +63,28 @@ namespace osuTrainer.Forms
             maxDuration = TimeSpan.FromSeconds(Properties.Settings.Default.Searchduration);
             SearchtimeTB.Value = Properties.Settings.Default.Searchduration;
             mods = (GlobalVars.Mods)Properties.Settings.Default.Mods;
-            ExclusiveCB.Checked = Properties.Settings.Default.Exclusive;
             GameModeCB.SelectedIndex = Properties.Settings.Default.GameMode;
         }
 
         private void UpdateCB()
         {
-            switch (mods)
+            if (mods.HasFlag(GlobalVars.Mods.DoubleTime))
             {
-                case GlobalVars.Mods.DoubleTime:
                     DoubletimeCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.DoubleTime | GlobalVars.Mods.Hidden:
-                    DoubletimeCB.Checked = true;
-                    HiddenCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.DoubleTime | GlobalVars.Mods.HardRock:
-                    DoubletimeCB.Checked = true;
-                    HardrockCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.Hidden:
-                    HiddenCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.HardRock:
-                    HardrockCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.HardRock | GlobalVars.Mods.Hidden:
-                    HiddenCB.Checked = true;
-                    HardrockCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.HardRock | GlobalVars.Mods.Hidden | GlobalVars.Mods.DoubleTime:
-                    HiddenCB.Checked = true;
-                    HardrockCB.Checked = true;
-                    DoubletimeCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.Flashlight:
-                    FlashlightCB.Checked = true;
-                    break;
-
-                default:
-                    break;
             }
+            if (mods.HasFlag(GlobalVars.Mods.Hidden))
+            {
+                    HiddenCB.Checked = true;
+            }
+            if (mods.HasFlag(GlobalVars.Mods.HardRock))
+            {
+                    HardrockCB.Checked = true;
+            }
+            if (mods.HasFlag(GlobalVars.Mods.Flashlight))
+            {
+                    FlashlightCB.Checked = true;
+            }
+            ExclusiveCB.Checked = Properties.Settings.Default.Exclusive;
         }
 
         private void SaveSettings()
@@ -284,12 +257,13 @@ namespace osuTrainer.Forms
                     string json = "";
                     lock (firstLock)
                     {
-                        json = client.DownloadString(GlobalVars.UserBestAPI + standardids[startid]);
-                        startid -= skippedIds;
-                        if (startid <= 0)
+                        if (startid < 0)
                         {
-                            break;
+                            state.Break();
+                            return;
                         }
+                        json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
+                        startid -= skippedIds;
                         pChecked++;
                         Invoke((MethodInvoker)delegate
                         {
@@ -301,20 +275,15 @@ namespace osuTrainer.Forms
                     {
                         if (userBestList[j].PP < minPP)
                         {
-                            lock (secondLock)
-                            {
-                                startid -= skippedIds;
-                            }
                             break;
                         }
                         if ((ExclusiveCB.Checked && (userBestList[j].Enabled_Mods == ModsAndNV || userBestList[j].Enabled_Mods == mods)) || (!ExclusiveCB.Checked && userBestList[j].Enabled_Mods.HasFlag(mods)))
                         {
-                            lock (thirdLock)
+                            lock (secondLock)
                             {
                                 if (!addedScores.Contains(userBestList[j].Beatmap_Id))
                                 {
                                     Beatmap beatmap = new Beatmap(userBestList[j].Beatmap_Id);
-                                    Debug.WriteLine(beatmap.Beatmap_id);
                                     beatmapCache.Add(beatmap.Beatmap_id, beatmap);
                                     scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Version = beatmap.Version, Artist = beatmap.Artist, Enabled_Mods = userBestList[j].Enabled_Mods, ppRaw = (int)Math.Truncate(userBestList[j].PP), RankImage = GetRankImage(userBestList[j].Rank), BeatmapId = beatmap.Beatmap_id });
                                     addedScores.Add(userBestList[j].Beatmap_Id);
