@@ -31,7 +31,6 @@ namespace osuTrainer.Forms
         private const int pbMaxhalf = 30;
         private Object firstLock = new Object();
         private Object secondLock = new Object();
-        private Object thirdLock = new Object();
         public OsuTrainer()
         {
             InitializeComponent();
@@ -285,15 +284,11 @@ namespace osuTrainer.Forms
                     {
                         if (userBestList[j].PP < minPP)
                         {
-                            lock (secondLock)
-                            {
-                                startid -= skippedIds;
-                            }
                             break;
                         }
                         if ((ExclusiveCB.Checked && (userBestList[j].Enabled_Mods == ModsAndNV || userBestList[j].Enabled_Mods == mods)) || (!ExclusiveCB.Checked && userBestList[j].Enabled_Mods.HasFlag(mods)))
                         {
-                            lock (thirdLock)
+                            lock (secondLock)
                             {
                                 if (!addedScores.Contains(userBestList[j].Beatmap_Id))
                                 {
