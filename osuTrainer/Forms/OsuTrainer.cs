@@ -199,10 +199,10 @@ namespace osuTrainer.Forms
                     Properties.Settings.Default.UserId = currentUser.User_id.ToString();
                     Properties.Settings.Default.Username = currentUser.Username;
                     Properties.Settings.Default.Save();
+                    LoadUserSettings();
+                    UpdateDataGrid(Properties.Settings.Default.GameMode);
                 }
             }
-            LoadUserSettings();
-            UpdateDataGrid(Properties.Settings.Default.GameMode);
         }
 
         private void LoadUserSettings()
