@@ -322,13 +322,11 @@ namespace osuTrainer.Forms
                     return;
             }
             scoreSugDisplay = new SortableBindingList<ScoreInfo>();
-            ConcurrentBag<UserBest> scoreSuggestions = new ConcurrentBag<UserBest>();
-            ConcurrentBag<int> addedScores = new ConcurrentBag<int>();
             beatmapCache = new Dictionary<int, Beatmap>();
             GlobalVars.Mods ModsAndNV = mods | GlobalVars.Mods.NoVideo;
             foreach (var score in currentUser.BestScores)
             {
-                addedScores.Add(score.Beatmap_Id);
+                beatmapCache.Add(score.Beatmap_Id,null);
             }
             int pChecked = 0;
             Stopwatch sw = Stopwatch.StartNew();
@@ -363,12 +361,11 @@ namespace osuTrainer.Forms
                         {
                             lock (secondLock)
                             {
-                                if (!addedScores.Contains(userBestList[j].Beatmap_Id))
+                                if (!beatmapCache.ContainsKey(userBestList[j].Beatmap_Id))
                                 {
                                     Beatmap beatmap = new Beatmap(userBestList[j].Beatmap_Id);
                                     beatmapCache.Add(beatmap.Beatmap_id, beatmap);
                                     scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Version = beatmap.Version, Artist = beatmap.Artist, Enabled_Mods = userBestList[j].Enabled_Mods, ppRaw = (int)Math.Truncate(userBestList[j].PP), RankImage = GetRankImage(userBestList[j].Rank), BeatmapId = beatmap.Beatmap_id });
-                                    addedScores.Add(userBestList[j].Beatmap_Id);
                                     Invoke((MethodInvoker)delegate
                                     {
                                         if (progressBar1.Value < pbMax)
