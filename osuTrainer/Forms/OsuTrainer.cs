@@ -59,54 +59,28 @@ namespace osuTrainer.Forms
         {
             maxDuration = TimeSpan.FromSeconds(Properties.Settings.Default.Searchduration);
             SearchtimeTB.Value = Properties.Settings.Default.Searchduration;
-            mods = (GlobalVars.Mods)Properties.Settings.Default.Mods;
-            ExclusiveCB.Checked = Properties.Settings.Default.Exclusive;
+            mods = (GlobalVars.Mods)Properties.Settings.Default.Mods;            
         }
 
         private void UpdateCB()
         {
-            switch (mods)
+            if (mods.HasFlag(GlobalVars.Mods.DoubleTime))
             {
-                case GlobalVars.Mods.DoubleTime:
-                    DoubletimeCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.DoubleTime | GlobalVars.Mods.Hidden:
-                    DoubletimeCB.Checked = true;
-                    HiddenCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.DoubleTime | GlobalVars.Mods.HardRock:
-                    DoubletimeCB.Checked = true;
-                    HardrockCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.Hidden:
-                    HiddenCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.HardRock:
-                    HardrockCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.HardRock | GlobalVars.Mods.Hidden:
-                    HiddenCB.Checked = true;
-                    HardrockCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.HardRock | GlobalVars.Mods.Hidden | GlobalVars.Mods.DoubleTime:
-                    HiddenCB.Checked = true;
-                    HardrockCB.Checked = true;
-                    DoubletimeCB.Checked = true;
-                    break;
-
-                case GlobalVars.Mods.Flashlight:
-                    FlashlightCB.Checked = true;
-                    break;
-
-                default:
-                    break;
+                DoubletimeCB.Checked = true;
             }
+            if (mods.HasFlag(GlobalVars.Mods.Hidden))
+            {
+                HiddenCB.Checked = true;
+            }
+            if (mods.HasFlag(GlobalVars.Mods.HardRock))
+            {
+                HardrockCB.Checked = true;
+            }
+            if (mods.HasFlag(GlobalVars.Mods.Flashlight))
+            {
+                FlashlightCB.Checked = true;
+            }
+            ExclusiveCB.Checked = Properties.Settings.Default.Exclusive;
         }
 
         private void SaveSettings()
