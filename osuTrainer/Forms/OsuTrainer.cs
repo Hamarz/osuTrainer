@@ -112,11 +112,6 @@ namespace osuTrainer.Forms
             dataGridView1.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridView1.Columns[1].Width = 75;
             dataGridView1.Sort(dataGridView1.Columns[5], ListSortDirection.Ascending);
-            dataGridView1.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
-            dataGridView1.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
-            dataGridView1.Columns[2].SortMode = DataGridViewColumnSortMode.NotSortable;
-            dataGridView1.Columns[3].SortMode = DataGridViewColumnSortMode.NotSortable;
-            dataGridView1.Columns[4].SortMode = DataGridViewColumnSortMode.NotSortable;
             progressBar1.Value = progressBar1.Maximum;
             if (dataGridView1.Rows.Count == 0)
             {
