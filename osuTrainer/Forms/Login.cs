@@ -5,8 +5,8 @@ namespace osuTrainer.Forms
 {
     public partial class Login : Form
     {
-        public User newUser;
         private bool changeUser;
+        public string userString;
 
         public Login(bool changeUser)
         {
@@ -22,20 +22,35 @@ namespace osuTrainer.Forms
 
         private void ConfirmButton_Click(object sender, EventArgs e)
         {
-            string json = User.UserString(UsernameTextbox.Text);
-            if (json.Length>33)
+            switch (Properties.Settings.Default.GameMode)
             {
-                newUser = new User(json,true);
+                case 0:
+                    userString = UserStandard.UserString(UsernameTextbox.Text);
+                    break;
+                case 1:
+                    userString = UserTaiko.UserString(UsernameTextbox.Text);
+                    break;
+                case 2:
+                    userString = UserCtb.UserString(UsernameTextbox.Text);
+                    break;
+                case 3:
+                    userString = UserMania.UserString(UsernameTextbox.Text);
+                    break;
+                default:
+                    break;
+            }
+            if (userString.Length > 33)
+            {
                 Close();
                 DialogResult = DialogResult.OK;
             }
-            else if (json.Length < 3)
+            else if (userString.Length < 3)
             {
                 MessageBox.Show("User not found!");
             }
             else
             {
-                MessageBox.Show(json);
+                MessageBox.Show(userString);
                 using (GetAPIKey getApiKey = new GetAPIKey())
                 {
                     if (getApiKey.ShowDialog() == DialogResult.Cancel)

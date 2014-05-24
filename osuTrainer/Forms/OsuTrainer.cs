@@ -18,7 +18,7 @@ namespace osuTrainer.Forms
     public partial class OsuTrainer : Form
     {
         private CustomWebClient client = new CustomWebClient();
-        public User currentUser;
+        public IUser currentUser;
         public int[] standardids;
         public int[] taikoids;
         public int[] ctbids;
@@ -45,15 +45,15 @@ namespace osuTrainer.Forms
 
         private void OsuTrainer_Load(object sender, EventArgs e)
         {
+            LoadSettings();
+
             CheckUser();
 
             this.Text = "osu! Trainer " + Assembly.GetExecutingAssembly().GetName().Version;
 
             LoadUsers();
 
-            LoadSettings();
-
-            UpdateDataGrid();
+            UpdateDataGrid(GameModeCB.SelectedIndex);
 
             UpdateCB();
         }
@@ -70,19 +70,19 @@ namespace osuTrainer.Forms
         {
             if (mods.HasFlag(GlobalVars.Mods.DoubleTime))
             {
-                    DoubletimeCB.Checked = true;
+                DoubletimeCB.Checked = true;
             }
             if (mods.HasFlag(GlobalVars.Mods.Hidden))
             {
-                    HiddenCB.Checked = true;
+                HiddenCB.Checked = true;
             }
             if (mods.HasFlag(GlobalVars.Mods.HardRock))
             {
-                    HardrockCB.Checked = true;
+                HardrockCB.Checked = true;
             }
             if (mods.HasFlag(GlobalVars.Mods.Flashlight))
             {
-                    FlashlightCB.Checked = true;
+                FlashlightCB.Checked = true;
             }
             ExclusiveCB.Checked = Properties.Settings.Default.Exclusive;
         }
@@ -96,11 +96,11 @@ namespace osuTrainer.Forms
             Properties.Settings.Default.Save();
         }
 
-        private async void UpdateDataGrid()
+        private async void UpdateDataGrid(int gameMode)
         {
             double minPP = (double)MinPPTB.Value;
             progressBar1.Value = progressBar1.Minimum + 2;
-            await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPP));
+            await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPP, gameMode));
             dataGridView1.DataSource = scoreSugDisplay;
             dataGridView1.Columns[6].Visible = false;
             dataGridView1.Columns[0].HeaderText = "";
@@ -131,7 +131,23 @@ namespace osuTrainer.Forms
                 {
                     Close();
                 }
-                currentUser = login.newUser;
+                switch (Properties.Settings.Default.GameMode)
+                {
+                    case 0:
+                        currentUser = new UserStandard(login.userString, true);
+                        break;
+                    case 1:
+                        currentUser = new UserTaiko(login.userString, true);
+                        break;
+                    case 2:
+                        currentUser = new UserCtb(login.userString, true);
+                        break;
+                    case 3:
+                        currentUser = new UserMania(login.userString, true);
+                        break;
+                    default:
+                        break;
+                }
                 Properties.Settings.Default.UserId = currentUser.User_id.ToString();
                 Properties.Settings.Default.Username = currentUser.Username;
                 Properties.Settings.Default.Save();
@@ -154,7 +170,7 @@ namespace osuTrainer.Forms
             {
                 ctbids = (int[])formatter.Deserialize(fs);
             }
-            using (FileStream fs = new FileStream("mnania", FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream("mania", FileMode.Open, FileAccess.Read))
             {
                 maniaids = (int[])formatter.Deserialize(fs);
             }
@@ -166,20 +182,44 @@ namespace osuTrainer.Forms
             {
                 if (login.ShowDialog() != DialogResult.Cancel)
                 {
-                    currentUser = login.newUser;
+                    switch (Properties.Settings.Default.GameMode)
+                    {
+                        case 0:
+                            currentUser = new UserStandard(login.userString);
+                            break;
+                        case 1:
+                            currentUser = new UserTaiko(login.userString);
+                            break;
+                        case 2:
+                            currentUser = new UserCtb(login.userString);
+                            break;
+                        case 3:
+                            currentUser = new UserMania(login.userString);
+                            break;
+                        default:
+                            break;
+                    }
                     Properties.Settings.Default.UserId = currentUser.User_id.ToString();
                     Properties.Settings.Default.Username = currentUser.Username;
                     Properties.Settings.Default.Save();
                 }
             }
             LoadUserSettings();
-            UpdateDataGrid();
+            UpdateDataGrid(GameModeCB.SelectedIndex);
         }
 
         private void LoadUserSettings()
         {
-            MinPPTB.Minimum = (int)currentUser.BestScores.Last().PP;
-            MinPPTB.Maximum = (int)currentUser.BestScores.First().PP + 1;
+            if (currentUser.BestScores.Count > 0)
+            {
+                MinPPTB.Minimum = (int)currentUser.BestScores.Last().PP;
+                MinPPTB.Maximum = (int)currentUser.BestScores.First().PP + 1;
+            }
+            else
+            {
+                MinPPTB.Minimum = 0;
+                MinPPTB.Maximum = 20;
+            }
             MinPPTB.Value = MinPPTB.Minimum;
             MinPPLabel.Text = Convert.ToString(MinPPTB.Value);
         }
@@ -207,21 +247,38 @@ namespace osuTrainer.Forms
             }
         }
 
-        private int FindStartingUser(double targetpp)
+        private int FindStartingUser(double targetpp, int gameMode)
         {
             int low = 0;
             int high = standardids.Length - 1;
             int midpoint = 0;
             int iterations = 0;
+            IUser miduser = null;
             while (low < high && iterations < 7)
             {
                 midpoint = low + (high - low) / 2;
-                User miduser = new User(standardids[midpoint].ToString());
-                if (targetpp > miduser.Pp_raw)
+                switch (gameMode)
+                {
+                    case 0:
+                        miduser = new UserStandard(standardids[midpoint].ToString());
+                        break;
+                    case 1:
+                        miduser = new UserTaiko(standardids[midpoint].ToString());
+                        break;
+                    case 2:
+                        miduser = new UserCtb(standardids[midpoint].ToString());
+                        break;
+                    case 3:
+                        miduser = new UserMania(standardids[midpoint].ToString());
+                        break;
+                    default:
+                        break;
+                }
+                if (targetpp > miduser.PpRaw)
                 {
                     high = midpoint - 1;
                 }
-                else if (miduser.Pp_raw - targetpp < 100)
+                else if (miduser.PpRaw - targetpp < 100)
                 {
                     return midpoint;
                 }
@@ -234,15 +291,43 @@ namespace osuTrainer.Forms
             return midpoint;
         }
 
-        private void UpdateSuggestionsAsync(double minPP)
+        private void UpdateSuggestionsAsync(double minPP, int gameMode)
         {
+            int[] userids;
+            int startid;
+            switch (gameMode)
+            {
+                case 0:
+                    userids = standardids;
+                    startid = currentUser.PpRaw < 200 ? 12843 :
+                        currentUser.PpRank < 5001 ? startid = currentUser.PpRank - 2 :
+                        FindStartingUser(currentUser.PpRaw, gameMode);
+                    break;
+                case 1:
+                    userids = taikoids;
+                    startid = currentUser.PpRaw < 200 ? 6806 :
+                        currentUser.PpRank < 5001 ? startid = currentUser.PpRank - 2 :
+                        FindStartingUser(currentUser.PpRaw, gameMode);
+                    break;
+                case 2:
+                    userids = ctbids;
+                    startid = currentUser.PpRaw < 200 ? 7638 :
+                        currentUser.PpRank < 5001 ? startid = currentUser.PpRank - 2 :
+                        FindStartingUser(currentUser.PpRaw, gameMode);
+                    break;
+                case 3:
+                    userids = maniaids;
+                    startid = currentUser.PpRaw < 200 ? 7569 :
+                        currentUser.PpRank < 5001 ? startid = currentUser.PpRank - 2 :
+                        FindStartingUser(currentUser.PpRaw, gameMode);
+                    break;
+                default:
+                    return;
+            }
             scoreSugDisplay = new SortableBindingList<ScoreInfo>();
             ConcurrentBag<UserBest> scoreSuggestions = new ConcurrentBag<UserBest>();
             ConcurrentBag<int> addedScores = new ConcurrentBag<int>();
             beatmapCache = new Dictionary<int, Beatmap>();
-            int startid = currentUser.Pp_raw < 200 ? 12849 :
-                currentUser.Pp_rank < 5001 ? startid = currentUser.Pp_rank - 2 :
-                FindStartingUser(currentUser.Pp_raw);
             GlobalVars.Mods ModsAndNV = mods | GlobalVars.Mods.NoVideo;
             foreach (var score in currentUser.BestScores)
             {
@@ -262,7 +347,7 @@ namespace osuTrainer.Forms
                             state.Break();
                             return;
                         }
-                        json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid]);
+                        json = client.DownloadString(GlobalVars.UserBestAPI + userids[startid] + GlobalVars.Mode + gameMode);
                         startid -= skippedIds;
                         pChecked++;
                         Invoke((MethodInvoker)delegate
@@ -339,9 +424,9 @@ namespace osuTrainer.Forms
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-                PlayersCheckedLbl.Text = "0";
-                ScoresAddedLbl.Text = "0";
-                UpdateDataGrid();
+            PlayersCheckedLbl.Text = "0";
+            ScoresAddedLbl.Text = "0";
+            UpdateDataGrid(GameModeCB.SelectedIndex);
         }
 
         private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
@@ -429,6 +514,27 @@ namespace osuTrainer.Forms
         {
             toolTip1.SetToolTip(SearchtimeTB, (SearchtimeTB.Value * 2).ToString());
             maxDuration = TimeSpan.FromSeconds(SearchtimeTB.Value);
+        }
+
+        private void GameModeCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (GameModeCB.SelectedIndex)
+            {
+                case 0:
+                    currentUser = new UserStandard(Properties.Settings.Default.Username);
+                    break;
+                case 1:
+                    currentUser = new UserTaiko(Properties.Settings.Default.Username);
+                    break;
+                case 2:
+                    currentUser = new UserCtb(Properties.Settings.Default.Username);
+                    break;
+                case 3:
+                    currentUser = new UserMania(Properties.Settings.Default.Username);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

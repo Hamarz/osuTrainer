@@ -12,7 +12,7 @@ namespace osuTrainer
         public static readonly string ThumbUrl = "https://b.ppy.sh/thumb/40924l.jpg";
 
         // 0 = osu! 1 = Taiko 2 = CtB 3 = osu!mania
-        public static readonly string Mode = @"m=";
+        public static readonly string Mode = @"&m=";
 
         public enum RankImage
         {

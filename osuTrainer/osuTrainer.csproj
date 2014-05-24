@@ -95,8 +95,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScoreInfo.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="IUser.cs" />
     <Compile Include="UserBest.cs" />
+    <Compile Include="UserCtb.cs" />
+    <Compile Include="UserMania.cs" />
+    <Compile Include="UserStandard.cs" />
+    <Compile Include="UserTaiko.cs" />
     <EmbeddedResource Include="Forms\GetAPIKey.resx">
       <DependentUpon>GetAPIKey.cs</DependentUpon>
     </EmbeddedResource>
@@ -116,7 +120,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="ids" />
+    <None Include="ctb" />
+    <None Include="mania" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -126,6 +131,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="standard" />
+    <None Include="taiko" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
