@@ -432,7 +432,6 @@
             this.GameModeCB.Name = "GameModeCB";
             this.GameModeCB.Size = new System.Drawing.Size(117, 21);
             this.GameModeCB.TabIndex = 20;
-            this.GameModeCB.SelectedIndexChanged += new System.EventHandler(this.GameModeCB_SelectedIndexChanged);
             // 
             // label6
             // 

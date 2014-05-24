@@ -54,6 +54,8 @@ namespace osuTrainer.Forms
             LoadUsers();
 
             UpdateDataGrid(GameModeCB.SelectedIndex);
+            
+            this.GameModeCB.SelectedIndexChanged += new System.EventHandler(this.GameModeCB_SelectedIndexChanged);
 
             UpdateCB();
         }
@@ -185,16 +187,16 @@ namespace osuTrainer.Forms
                     switch (Properties.Settings.Default.GameMode)
                     {
                         case 0:
-                            currentUser = new UserStandard(login.userString);
+                            currentUser = new UserStandard(login.userString, true);
                             break;
                         case 1:
-                            currentUser = new UserTaiko(login.userString);
+                            currentUser = new UserTaiko(login.userString, true);
                             break;
                         case 2:
-                            currentUser = new UserCtb(login.userString);
+                            currentUser = new UserCtb(login.userString, true);
                             break;
                         case 3:
-                            currentUser = new UserMania(login.userString);
+                            currentUser = new UserMania(login.userString, true);
                             break;
                         default:
                             break;
@@ -205,7 +207,7 @@ namespace osuTrainer.Forms
                 }
             }
             LoadUserSettings();
-            UpdateDataGrid(GameModeCB.SelectedIndex);
+            UpdateDataGrid(Properties.Settings.Default.GameMode);
         }
 
         private void LoadUserSettings()
@@ -522,15 +524,19 @@ namespace osuTrainer.Forms
             {
                 case 0:
                     currentUser = new UserStandard(Properties.Settings.Default.Username);
+                    LoadUserSettings();
                     break;
                 case 1:
                     currentUser = new UserTaiko(Properties.Settings.Default.Username);
+                    LoadUserSettings();
                     break;
                 case 2:
                     currentUser = new UserCtb(Properties.Settings.Default.Username);
+                    LoadUserSettings();
                     break;
                 case 3:
                     currentUser = new UserMania(Properties.Settings.Default.Username);
+                    LoadUserSettings();
                     break;
                 default:
                     break;
