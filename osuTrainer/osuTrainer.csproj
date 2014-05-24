@@ -98,6 +98,7 @@
     <Compile Include="IUser.cs" />
     <Compile Include="UserBest.cs" />
     <Compile Include="UserCtb.cs" />
+    <Compile Include="UserFactory.cs" />
     <Compile Include="UserMania.cs" />
     <Compile Include="UserStandard.cs" />
     <Compile Include="UserTaiko.cs" />

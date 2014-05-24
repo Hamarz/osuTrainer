@@ -27,15 +27,17 @@ namespace osuTrainer
 
         private static CustomWebClient client = new CustomWebClient();
 
-        /// <summary>
-        /// username can be either username or user id
-        /// </summary>
-        public UserCtb(string username)
+        public UserCtb()
+        {
+
+        }
+
+        public void GetInfo(string nameorid)
         {
             using (var client = new CustomWebClient())
             {
                 //standard
-                string json = client.DownloadString(GlobalVars.UserAPI + username + GlobalVars.Mode + 2);
+                string json = client.DownloadString(GlobalVars.UserAPI + nameorid + GlobalVars.Mode + 2);
                 Match match = Regex.Match(json, @"""user_id"":""(.+?)"".+?""username"":""(.+?)"".+?""pp_rank"":""(.+?)"".+?""level"":""(.+?)"".+?""pp_raw"":""(.+?)"".+?""country"":""(.+?)""");
                 User_id = Convert.ToInt32(match.Groups[1].Value);
                 Username = match.Groups[2].Value;
@@ -48,7 +50,7 @@ namespace osuTrainer
             }
         }
 
-        public UserCtb(string json, bool isjson = true)
+        public void GetInfo(string json, bool isjson = true)
         {
             using (var client = new CustomWebClient())
             {

@@ -16,5 +16,9 @@ namespace osuTrainer
         string Country { get; set; }
 
         List<UserBest> BestScores { get; set; }
+
+        void GetInfo(string p1);
+
+        void GetInfo(string p1, bool p2);
     }
 }
