@@ -51,10 +51,10 @@ namespace osuTrainer.Forms
         private async void CheckUpdates()
         {
             string newestVersion = await Updater.Check();
-            if (newestVersion == Assembly.GetExecutingAssembly().GetName().Version.ToString())
+            if (newestVersion != Assembly.GetExecutingAssembly().GetName().Version.ToString())
             {
                 UpdateLbl.IsLink = true;
-                UpdateLbl.Text = "Update to " + newestVersion + "available.";
+                UpdateLbl.Text = "Update to " + newestVersion + " available.";
                 UpdateLbl.Tag = "https://github.com/condone/osuTrainer/releases";
                 UpdateLbl.LinkBehavior = LinkBehavior.AlwaysUnderline;
                 this.UpdateLbl.Click += new System.EventHandler(this.UpdateLbl_Click);
