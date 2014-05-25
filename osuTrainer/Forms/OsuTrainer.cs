@@ -27,7 +27,7 @@ namespace osuTrainer.Forms
         private const int pbMax = 60;
         private const int pbMaxhalf = 30;
         private CustomWebClient client = new CustomWebClient();
-        private int currentBeatmap;
+        private int selectedBeatmap;
         private Object firstLock = new Object();
         private TimeSpan maxDuration;
         private GlobalVars.Mods mods;
@@ -45,12 +45,12 @@ namespace osuTrainer.Forms
 
         private void beatmapPage_Click(object sender, System.EventArgs e)
         {
-            Process.Start(beatmapCache.Single(x => x.Key == currentBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
+            Process.Start(beatmapCache.Single(x => x.Key == selectedBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
 
         private void copyToClipboard_Click(object sender, System.EventArgs e)
         {
-           Clipboard.SetText(beatmapCache.Single(x => x.Key == currentBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
+           Clipboard.SetText(beatmapCache.Single(x => x.Key == selectedBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
 
         private async void CheckUpdates()
@@ -106,7 +106,7 @@ namespace osuTrainer.Forms
         {
             if (e.Button == MouseButtons.Right)
             {
-                currentBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells[6].Value;
+                selectedBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells[7].Value;
                 dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Selected = true;
                 ContextMenu m = new ContextMenu();
                 MenuItem beatmapPage = new MenuItem("Beatmap link");
@@ -159,7 +159,7 @@ namespace osuTrainer.Forms
 
         private void download_Click(object sender, System.EventArgs e)
         {
-            Process.Start(beatmapCache.Single(x => x.Key == currentBeatmap).Value.BloodcatUrl);
+            Process.Start(beatmapCache.Single(x => x.Key == selectedBeatmap).Value.BloodcatUrl);
         }
 
         private int FindStartingUser(double targetpp, int gameMode, int[] ids)
