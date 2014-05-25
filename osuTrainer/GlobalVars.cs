@@ -55,17 +55,17 @@ namespace osuTrainer
         public enum Mods
         {
             None = 0,
-            NoFail = 1,
-            Easy = 2,
-            NoVideo = 4,
-            Hidden = 8,
-            HardRock = 16,
-            SuddenDeath = 32,
-            DoubleTime = 64,
+            NF = 1,
+            EZ = 2,
+            NV = 4,
+            HD = 8,
+            HR = 16,
+            SD = 32,
+            DT = 64,
             Relax = 128,
-            HalfTime = 256,
-            Nightcore = 512,
-            Flashlight = 1024,
+            HT = 256,
+            NC = 512,
+            FL = 1024,
             Autoplay = 2048,
             SpunOut = 4096,
             Relax2 = 8192,  // Autopilot?
@@ -79,7 +79,7 @@ namespace osuTrainer
             FadeIn = 1048576,
             Random = 2097152,
             LastMod = 4194304,
-            FreeModAllowed = NoFail | Easy | Hidden | HardRock | SuddenDeath | Flashlight | FadeIn | Relax | Relax2 | SpunOut | keyMod
+            FreeModAllowed = NF | EZ | HD | HR | SD | FL | FadeIn | Relax | Relax2 | SpunOut | keyMod
         }
     }
 }

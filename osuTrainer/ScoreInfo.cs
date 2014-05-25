@@ -13,7 +13,9 @@ namespace osuTrainer
 
         public string Version { get; set; }
 
-        public GlobalVars.Mods Enabled_Mods { get; set; }
+        public string Creator { get; set; }
+
+        public GlobalVars.Mods Mods { get; set; }
 
         [System.ComponentModel.DisplayName("PP")]
         public int ppRaw { get; set; }

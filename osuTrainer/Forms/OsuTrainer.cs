@@ -45,7 +45,12 @@ namespace osuTrainer.Forms
 
         private void beatmapPage_Click(object sender, System.EventArgs e)
         {
-            Process.Start(beatmapCache.Single(x => x.Key == currentBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.Text);
+            Process.Start(beatmapCache.Single(x => x.Key == currentBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
+        }
+
+        private void copyToClipboard_Click(object sender, System.EventArgs e)
+        {
+           Clipboard.SetText(beatmapCache.Single(x => x.Key == currentBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
 
         private async void CheckUpdates()
@@ -104,11 +109,14 @@ namespace osuTrainer.Forms
                 currentBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells[6].Value;
                 dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Selected = true;
                 ContextMenu m = new ContextMenu();
-                MenuItem beatmapPage = new MenuItem("Beatmap Page");
+                MenuItem beatmapPage = new MenuItem("Beatmap link");
+                MenuItem copyToClipboard = new MenuItem("Copy link to clipboard");
                 MenuItem download = new MenuItem("Download from Bloodcat");
                 m.MenuItems.Add(beatmapPage);
+                m.MenuItems.Add(copyToClipboard);
                 m.MenuItems.Add(download);
                 beatmapPage.Click += new System.EventHandler(beatmapPage_Click);
+                copyToClipboard.Click += new System.EventHandler(copyToClipboard_Click);
                 download.Click += new System.EventHandler(download_Click);
                 m.Show(dataGridView1, new Point(e.X, e.Y));
             }
@@ -119,7 +127,7 @@ namespace osuTrainer.Forms
             if (dataGridView1.SelectedRows.Count == 1)
             {
                 Beatmap selected;
-                beatmapCache.TryGetValue((int)dataGridView1.SelectedRows[0].Cells[6].Value, out selected);
+                beatmapCache.TryGetValue((int)dataGridView1.SelectedRows[0].Cells[7].Value, out selected);
                 ArtistLbl.Text = selected.Artist;
                 TitleLbl.Text = selected.Title;
                 CreatorLbl.Text = selected.Creator;
@@ -141,11 +149,11 @@ namespace osuTrainer.Forms
         {
             if (DoubletimeCB.Checked)
             {
-                mods |= GlobalVars.Mods.DoubleTime;
+                mods |= GlobalVars.Mods.DT;
             }
             else
             {
-                mods &= ~GlobalVars.Mods.DoubleTime;
+                mods &= ~GlobalVars.Mods.DT;
             }
         }
 
@@ -187,11 +195,11 @@ namespace osuTrainer.Forms
         {
             if (FlashlightCB.Checked)
             {
-                mods |= GlobalVars.Mods.Flashlight;
+                mods |= GlobalVars.Mods.FL;
             }
             else
             {
-                mods &= ~GlobalVars.Mods.Flashlight;
+                mods &= ~GlobalVars.Mods.FL;
             }
         }
 
@@ -201,7 +209,7 @@ namespace osuTrainer.Forms
             currentUser.GetInfo(Properties.Settings.Default.Username);
             LoadUserSettings();
         }
-
+        
         private Bitmap GetRankImage(GlobalVars.Rank rank)
         {
             switch (rank)
@@ -239,11 +247,11 @@ namespace osuTrainer.Forms
         {
             if (HardrockCB.Checked)
             {
-                mods |= GlobalVars.Mods.HardRock;
+                mods |= GlobalVars.Mods.HR;
             }
             else
             {
-                mods &= ~GlobalVars.Mods.HardRock;
+                mods &= ~GlobalVars.Mods.HR;
             }
         }
 
@@ -251,11 +259,11 @@ namespace osuTrainer.Forms
         {
             if (HiddenCB.Checked)
             {
-                mods |= GlobalVars.Mods.Hidden;
+                mods |= GlobalVars.Mods.HD;
             }
             else
             {
-                mods &= ~GlobalVars.Mods.Hidden;
+                mods &= ~GlobalVars.Mods.HD;
             }
         }
 
@@ -352,19 +360,19 @@ namespace osuTrainer.Forms
 
         private void UpdateCB()
         {
-            if (mods.HasFlag(GlobalVars.Mods.DoubleTime))
+            if (mods.HasFlag(GlobalVars.Mods.DT))
             {
                 DoubletimeCB.Checked = true;
             }
-            if (mods.HasFlag(GlobalVars.Mods.Hidden))
+            if (mods.HasFlag(GlobalVars.Mods.HD))
             {
                 HiddenCB.Checked = true;
             }
-            if (mods.HasFlag(GlobalVars.Mods.HardRock))
+            if (mods.HasFlag(GlobalVars.Mods.HR))
             {
                 HardrockCB.Checked = true;
             }
-            if (mods.HasFlag(GlobalVars.Mods.Flashlight))
+            if (mods.HasFlag(GlobalVars.Mods.FL))
             {
                 FlashlightCB.Checked = true;
             }
@@ -376,14 +384,15 @@ namespace osuTrainer.Forms
             progressBar1.Value = progressBar1.Minimum + 2;
             await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPP, gameMode));
             dataGridView1.DataSource = scoreSugDisplay;
-            dataGridView1.Columns[6].Visible = false;
+            dataGridView1.Columns[7].Visible = false;
             dataGridView1.Columns[0].HeaderText = "";
             dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             dataGridView1.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Columns[6].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             dataGridView1.Columns[1].Width = 75;
             dataGridView1.Columns[3].Width = 55;
-            dataGridView1.Sort(dataGridView1.Columns[5], ListSortDirection.Ascending);
+            dataGridView1.Sort(dataGridView1.Columns[6], ListSortDirection.Ascending);
             progressBar1.Value = progressBar1.Maximum;
             if (dataGridView1.Rows.Count == 0)
             {
@@ -430,7 +439,7 @@ namespace osuTrainer.Forms
             }
             scoreSugDisplay = new SortableBindingList<ScoreInfo>();
             beatmapCache = new Dictionary<int, Beatmap>();
-            GlobalVars.Mods ModsAndNV = mods | GlobalVars.Mods.NoVideo;
+            GlobalVars.Mods ModsAndNV = mods | GlobalVars.Mods.NV;
             foreach (var score in currentUser.BestScores)
             {
                 beatmapCache.Add(score.Beatmap_Id, null);
@@ -472,7 +481,7 @@ namespace osuTrainer.Forms
                                 {
                                     Beatmap beatmap = new Beatmap(userBestList[j].Beatmap_Id);
                                     beatmapCache.Add(beatmap.Beatmap_id, beatmap);
-                                    scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Version = beatmap.Version, Artist = beatmap.Artist, Enabled_Mods = userBestList[j].Enabled_Mods, ppRaw = (int)Math.Truncate(userBestList[j].PP), RankImage = GetRankImage(userBestList[j].Rank), BeatmapId = beatmap.Beatmap_id });
+                                    scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Version = beatmap.Version, Creator = beatmap.Creator, Artist = beatmap.Artist, Mods = userBestList[j].Enabled_Mods, ppRaw = (int)Math.Truncate(userBestList[j].PP), RankImage = GetRankImage(userBestList[j].Rank), BeatmapId = beatmap.Beatmap_id });
                                     Invoke((MethodInvoker)delegate
                                     {
                                         if (progressBar1.Value < pbMax)
