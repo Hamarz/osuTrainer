@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ServiceStack.Text;
 using Octokit;
+using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 namespace osuTrainer.Forms
 {
@@ -24,6 +26,8 @@ namespace osuTrainer.Forms
         public int[] maniaids;
         public int[] standardids;
         public int[] taikoids;
+        private string osuDirectory;
+        private string osuExe;
         private const int pbMax = 60;
         private const int pbMaxhalf = 30;
         private CustomWebClient client = new CustomWebClient();
@@ -51,6 +55,19 @@ namespace osuTrainer.Forms
         private void copyToClipboard_Click(object sender, System.EventArgs e)
         {
            Clipboard.SetText(beatmapCache.Single(x => x.Key == selectedBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
+        }
+
+        private void dl_Click(object sender, System.EventArgs e)
+        {
+            Process.Start(GlobalVars.DownloadURL + beatmapCache.Single(x => x.Key == selectedBeatmap).Value.BeatmapSet_id);
+        }
+
+        private void osuDirect_Click(object sender, System.EventArgs e)
+        {
+            Process osuDirect = new Process();
+            osuDirect.StartInfo.FileName = osuExe;
+            osuDirect.StartInfo.Arguments = @"osu://dl/" + beatmapCache.Single(x => x.Key == selectedBeatmap).Value.BeatmapSet_id;
+            osuDirect.Start();
         }
 
         private async void CheckUpdates()
@@ -111,13 +128,19 @@ namespace osuTrainer.Forms
                 ContextMenu m = new ContextMenu();
                 MenuItem beatmapPage = new MenuItem("Beatmap link");
                 MenuItem copyToClipboard = new MenuItem("Copy link to clipboard");
-                MenuItem download = new MenuItem("Download from Bloodcat");
+                MenuItem dl = new MenuItem("Download");
+                MenuItem osuDirect = new MenuItem("Download with osu!direct");
+                MenuItem dlBloodcat = new MenuItem("Download with Bloodcat");
                 m.MenuItems.Add(beatmapPage);
                 m.MenuItems.Add(copyToClipboard);
-                m.MenuItems.Add(download);
+                m.MenuItems.Add(dl);
+                m.MenuItems.Add(osuDirect);
+                m.MenuItems.Add(dlBloodcat);
                 beatmapPage.Click += new System.EventHandler(beatmapPage_Click);
                 copyToClipboard.Click += new System.EventHandler(copyToClipboard_Click);
-                download.Click += new System.EventHandler(download_Click);
+                dl.Click += new System.EventHandler(dl_Click);
+                osuDirect.Click += new System.EventHandler(osuDirect_Click);
+                dlBloodcat.Click += new System.EventHandler(dlBloodcat_Click);
                 m.Show(dataGridView1, new Point(e.X, e.Y));
             }
         }
@@ -157,7 +180,7 @@ namespace osuTrainer.Forms
             }
         }
 
-        private void download_Click(object sender, System.EventArgs e)
+        private void dlBloodcat_Click(object sender, System.EventArgs e)
         {
             Process.Start(beatmapCache.Single(x => x.Key == selectedBeatmap).Value.BloodcatUrl);
         }
@@ -318,9 +341,39 @@ namespace osuTrainer.Forms
             MinPPLabel.Text = Convert.ToString(MinPPTB.Value);
         }
 
+        private async void FindOsu()
+        {
+            osuDirectory = await FindOsuDirAsync();
+            osuExe = Path.Combine(osuDirectory, "osu!.exe");
+        }
+
+        private async Task<string> FindOsuDirAsync()
+        {
+            try
+            {
+                RegistryKey key = Registry.ClassesRoot.OpenSubKey("osu!\\DefaultIcon");
+                if (key != null)
+                {
+                    object o = key.GetValue(null);
+                    if (o != null)
+                    {
+                        var filter = new Regex(@"(?<="")[^\""]*(?="")");
+                        return Path.GetDirectoryName(filter.Match(o.ToString()).ToString());
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+            return "";
+        }
+
         private void OsuTrainer_Load(object sender, EventArgs e)
         {
             CheckUpdates();
+
+            FindOsu();
 
             LoadSettings();
 

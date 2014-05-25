@@ -9,7 +9,9 @@ namespace osuTrainer
         public static string UserAPI = @"http://osu.ppy.sh/api/get_user?k=" + Properties.Settings.Default.APIKey + "&u=";
         public static readonly string Bloodcat = @"http://bloodcat.com/osu/m/";
         public static string UserBestAPI = @"https://osu.ppy.sh/api/get_user_best?k=" + Properties.Settings.Default.APIKey + "&u=";
-        public static readonly string ThumbUrl = "https://b.ppy.sh/thumb/40924l.jpg";
+        public static readonly string ThumbUrl = @"https://b.ppy.sh/thumb/40924l.jpg";
+        public static readonly string DownloadURL = @"http://osu.ppy.sh/d/";
+        public static readonly string OsuDirectURL = @"osu://dl/";
 
         // 0 = osu! 1 = Taiko 2 = CtB 3 = osu!mania
         public static readonly string Mode = @"&m=";
