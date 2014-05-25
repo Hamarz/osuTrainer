@@ -10,6 +10,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ServiceStack.Text;
+using Octokit;
 
 namespace osuTrainer.Forms
 {
@@ -44,7 +45,20 @@ namespace osuTrainer.Forms
 
         private void beatmapPage_Click(object sender, System.EventArgs e)
         {
-            Process.Start(beatmapCache.Single(x => x.Key == currentBeatmap).Value.Url);
+            Process.Start(beatmapCache.Single(x => x.Key == currentBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.Text);
+        }
+
+        private async void CheckUpdates()
+        {
+            string newestVersion = await Updater.Check();
+            if (newestVersion == Assembly.GetExecutingAssembly().GetName().Version.ToString())
+            {
+                UpdateLbl.IsLink = true;
+                UpdateLbl.Text = "Update to " + newestVersion + "available.";
+                UpdateLbl.Tag = "https://github.com/condone/osuTrainer/releases";
+                UpdateLbl.LinkBehavior = LinkBehavior.AlwaysUnderline;
+                this.UpdateLbl.Click += new System.EventHandler(this.UpdateLbl_Click);
+            }
         }
 
         private void ChangeUserButton_Click(object sender, EventArgs e)
@@ -140,10 +154,10 @@ namespace osuTrainer.Forms
             Process.Start(beatmapCache.Single(x => x.Key == currentBeatmap).Value.BloodcatUrl);
         }
 
-        private int FindStartingUser(double targetpp, int gameMode)
+        private int FindStartingUser(double targetpp, int gameMode, int[] ids)
         {
             int low = 0;
-            int high = standardids.Length - 1;
+            int high = ids.Length - 1;
             int midpoint = 0;
             int iterations = 0;
             IUser miduser = null;
@@ -151,7 +165,7 @@ namespace osuTrainer.Forms
             {
                 midpoint = low + (high - low) / 2;
                 miduser = UserFactory.GetUser(gameMode);
-                currentUser.GetInfo(standardids[midpoint].ToString());
+                miduser.GetInfo(ids[midpoint].ToString());
                 if (targetpp > miduser.PpRaw)
                 {
                     high = midpoint - 1;
@@ -256,19 +270,19 @@ namespace osuTrainer.Forms
         private void LoadUsers()
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            using (FileStream fs = new FileStream("standard", FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream("standard", System.IO.FileMode.Open, FileAccess.Read))
             {
                 standardids = (int[])formatter.Deserialize(fs);
             }
-            using (FileStream fs = new FileStream("taiko", FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream("taiko", System.IO.FileMode.Open, FileAccess.Read))
             {
                 taikoids = (int[])formatter.Deserialize(fs);
             }
-            using (FileStream fs = new FileStream("ctb", FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream("ctb", System.IO.FileMode.Open, FileAccess.Read))
             {
                 ctbids = (int[])formatter.Deserialize(fs);
             }
-            using (FileStream fs = new FileStream("mania", FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream("mania", System.IO.FileMode.Open, FileAccess.Read))
             {
                 maniaids = (int[])formatter.Deserialize(fs);
             }
@@ -298,6 +312,8 @@ namespace osuTrainer.Forms
 
         private void OsuTrainer_Load(object sender, EventArgs e)
         {
+            CheckUpdates();
+
             LoadSettings();
 
             CheckUser();
@@ -385,28 +401,28 @@ namespace osuTrainer.Forms
                     userids = standardids;
                     startid = currentUser.PpRaw < 200 ? 12843 :
                         currentUser.PpRank < 5001 ? startid = currentUser.PpRank - 2 :
-                        FindStartingUser(currentUser.PpRaw, gameMode);
+                        FindStartingUser(currentUser.PpRaw, gameMode, userids);
                     break;
 
                 case 1:
                     userids = taikoids;
                     startid = currentUser.PpRaw < 200 ? 6806 :
                         currentUser.PpRank < 5001 ? startid = currentUser.PpRank - 2 :
-                        FindStartingUser(currentUser.PpRaw, gameMode);
+                        FindStartingUser(currentUser.PpRaw, gameMode, userids);
                     break;
 
                 case 2:
                     userids = ctbids;
                     startid = currentUser.PpRaw < 200 ? 7638 :
                         currentUser.PpRank < 5001 ? startid = currentUser.PpRank - 2 :
-                        FindStartingUser(currentUser.PpRaw, gameMode);
+                        FindStartingUser(currentUser.PpRaw, gameMode, userids);
                     break;
 
                 case 3:
                     userids = maniaids;
                     startid = currentUser.PpRaw < 200 ? 7569 :
                         currentUser.PpRank < 5001 ? startid = currentUser.PpRank - 2 :
-                        FindStartingUser(currentUser.PpRaw, gameMode);
+                        FindStartingUser(currentUser.PpRaw, gameMode, userids);
                     break;
 
                 default:
@@ -472,6 +488,16 @@ namespace osuTrainer.Forms
                 }
                 state.Break();
             });
+        }
+
+        private void UpdateLbl_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripLabel)
+            {
+                ToolStripLabel toolStripLabel1 = sender as ToolStripLabel;
+                Process.Start(toolStripLabel1.Tag.ToString());
+                toolStripLabel1.LinkVisited = true;
+            }
         }
     }
 }

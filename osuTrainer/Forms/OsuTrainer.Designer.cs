@@ -60,6 +60,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.progressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.UpdateLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.PlayersCheckedLbl = new System.Windows.Forms.ToolStripStatusLabel();
@@ -368,6 +369,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.progressBar1,
+            this.UpdateLbl,
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel3,
             this.PlayersCheckedLbl,
@@ -384,10 +386,16 @@
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(100, 16);
             // 
+            // UpdateLbl
+            // 
+            this.UpdateLbl.Name = "UpdateLbl";
+            this.UpdateLbl.Size = new System.Drawing.Size(10, 17);
+            this.UpdateLbl.Text = " ";
+            // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(333, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(292, 17);
             this.toolStripStatusLabel1.Spring = true;
             // 
             // toolStripStatusLabel3
@@ -523,5 +531,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ComboBox GameModeCB;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ToolStripStatusLabel UpdateLbl;
     }
 }
