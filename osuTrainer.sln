@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osuTrainer", "osuTrainer\osuTrainer.csproj", "{B8CF6C3D-1C51-48D0-A5CC-959877BC205A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osuTrainerOS", "osuTrainerOS\osuTrainerOS.csproj", "{D005D39E-77BA-4C57-93EB-2ECB33FBF789}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B8CF6C3D-1C51-48D0-A5CC-959877BC205A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8CF6C3D-1C51-48D0-A5CC-959877BC205A}.Release32|Any CPU.ActiveCfg = Release 32bit|Any CPU
 		{B8CF6C3D-1C51-48D0-A5CC-959877BC205A}.Release32|Any CPU.Build.0 = Release 32bit|Any CPU
+		{D005D39E-77BA-4C57-93EB-2ECB33FBF789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D005D39E-77BA-4C57-93EB-2ECB33FBF789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D005D39E-77BA-4C57-93EB-2ECB33FBF789}.Release32|Any CPU.ActiveCfg = Release 32bit|Any CPU
+		{D005D39E-77BA-4C57-93EB-2ECB33FBF789}.Release32|Any CPU.Build.0 = Release 32bit|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
