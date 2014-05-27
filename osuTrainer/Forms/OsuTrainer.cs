@@ -435,6 +435,7 @@ namespace osuTrainer.Forms
         {
             double minPP = (double)MinPPTB.Value;
             progressBar1.Value = progressBar1.Minimum + 2;
+            dataGridView1.DataSource = null;
             await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPP, gameMode));
             dataGridView1.DataSource = scoreSugDisplay;
             dataGridView1.Columns[7].Visible = false;
@@ -533,7 +534,7 @@ namespace osuTrainer.Forms
                                 if (!beatmapCache.ContainsKey(userBestList[j].Beatmap_Id))
                                 {
                                     Beatmap beatmap = new Beatmap(userBestList[j].Beatmap_Id);
-                                    beatmapCache.Add(beatmap.Beatmap_id, beatmap);
+                                    beatmapCache[beatmap.Beatmap_id] = beatmap;
                                     scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Version = beatmap.Version, Creator = beatmap.Creator, Artist = beatmap.Artist, Mods = userBestList[j].Enabled_Mods, ppRaw = (int)Math.Truncate(userBestList[j].PP), RankImage = GetRankImage(userBestList[j].Rank), BeatmapId = beatmap.Beatmap_id });
                                     Invoke((MethodInvoker)delegate
                                     {
