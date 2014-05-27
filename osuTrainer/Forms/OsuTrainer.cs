@@ -406,9 +406,16 @@ namespace osuTrainer.Forms
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            PlayersCheckedLbl.Text = "0";
-            ScoresAddedLbl.Text = "0";
-            UpdateDataGrid(GameModeCB.SelectedIndex);
+            if (UpdateButton.Text == "Update")
+            {
+                PlayersCheckedLbl.Text = "0";
+                ScoresAddedLbl.Text = "0";
+                UpdateDataGrid(GameModeCB.SelectedIndex);
+            }
+            else
+            {
+                MessageBox.Show("Already updating!");
+            }
         }
 
         private void UpdateCB()
@@ -433,10 +440,12 @@ namespace osuTrainer.Forms
         }
         private async void UpdateDataGrid(int gameMode)
         {
+            UpdateButton.Text = "Updating";
             double minPP = (double)MinPPTB.Value;
             progressBar1.Value = progressBar1.Minimum + 2;
             dataGridView1.DataSource = null;
-            await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPP, gameMode));
+            await Task.Run(() => UpdateSuggestionsAsync(minPP, gameMode));
+
             dataGridView1.DataSource = scoreSugDisplay;
             dataGridView1.Columns[7].Visible = false;
             dataGridView1.Columns[0].HeaderText = "";
@@ -453,6 +462,7 @@ namespace osuTrainer.Forms
                 MessageBox.Show("No suitable maps found.");
             }
             SaveSettings();
+            UpdateButton.Text = "Update";
         }
         private void UpdateSuggestionsAsync(double minPP, int gameMode)
         {
