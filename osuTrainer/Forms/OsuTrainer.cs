@@ -79,7 +79,6 @@ namespace osuTrainer.Forms
             UpdateLbl.Tag = "https://github.com/condone/osuTrainer/releases";
             UpdateLbl.LinkBehavior = LinkBehavior.AlwaysUnderline;
             UpdateLbl.Click += UpdateLbl_Click;
-
         }
 
         private void ChangeUserButton_Click(object sender, EventArgs e)
@@ -365,6 +364,16 @@ namespace osuTrainer.Forms
 
         private void OsuTrainer_Load(object sender, EventArgs e)
         {
+            if (Settings.Default.UpgradeRequired)
+            {
+                if (MessageBox.Show(@"Load settings from the previous version?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    Settings.Default.Upgrade();
+                }
+                Settings.Default.UpgradeRequired = false;
+                Settings.Default.Save();
+            }
+
             CheckUpdates();
 
             FindOsu();

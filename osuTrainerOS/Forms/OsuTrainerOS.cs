@@ -7,11 +7,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using osuTrainerOS.Properties;
 using ServiceStack.Text;
-using Octokit;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 
@@ -317,6 +316,16 @@ namespace osuTrainerOS.Forms
 
         private void OsuTrainer_Load(object sender, EventArgs e)
         {
+            if (Settings.Default.UpgradeRequired)
+            {
+                if (MessageBox.Show(@"Load settings from the previous version?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    Settings.Default.Upgrade();
+                }
+                Settings.Default.UpgradeRequired = false;
+                Settings.Default.Save();
+            }
+
             CheckUpdates();
 
             FindOsu();
