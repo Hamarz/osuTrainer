@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -61,7 +62,7 @@ namespace osuTrainerOS.Forms
 
         private void osuDirect_Click(object sender, System.EventArgs e)
         {
-            Process osuDirect = new Process();
+            var osuDirect = new Process();
             osuDirect.StartInfo.FileName = osuExe;
             osuDirect.StartInfo.Arguments = @"osu://dl/" + beatmapCache.Single(x => x.Key == selectedBeatmap).Value.BeatmapSet_id;
             osuDirect.Start();
@@ -69,19 +70,17 @@ namespace osuTrainerOS.Forms
 
         private async void CheckUpdates()
         {
-            string newestVersion = await Updater.Check();
-            if (newestVersion != Assembly.GetExecutingAssembly().GetName().Version.ToString())
-            {
-                UpdateLbl.IsLink = true;
-                UpdateLbl.Text = "Update to " + newestVersion + " available.";
-                UpdateLbl.Tag = "https://github.com/condone/osuTrainer/releases";
-                UpdateLbl.LinkBehavior = LinkBehavior.AlwaysUnderline;
-                this.UpdateLbl.Click += new System.EventHandler(this.UpdateLbl_Click);
-            }
+            var newestVersion = await Updater.Check();
+            if (newestVersion == Assembly.GetExecutingAssembly().GetName().Version.ToString()) return;
+            UpdateLbl.IsLink = true;
+            UpdateLbl.Text = "Update to " + newestVersion + " available.";
+            UpdateLbl.Tag = "https://github.com/condone/osuTrainer/releases";
+            UpdateLbl.LinkBehavior = LinkBehavior.AlwaysUnderline;
+            UpdateLbl.Click += UpdateLbl_Click;
         }
         private void CheckUser()
         {
-            using (Login login = new Login(false))
+            using (var login = new Login(false))
             {
                 if (login.ShowDialog() == DialogResult.Cancel)
                 {
@@ -97,28 +96,26 @@ namespace osuTrainerOS.Forms
 
         private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                selectedBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells[7].Value;
-                dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Selected = true;
-                ContextMenu m = new ContextMenu();
-                MenuItem beatmapPage = new MenuItem("Beatmap link");
-                MenuItem copyToClipboard = new MenuItem("Copy link to clipboard");
-                MenuItem dl = new MenuItem("Download");
-                MenuItem osuDirect = new MenuItem("Download with osu!direct");
-                MenuItem dlBloodcat = new MenuItem("Download with Bloodcat");
-                m.MenuItems.Add(beatmapPage);
-                m.MenuItems.Add(copyToClipboard);
-                m.MenuItems.Add(dl);
-                m.MenuItems.Add(osuDirect);
-                m.MenuItems.Add(dlBloodcat);
-                beatmapPage.Click += new System.EventHandler(beatmapPage_Click);
-                copyToClipboard.Click += new System.EventHandler(copyToClipboard_Click);
-                dl.Click += new System.EventHandler(dl_Click);
-                osuDirect.Click += new System.EventHandler(osuDirect_Click);
-                dlBloodcat.Click += new System.EventHandler(dlBloodcat_Click);
-                m.Show(dataGridView1, new Point(e.X, e.Y));
-            }
+            if (e.Button != MouseButtons.Right) return;
+            selectedBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells[7].Value;
+            dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Selected = true;
+            var m = new ContextMenu();
+            var beatmapPage = new MenuItem("Beatmap link");
+            var copyToClipboard = new MenuItem("Copy link to clipboard");
+            var dl = new MenuItem("Download");
+            var osuDirect = new MenuItem("Download with osu!direct");
+            var dlBloodcat = new MenuItem("Download with Bloodcat");
+            m.MenuItems.Add(beatmapPage);
+            m.MenuItems.Add(copyToClipboard);
+            m.MenuItems.Add(dl);
+            m.MenuItems.Add(osuDirect);
+            m.MenuItems.Add(dlBloodcat);
+            beatmapPage.Click += beatmapPage_Click;
+            copyToClipboard.Click += copyToClipboard_Click;
+            dl.Click += dl_Click;
+            osuDirect.Click += osuDirect_Click;
+            dlBloodcat.Click += dlBloodcat_Click;
+            m.Show(dataGridView1, new Point(e.X, e.Y));
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -156,7 +153,7 @@ namespace osuTrainerOS.Forms
             }
         }
 
-        private void dlBloodcat_Click(object sender, System.EventArgs e)
+        private void dlBloodcat_Click(object sender, EventArgs e)
         {
             Process.Start(beatmapCache.Single(x => x.Key == selectedBeatmap).Value.BloodcatUrl);
         }
@@ -248,7 +245,7 @@ namespace osuTrainerOS.Forms
 
         private void MinPPTB_Scroll(object sender, EventArgs e)
         {
-            toolTip1.SetToolTip(MinPPTB, MinPPTB.Value.ToString());
+            toolTip1.SetToolTip(MinPPTB, MinPPTB.Value.ToString(CultureInfo.InvariantCulture));
             MinPPTextBox.Text = Convert.ToString(MinPPTB.Value);
         }
 
@@ -304,14 +301,17 @@ namespace osuTrainerOS.Forms
 
         private void LoadScores()
         {
-            string json = client.DownloadString("http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + GameModeCB.SelectedIndex + "&uid=" + currentUser.User_id);
-            List<OsuStatsBest> userBest = JsonSerializer.DeserializeFromString<List<OsuStatsBest>>(json);
-            foreach (var item in userBest)
+            var json = client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + GameModeCB.SelectedIndex + @"&uid=" + currentUser.User_id);
+            var userBest = JsonSerializer.DeserializeFromString<List<OsuStatsBest>>(json);
+            foreach (var item in userBest.Where(item => currentUser.BestScores.All(e => e.Beatmap_Id != item.Beatmap_Id)))
             {
-                if (!currentUser.BestScores.Any(e => e.Beatmap_Id == item.Beatmap_Id))
+                currentUser.BestScores.Add(new UserBest
                 {
-                    currentUser.BestScores.Add(new UserBest { Beatmap_Id = item.Beatmap_Id, Enabled_Mods = item.Enabled_Mods, User_Id = item.Uid, PP = item.PP_Value, Rank = item.Rank });
-                }
+                    Beatmap_Id = item.Beatmap_Id,
+                    Enabled_Mods = item.Enabled_Mods, 
+                    User_Id = item.Uid, PP = item.PP_Value, 
+                    Rank = item.Rank
+                });
             }
         }
 
@@ -325,13 +325,13 @@ namespace osuTrainerOS.Forms
 
             CheckUser();
 
-            this.Text = "osu! Trainer (OsuStats) " + Assembly.GetExecutingAssembly().GetName().Version;
+            Text = @"osu! Trainer (OsuStats) " + Assembly.GetExecutingAssembly().GetName().Version;
 
             LoadScores();
 
             FindScores(GameModeCB.SelectedIndex);
 
-            this.GameModeCB.SelectedIndexChanged += new System.EventHandler(this.GameModeCB_SelectedIndexChanged);
+            GameModeCB.SelectedIndexChanged += GameModeCB_SelectedIndexChanged;
 
             UpdateCB();
         }
@@ -346,22 +346,22 @@ namespace osuTrainerOS.Forms
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            if (UpdateButton.Text == "Update")
+            if (UpdateButton.Text == @"Update")
             {
-                UpdateButton.Text = "Updating";
-                ScoresAddedLbl.Text = "0";
-                int minPPTextBoxValue = Convert.ToInt32(MinPPTextBox.Text);
-                if (minPPTextBoxValue < 1)
+                UpdateButton.Text = @"Updating";
+                ScoresAddedLbl.Text = @"0";
+                int minPpTextBoxValue = Convert.ToInt32(MinPPTextBox.Text);
+                if (minPpTextBoxValue < 1)
                 {
                     MinPPTB.Value = 1;
                 }
-                else if (minPPTextBoxValue > 400)
+                else if (minPpTextBoxValue > 400)
                 {
                     MinPPTB.Value = 400;
                 }
                 else
                 {
-                    MinPPTB.Value = minPPTextBoxValue;
+                    MinPPTB.Value = minPpTextBoxValue;
                 }
                 FindScores(GameModeCB.SelectedIndex);
             }
