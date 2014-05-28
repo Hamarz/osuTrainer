@@ -393,10 +393,10 @@ namespace osuTrainerOS.Forms
         }
         private async void FindScores(int gameMode)
         {
-            UpdateButton.Text = "Updating";
-            double minPP = Convert.ToDouble(MinPPTextBox.Text);
+            UpdateButton.Text = @"Updating";
+            var minPp = Convert.ToDouble(MinPPTextBox.Text);
             progressBar1.Value = progressBar1.Minimum + 2;
-            await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPP, gameMode));
+            await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPp, gameMode));
             dataGridView1.DataSource = scoreSugDisplay;
             dataGridView1.Columns[7].Visible = false;
             dataGridView1.Columns[0].HeaderText = "";
@@ -413,26 +413,25 @@ namespace osuTrainerOS.Forms
                 MessageBox.Show(@"No suitable maps found.");
             }
             SaveSettings();
-            UpdateButton.Text = "Update";
+            UpdateButton.Text = @"Update";
         }
-        private void UpdateSuggestionsAsync(double minPP, int gameMode)
+        private void UpdateSuggestionsAsync(double minPp, int gameMode)
         {
             scoreSugDisplay = new SortableBindingList<ScoreInfo>();
             beatmapCache = new Dictionary<int, Beatmap>();
-            GlobalVars.Mods ModsAndNV = mods | GlobalVars.Mods.NV;
-            foreach (var score in currentUser.BestScores)
+            for (int index = 0; index < currentUser.BestScores.Count; index++)
             {
+                var score = currentUser.BestScores[index];
                 beatmapCache.Add(score.Beatmap_Id, null);
             }
-            string statsjson = client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + gameMode + "&pp_value=" + (int)minPP + "&mod_only_selected=" + ExclusiveCB.Checked.ToString().ToLower() + "&mod_string=" + SelectedModsToString());
-            if (statsjson.Length < 3)
-            {
-                return;
-            }
-            List<OsuStatsScores> osuStatsScores = JsonSerializer.DeserializeFromString<List<OsuStatsScores>>(statsjson);
-            osuStatsScores = osuStatsScores.GroupBy(e => new { e.Beatmap_Id, e.Enabled_Mods }).Select(g => g.First()).ToList();
+            string statsjson = client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + gameMode + @"&pp_value=" + (int)minPp + @"&mod_only_selected=" + ExclusiveCB.Checked.ToString().ToLower() + @"&mod_string=" + SelectedModsToString());
+            if (statsjson.Length < 3) return;
+            var osuStatsScores = JsonSerializer.DeserializeFromString<List<OsuStatsScores>>(statsjson);
+            osuStatsScores =
+                osuStatsScores.GroupBy(e => new { e.Beatmap_Id, e.Enabled_Mods }).Select(g => g.First()).ToList();
             for (int i = 0; i < osuStatsScores.Count; i++)
             {
+                if (beatmapCache.ContainsKey((osuStatsScores[i].Beatmap_Id))) return;
                 beatmapCache[osuStatsScores[i].Beatmap_Id] = new Beatmap
                 {
                     Beatmap_id = osuStatsScores[i].Beatmap_Id,
@@ -447,9 +446,19 @@ namespace osuTrainerOS.Forms
                     Difficultyrating = osuStatsScores[i].Beatmap_Diffrating,
                     Url = GlobalVars.Beatmap + osuStatsScores[i].Beatmap_Id,
                     BloodcatUrl = GlobalVars.Bloodcat + osuStatsScores[i].Beatmap_SetId,
-                    ThumbnailUrl = @"http://b.ppy.sh/thumb/" + osuStatsScores[i].Beatmap_SetId + "l.jpg"
+                    ThumbnailUrl = @"http://b.ppy.sh/thumb/" + osuStatsScores[i].Beatmap_SetId + @"l.jpg"
                 };
-                scoreSugDisplay.Add(new ScoreInfo { Mods = (osuStatsScores[i].Enabled_Mods & ~GlobalVars.Mods.Autoplay), BeatmapName = osuStatsScores[i].Beatmap_Title, Version = osuStatsScores[i].Beatmap_Version, Creator = osuStatsScores[i].Beatmap_Creator, Artist = osuStatsScores[i].Beatmap_Artist, ppRaw = (int)Math.Truncate(osuStatsScores[i].PP_Value), RankImage = GetRankImage(osuStatsScores[i].Rank), BeatmapId = osuStatsScores[i].Beatmap_Id });
+                scoreSugDisplay.Add(new ScoreInfo
+                {
+                    Mods = (osuStatsScores[i].Enabled_Mods & ~GlobalVars.Mods.Autoplay),
+                    BeatmapName = osuStatsScores[i].Beatmap_Title,
+                    Version = osuStatsScores[i].Beatmap_Version,
+                    Creator = osuStatsScores[i].Beatmap_Creator,
+                    Artist = osuStatsScores[i].Beatmap_Artist,
+                    ppRaw = (int)Math.Truncate(osuStatsScores[i].PP_Value),
+                    RankImage = GetRankImage(osuStatsScores[i].Rank),
+                    BeatmapId = osuStatsScores[i].Beatmap_Id
+                });
                 Invoke((MethodInvoker)delegate
                 {
                     if (progressBar1.Value < pbMax)
@@ -463,12 +472,10 @@ namespace osuTrainerOS.Forms
 
         private void UpdateLbl_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripLabel)
-            {
-                ToolStripLabel toolStripLabel1 = sender as ToolStripLabel;
-                Process.Start(toolStripLabel1.Tag.ToString());
-                toolStripLabel1.LinkVisited = true;
-            }
+            if (!(sender is ToolStripLabel)) return;
+            var toolStripLabel1 = sender as ToolStripLabel;
+            Process.Start(toolStripLabel1.Tag.ToString());
+            toolStripLabel1.LinkVisited = true;
         }
     }
 }
