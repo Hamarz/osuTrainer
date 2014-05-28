@@ -71,10 +71,10 @@ namespace osuTrainerOS.Forms
         private async void CheckUpdates()
         {
             var newestVersion = await Updater.Check();
-            if (newestVersion == Assembly.GetExecutingAssembly().GetName().Version.ToString()) return;
+            if (newestVersion < Assembly.GetExecutingAssembly().GetName().Version) return;
             UpdateLbl.IsLink = true;
-            UpdateLbl.Text = "Update to " + newestVersion + " available.";
-            UpdateLbl.Tag = "https://github.com/condone/osuTrainer/releases";
+            UpdateLbl.Text = @"Update to " + newestVersion + @" available.";
+            UpdateLbl.Tag = @"https://github.com/condone/osuTrainer/releases";
             UpdateLbl.LinkBehavior = LinkBehavior.AlwaysUnderline;
             UpdateLbl.Click += UpdateLbl_Click;
         }
