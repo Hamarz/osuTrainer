@@ -54,7 +54,7 @@ namespace osuTrainer.Forms
 
         private void copyToClipboard_Click(object sender, System.EventArgs e)
         {
-           Clipboard.SetText(beatmapCache.Single(x => x.Key == selectedBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
+            Clipboard.SetText(beatmapCache.Single(x => x.Key == selectedBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
 
         private void dl_Click(object sender, System.EventArgs e)
@@ -232,7 +232,7 @@ namespace osuTrainer.Forms
             currentUser.GetInfo(Properties.Settings.Default.Username);
             LoadUserSettings();
         }
-        
+
         private Bitmap GetRankImage(GlobalVars.Rank rank)
         {
             switch (rank)
@@ -571,6 +571,16 @@ namespace osuTrainer.Forms
                 Process.Start(toolStripLabel1.Tag.ToString());
                 toolStripLabel1.LinkVisited = true;
             }
+        }
+
+        private void pictureBox1_DoubleClick(object sender, EventArgs e)
+        {
+            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells[7].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
+        }
+
+        private void dataGridView1_DoubleClick(object sender, EventArgs e)
+        {
+            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells[7].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
     }
 }
