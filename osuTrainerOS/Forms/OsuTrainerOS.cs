@@ -367,7 +367,7 @@ namespace osuTrainerOS.Forms
             }
             else
             {
-                MessageBox.Show("Already updating!");
+                MessageBox.Show(@"Already updating!");
             }
         }
 
@@ -410,7 +410,7 @@ namespace osuTrainerOS.Forms
             progressBar1.Value = progressBar1.Maximum;
             if (dataGridView1.Rows.Count == 0)
             {
-                MessageBox.Show("No suitable maps found.");
+                MessageBox.Show(@"No suitable maps found.");
             }
             SaveSettings();
             UpdateButton.Text = "Update";

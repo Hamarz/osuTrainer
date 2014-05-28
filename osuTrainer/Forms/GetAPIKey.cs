@@ -4,18 +4,18 @@ using System.Windows.Forms;
 
 namespace osuTrainer.Forms
 {
-    public partial class GetAPIKey : Form
+    public partial class GetApiKey : Form
     {
-        private CustomWebClient client = new CustomWebClient();
+        private readonly CustomWebClient _client = new CustomWebClient();
 
-        public GetAPIKey()
+        public GetApiKey()
         {
             InitializeComponent();
         }
 
         private void ConfirmButton_Click(object sender, EventArgs e)
         {
-            if (client.DownloadString("https://osu.ppy.sh/api/get_user?k=" + textBox1.Text + "&u=1").Length < 3)
+            if (_client.DownloadString(@"https://osu.ppy.sh/api/get_user?k=" + textBox1.Text + @"&u=1").Length < 3)
             {
                 Properties.Settings.Default.APIKey = textBox1.Text;
                 Properties.Settings.Default.Save();
@@ -24,7 +24,7 @@ namespace osuTrainer.Forms
             }
             else
             {
-                MessageBox.Show("Please provide a valid API key.");
+                MessageBox.Show(@"Please provide a valid API key.");
             }
         }
 

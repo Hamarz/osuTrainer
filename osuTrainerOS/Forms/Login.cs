@@ -5,7 +5,7 @@ namespace osuTrainerOS.Forms
 {
     public partial class Login : Form
     {
-        private bool changeUser;
+        private readonly bool changeUser;
         public string userString;
 
         public Login(bool changeUser)
@@ -46,12 +46,12 @@ namespace osuTrainerOS.Forms
             }
             else if (userString.Length < 3)
             {
-                MessageBox.Show("User not found!");
+                MessageBox.Show(@"User not found!");
             }
             else
             {
                 MessageBox.Show(userString);
-                using (GetAPIKey getApiKey = new GetAPIKey())
+                using (GetApiKey getApiKey = new GetApiKey())
                 {
                     if (getApiKey.ShowDialog() == DialogResult.Cancel)
                     {
@@ -72,7 +72,7 @@ namespace osuTrainerOS.Forms
                 }
                 else
                 {
-                    using (GetAPIKey getApiKey = new GetAPIKey())
+                    using (GetApiKey getApiKey = new GetApiKey())
                     {
                         if (getApiKey.ShowDialog() == DialogResult.Cancel)
                         {

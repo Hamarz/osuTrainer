@@ -25,7 +25,7 @@ namespace osuTrainer
 
         public List<UserBest> BestScores { get; set; }
 
-        private static CustomWebClient client = new CustomWebClient();
+        private static readonly CustomWebClient client = new CustomWebClient();
 
         public UserCtb()
         {

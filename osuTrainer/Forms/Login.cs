@@ -5,8 +5,8 @@ namespace osuTrainer.Forms
 {
     public partial class Login : Form
     {
-        private bool changeUser;
-        public string userString;
+        private readonly bool changeUser;
+        public string UserString;
 
         public Login(bool changeUser)
         {
@@ -25,33 +25,33 @@ namespace osuTrainer.Forms
             switch (Properties.Settings.Default.GameMode)
             {
                 case 0:
-                    userString = UserStandard.UserString(UsernameTextbox.Text);
+                    UserString = UserStandard.UserString(UsernameTextbox.Text);
                     break;
                 case 1:
-                    userString = UserTaiko.UserString(UsernameTextbox.Text);
+                    UserString = UserTaiko.UserString(UsernameTextbox.Text);
                     break;
                 case 2:
-                    userString = UserCtb.UserString(UsernameTextbox.Text);
+                    UserString = UserCtb.UserString(UsernameTextbox.Text);
                     break;
                 case 3:
-                    userString = UserMania.UserString(UsernameTextbox.Text);
+                    UserString = UserMania.UserString(UsernameTextbox.Text);
                     break;
                 default:
                     break;
             }
-            if (userString.Length > 33)
+            if (UserString.Length > 33)
             {
                 Close();
                 DialogResult = DialogResult.OK;
             }
-            else if (userString.Length < 3)
+            else if (UserString.Length < 3)
             {
-                MessageBox.Show("User not found!");
+                MessageBox.Show(@"User not found!");
             }
             else
             {
-                MessageBox.Show(userString);
-                using (GetAPIKey getApiKey = new GetAPIKey())
+                MessageBox.Show(UserString);
+                using (var getApiKey = new GetApiKey())
                 {
                     if (getApiKey.ShowDialog() == DialogResult.Cancel)
                     {
@@ -72,7 +72,7 @@ namespace osuTrainer.Forms
                 }
                 else
                 {
-                    using (GetAPIKey getApiKey = new GetAPIKey())
+                    using (var getApiKey = new GetApiKey())
                     {
                         if (getApiKey.ShowDialog() == DialogResult.Cancel)
                         {

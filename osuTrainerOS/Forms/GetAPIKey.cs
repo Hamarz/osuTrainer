@@ -4,11 +4,11 @@ using System.Windows.Forms;
 
 namespace osuTrainerOS.Forms
 {
-    public partial class GetAPIKey : Form
+    public partial class GetApiKey : Form
     {
         private CustomWebClient client = new CustomWebClient();
 
-        public GetAPIKey()
+        public GetApiKey()
         {
             InitializeComponent();
         }
@@ -24,7 +24,7 @@ namespace osuTrainerOS.Forms
             }
             else
             {
-                MessageBox.Show("Please provide a valid API key.");
+                MessageBox.Show(@"Please provide a valid API key.");
             }
         }
 

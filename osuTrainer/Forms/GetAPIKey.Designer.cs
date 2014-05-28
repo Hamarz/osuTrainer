@@ -1,6 +1,6 @@
 ﻿namespace osuTrainer.Forms
 {
-    partial class GetAPIKey
+    partial class GetApiKey
     {
         /// <summary>
         /// Required designer variable.
@@ -85,7 +85,7 @@
             this.Controls.Add(this.textBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "GetAPIKey";
+            this.Name = "GetApiKey";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "API Access";
             this.TopMost = true;
