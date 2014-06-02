@@ -16,6 +16,7 @@ namespace osuTrainerOS
         public string Creator { get; set; }
 
         public GlobalVars.Mods Mods { get; set; }
+        public int BPM { get; set; }
 
         [System.ComponentModel.DisplayName("PP")]
         public int ppRaw { get; set; }

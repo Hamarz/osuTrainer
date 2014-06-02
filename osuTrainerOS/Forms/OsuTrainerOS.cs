@@ -44,22 +44,22 @@ namespace osuTrainerOS.Forms
             GameModeCB.DataSource = Enum.GetValues(typeof(GlobalVars.GameMode));
         }
 
-        private void beatmapPage_Click(object sender, System.EventArgs e)
+        private void beatmapPage_Click(object sender, EventArgs e)
         {
             Process.Start(beatmapCache.Single(x => x.Key == selectedBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
 
-        private void copyToClipboard_Click(object sender, System.EventArgs e)
+        private void copyToClipboard_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(beatmapCache.Single(x => x.Key == selectedBeatmap).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
 
-        private void dl_Click(object sender, System.EventArgs e)
+        private void dl_Click(object sender, EventArgs e)
         {
             Process.Start(GlobalVars.DownloadURL + beatmapCache.Single(x => x.Key == selectedBeatmap).Value.BeatmapSet_id);
         }
 
-        private void osuDirect_Click(object sender, System.EventArgs e)
+        private void osuDirect_Click(object sender, EventArgs e)
         {
             var osuDirect = new Process();
             osuDirect.StartInfo.FileName = osuExe;
@@ -70,7 +70,7 @@ namespace osuTrainerOS.Forms
         private async void CheckUpdates()
         {
             var newestVersion = await Updater.Check();
-            if (newestVersion < Assembly.GetExecutingAssembly().GetName().Version) return;
+            if (newestVersion <= Assembly.GetExecutingAssembly().GetName().Version) return;
             UpdateLbl.IsLink = true;
             UpdateLbl.Text = @"Update to " + newestVersion + @" available.";
             UpdateLbl.Tag = @"https://github.com/condone/osuTrainer/releases";
@@ -87,7 +87,7 @@ namespace osuTrainerOS.Forms
                 }
                 currentUser = UserFactory.GetUser(Properties.Settings.Default.GameMode);
                 currentUser.GetInfo(login.userString, true);
-                Properties.Settings.Default.UserId = currentUser.User_id.ToString();
+                Properties.Settings.Default.UserId = currentUser.User_id.ToString(CultureInfo.InvariantCulture);
                 Properties.Settings.Default.Username = currentUser.Username;
                 Properties.Settings.Default.Save();
             }
@@ -96,7 +96,7 @@ namespace osuTrainerOS.Forms
         private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Right) return;
-            selectedBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells[7].Value;
+            selectedBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells["BeatmapId"].Value;
             dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Selected = true;
             var m = new ContextMenu();
             var beatmapPage = new MenuItem("Beatmap link");
@@ -122,7 +122,7 @@ namespace osuTrainerOS.Forms
             if (dataGridView1.SelectedRows.Count == 1)
             {
                 Beatmap selected;
-                beatmapCache.TryGetValue((int)dataGridView1.SelectedRows[0].Cells[7].Value, out selected);
+                beatmapCache.TryGetValue((int)dataGridView1.SelectedRows[0].Cells["BeatmapId"].Value, out selected);
                 ArtistLbl.Text = selected.Artist;
                 TitleLbl.Text = selected.Title;
                 CreatorLbl.Text = selected.Creator;
@@ -172,7 +172,7 @@ namespace osuTrainerOS.Forms
         private void GameModeCB_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentUser = UserFactory.GetUser(GameModeCB.SelectedIndex);
-            currentUser.GetInfo(Properties.Settings.Default.Username);
+            currentUser.GetInfo(Settings.Default.Username);
             LoadScores();
         }
 
@@ -181,28 +181,28 @@ namespace osuTrainerOS.Forms
             switch (rank)
             {
                 case GlobalVars.Rank.S:
-                    return Properties.Resources.S_small;
+                    return Resources.S_small;
 
                 case GlobalVars.Rank.A:
-                    return Properties.Resources.A_small;
+                    return Resources.A_small;
 
                 case GlobalVars.Rank.X:
-                    return Properties.Resources.X_small;
+                    return Resources.X_small;
 
                 case GlobalVars.Rank.SH:
-                    return Properties.Resources.SH_small;
+                    return Resources.SH_small;
 
                 case GlobalVars.Rank.XH:
-                    return Properties.Resources.XH_small;
+                    return Resources.XH_small;
 
                 case GlobalVars.Rank.B:
-                    return Properties.Resources.B_small;
+                    return Resources.B_small;
 
                 case GlobalVars.Rank.C:
-                    return Properties.Resources.C_small;
+                    return Resources.C_small;
 
                 case GlobalVars.Rank.D:
-                    return Properties.Resources.D_small;
+                    return Resources.D_small;
 
                 default:
                     return null;
@@ -235,10 +235,10 @@ namespace osuTrainerOS.Forms
 
         private void LoadSettings()
         {
-            maxDuration = TimeSpan.FromSeconds(Properties.Settings.Default.Searchduration);
-            mods = (GlobalVars.Mods)Properties.Settings.Default.Mods;
-            GameModeCB.SelectedIndex = Properties.Settings.Default.GameMode;
-            MinPPTB.Value = Properties.Settings.Default.SelectedMinPP;
+            maxDuration = TimeSpan.FromSeconds(Settings.Default.Searchduration);
+            mods = (GlobalVars.Mods)Settings.Default.Mods;
+            GameModeCB.SelectedIndex = Settings.Default.GameMode;
+            MinPPTB.Value = Settings.Default.SelectedMinPP;
             MinPPTextBox.Text = Convert.ToString(MinPPTB.Value);
         }
 
@@ -346,11 +346,11 @@ namespace osuTrainerOS.Forms
         }
         private void SaveSettings()
         {
-            Properties.Settings.Default.Mods = (int)mods;
-            Properties.Settings.Default.Exclusive = ExclusiveCB.Checked;
-            Properties.Settings.Default.GameMode = GameModeCB.SelectedIndex;
-            Properties.Settings.Default.SelectedMinPP = MinPPTB.Value;
-            Properties.Settings.Default.Save();
+            Settings.Default.Mods = (int)mods;
+            Settings.Default.Exclusive = ExclusiveCB.Checked;
+            Settings.Default.GameMode = GameModeCB.SelectedIndex;
+            Settings.Default.SelectedMinPP = MinPPTB.Value;
+            Settings.Default.Save();
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)
@@ -398,28 +398,36 @@ namespace osuTrainerOS.Forms
             {
                 FlashlightCB.Checked = true;
             }
-            ExclusiveCB.Checked = Properties.Settings.Default.Exclusive;
+            ExclusiveCB.Checked = Settings.Default.Exclusive;
         }
         private async void FindScores(int gameMode)
         {
             UpdateButton.Text = @"Updating";
             var minPp = Convert.ToDouble(MinPPTextBox.Text);
             progressBar1.Value = progressBar1.Minimum + 2;
+            dataGridView1.DataSource = null;
+            dataGridView1.SelectionChanged -= dataGridView1_SelectionChanged;
             await Task.Factory.StartNew(() => UpdateSuggestionsAsync(minPp, gameMode));
             dataGridView1.DataSource = scoreSugDisplay;
-            dataGridView1.Columns[7].Visible = false;
-            dataGridView1.Columns[0].HeaderText = "";
-            dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridView1.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridView1.Columns[6].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridView1.Columns[1].Width = 75;
-            dataGridView1.Columns[3].Width = 55;
-            dataGridView1.Sort(dataGridView1.Columns[6], ListSortDirection.Ascending);
+            dataGridView1.Columns["BeatmapId"].Visible = false;
+            dataGridView1.Columns["RankImage"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Columns["RankImage"].HeaderText = "";
+            dataGridView1.Columns["Creator"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridView1.Columns["Mods"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridView1.Columns["BPM"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridView1.Columns["ppRaw"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridView1.Columns["Artist"].Width = 75;
+            dataGridView1.Columns["Version"].Width = 55;
+            dataGridView1.Sort(dataGridView1.Columns["ppRaw"], ListSortDirection.Ascending);
+            dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             progressBar1.Value = progressBar1.Maximum;
             if (dataGridView1.Rows.Count == 0)
             {
                 MessageBox.Show(@"No suitable maps found.");
+            }
+            else
+            {
+                dataGridView1_SelectionChanged(new object(), new EventArgs());
             }
             SaveSettings();
             UpdateButton.Text = @"Update";
@@ -433,7 +441,15 @@ namespace osuTrainerOS.Forms
                 var score = currentUser.BestScores[index];
                 beatmapCache.Add(score.Beatmap_Id, null);
             }
-            string statsjson = client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + gameMode + @"&pp_value=" + (int)minPp + @"&mod_only_selected=" + ExclusiveCB.Checked.ToString().ToLower() + @"&mod_string=" + SelectedModsToString());
+            string statsjson = "";
+            try
+            {
+                statsjson = client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + gameMode + @"&pp_value=" + (int)minPp + @"&mod_only_selected=" + ExclusiveCB.Checked.ToString().ToLower() + @"&mod_string=" + SelectedModsToString());
+            }
+            catch (Exception)
+            {
+                return;
+            }           
             if (statsjson.Length < 3) return;
             var osuStatsScores = JsonSerializer.DeserializeFromString<List<OsuStatsScores>>(statsjson);
             osuStatsScores =
@@ -441,7 +457,8 @@ namespace osuTrainerOS.Forms
             for (int i = 0; i < osuStatsScores.Count; i++)
             {
                 if (beatmapCache.ContainsKey((osuStatsScores[i].Beatmap_Id))) return;
-                beatmapCache[osuStatsScores[i].Beatmap_Id] = new Beatmap
+                var dtmodifier = 1.0;
+                var beatmap = new Beatmap
                 {
                     Beatmap_id = osuStatsScores[i].Beatmap_Id,
                     BeatmapSet_id = osuStatsScores[i].Beatmap_SetId,
@@ -457,6 +474,11 @@ namespace osuTrainerOS.Forms
                     BloodcatUrl = GlobalVars.Bloodcat + osuStatsScores[i].Beatmap_SetId,
                     ThumbnailUrl = @"http://b.ppy.sh/thumb/" + osuStatsScores[i].Beatmap_SetId + @"l.jpg"
                 };
+                beatmapCache[osuStatsScores[i].Beatmap_Id] = beatmap;
+                if (osuStatsScores[i].Enabled_Mods.HasFlag(GlobalVars.Mods.DT) || osuStatsScores[i].Enabled_Mods.HasFlag(GlobalVars.Mods.NC))
+                {
+                    dtmodifier = 1.5;
+                }
                 scoreSugDisplay.Add(new ScoreInfo
                 {
                     Mods = (osuStatsScores[i].Enabled_Mods & ~GlobalVars.Mods.Autoplay),
@@ -464,6 +486,7 @@ namespace osuTrainerOS.Forms
                     Version = osuStatsScores[i].Beatmap_Version,
                     Creator = osuStatsScores[i].Beatmap_Creator,
                     Artist = osuStatsScores[i].Beatmap_Artist,
+                    BPM = (int)Math.Truncate(beatmap.Bpm * dtmodifier),
                     ppRaw = (int)Math.Truncate(osuStatsScores[i].PP_Value),
                     RankImage = GetRankImage(osuStatsScores[i].Rank),
                     BeatmapId = osuStatsScores[i].Beatmap_Id

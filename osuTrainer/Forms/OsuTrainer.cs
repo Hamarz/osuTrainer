@@ -73,7 +73,7 @@ namespace osuTrainer.Forms
         private async void CheckUpdates()
         {
             var newestVersion = await Updater.Check();
-            if (newestVersion < Assembly.GetExecutingAssembly().GetName().Version) return;
+            if (newestVersion <= Assembly.GetExecutingAssembly().GetName().Version) return;
             UpdateLbl.IsLink = true;
             UpdateLbl.Text = @"Update to " + newestVersion + @" available.";
             UpdateLbl.Tag = "https://github.com/condone/osuTrainer/releases";
@@ -119,7 +119,7 @@ namespace osuTrainer.Forms
         {
             if (e.Button == MouseButtons.Right)
             {
-                selectedBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells[7].Value;
+                selectedBeatmap = (int)dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Cells["BeatmapId"].Value;
                 dataGridView1.Rows[dataGridView1.HitTest(e.X, e.Y).RowIndex].Selected = true;
                 var m = new ContextMenu();
                 var beatmapPage = new MenuItem("Beatmap link");
@@ -145,7 +145,7 @@ namespace osuTrainer.Forms
         {
             if (dataGridView1.SelectedRows.Count != 1) return;
             Beatmap selected;
-            beatmapCache.TryGetValue((int)dataGridView1.SelectedRows[0].Cells[7].Value, out selected);
+            beatmapCache.TryGetValue((int)dataGridView1.SelectedRows[0].Cells["BeatmapId"].Value, out selected);
             ArtistLbl.Text = selected.Artist;
             TitleLbl.Text = selected.Title;
             CreatorLbl.Text = selected.Creator;
@@ -285,10 +285,10 @@ namespace osuTrainer.Forms
 
         private void LoadSettings()
         {
-            maxDuration = TimeSpan.FromSeconds(Properties.Settings.Default.Searchduration);
-            SearchtimeTB.Value = Properties.Settings.Default.Searchduration;
-            mods = (GlobalVars.Mods)Properties.Settings.Default.Mods;
-            GameModeCB.SelectedIndex = Properties.Settings.Default.GameMode;
+            maxDuration = TimeSpan.FromSeconds(Settings.Default.Searchduration);
+            SearchtimeTB.Value = Settings.Default.Searchduration;
+            mods = (GlobalVars.Mods)Settings.Default.Mods;
+            GameModeCB.SelectedIndex = Settings.Default.GameMode;
         }
 
         private void LoadUsers()
@@ -439,7 +439,7 @@ namespace osuTrainer.Forms
             {
                 FlashlightCB.Checked = true;
             }
-            ExclusiveCB.Checked = Properties.Settings.Default.Exclusive;
+            ExclusiveCB.Checked = Settings.Default.Exclusive;
         }
         private async void UpdateDataGrid(int gameMode)
         {
@@ -447,25 +447,32 @@ namespace osuTrainer.Forms
             var minPp = (double)MinPPTB.Value;
             progressBar1.Value = progressBar1.Minimum + 2;
             dataGridView1.DataSource = null;
+            dataGridView1.SelectionChanged -= dataGridView1_SelectionChanged;
             await Task.Run(() => UpdateSuggestionsAsync(minPp, gameMode));
-
             dataGridView1.DataSource = scoreSugDisplay;
-            dataGridView1.Columns[7].Visible = false;
-            dataGridView1.Columns[0].HeaderText = "";
-            dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridView1.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridView1.Columns[6].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridView1.Columns[1].Width = 75;
-            dataGridView1.Columns[3].Width = 55;
-            dataGridView1.Sort(dataGridView1.Columns[6], ListSortDirection.Ascending);
+            dataGridView1.Columns["BeatmapId"].Visible = false;
+            dataGridView1.Columns["RankImage"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Columns["RankImage"].HeaderText = "";
+            dataGridView1.Columns["Creator"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridView1.Columns["Mods"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridView1.Columns["BPM"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridView1.Columns["ppRaw"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridView1.Columns["Artist"].Width = 75;
+            dataGridView1.Columns["Version"].Width = 55;
+            dataGridView1.Sort(dataGridView1.Columns["ppRaw"], ListSortDirection.Ascending);
+            dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             progressBar1.Value = progressBar1.Maximum;
             if (dataGridView1.Rows.Count == 0)
             {
                 MessageBox.Show(@"No suitable maps found.");
             }
+            else
+            {
+                dataGridView1_SelectionChanged(new object(), new EventArgs());
+            }
             SaveSettings();
             UpdateButton.Text = @"Update";
+
         }
         private void UpdateSuggestionsAsync(double minPp, int gameMode)
         {
@@ -548,8 +555,24 @@ namespace osuTrainer.Forms
                         {
                             if (beatmapCache.ContainsKey(userBestList[j].Beatmap_Id)) continue;
                             var beatmap = new Beatmap(userBestList[j].Beatmap_Id);
+                            var dtmodifier = 1.0;
+                            if (userBestList[j].Enabled_Mods.HasFlag(GlobalVars.Mods.DT) || userBestList[j].Enabled_Mods.HasFlag(GlobalVars.Mods.NC))
+                            {
+                                dtmodifier = 1.5;
+                            }
                             beatmapCache[beatmap.Beatmap_id] = beatmap;
-                            scoreSugDisplay.Add(new ScoreInfo { BeatmapName = beatmap.Title, Version = beatmap.Version, Creator = beatmap.Creator, Artist = beatmap.Artist, Mods = userBestList[j].Enabled_Mods, ppRaw = (int)Math.Truncate(userBestList[j].PP), RankImage = GetRankImage(userBestList[j].Rank), BeatmapId = beatmap.Beatmap_id });
+                            scoreSugDisplay.Add(new ScoreInfo
+                            {
+                                BeatmapName = beatmap.Title,
+                                Version = beatmap.Version,
+                                Creator = beatmap.Creator,
+                                Artist = beatmap.Artist,
+                                Mods = userBestList[j].Enabled_Mods,
+                                BPM = (int)Math.Truncate(beatmap.Bpm * dtmodifier),
+                                ppRaw = (int)Math.Truncate(userBestList[j].PP),
+                                RankImage = GetRankImage(userBestList[j].Rank),
+                                BeatmapId = beatmap.Beatmap_id
+                            });
                             Invoke((MethodInvoker)delegate
                             {
                                 if (progressBar1.Value < pbMax)
@@ -575,12 +598,12 @@ namespace osuTrainer.Forms
 
         private void pictureBox1_DoubleClick(object sender, EventArgs e)
         {
-            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells[7].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
+            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells["ppRaw"].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
 
         private void dataGridView1_DoubleClick(object sender, EventArgs e)
         {
-            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells[7].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
+            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells["ppRaw"].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
     }
 }
