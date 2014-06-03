@@ -154,7 +154,7 @@ namespace osuTrainer.Forms
             BpmLbl.Text = selected.Bpm.ToString("F2");
             try
             {
-                pictureBox1.Load(selected.ThumbnailUrl);
+                pictureBox1.LoadAsync(selected.ThumbnailUrl);
             }
             catch (Exception)
             {
