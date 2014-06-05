@@ -85,11 +85,11 @@ namespace osuTrainerOS.Forms
                 {
                     Close();
                 }
-                currentUser = UserFactory.GetUser(Properties.Settings.Default.GameMode);
+                currentUser = UserFactory.GetUser(Settings.Default.GameMode);
                 currentUser.GetInfo(login.userString, true);
-                Properties.Settings.Default.UserId = currentUser.User_id.ToString(CultureInfo.InvariantCulture);
-                Properties.Settings.Default.Username = currentUser.Username;
-                Properties.Settings.Default.Save();
+                Settings.Default.UserId = currentUser.User_id.ToString(CultureInfo.InvariantCulture);
+                Settings.Default.Username = currentUser.Username;
+                Settings.Default.Save();
             }
         }
 
@@ -456,7 +456,7 @@ namespace osuTrainerOS.Forms
                 osuStatsScores.GroupBy(e => new { e.Beatmap_Id, e.Enabled_Mods }).Select(g => g.First()).ToList();
             for (int i = 0; i < osuStatsScores.Count; i++)
             {
-                if (beatmapCache.ContainsKey((osuStatsScores[i].Beatmap_Id))) return;
+                if (beatmapCache.ContainsKey((osuStatsScores[i].Beatmap_Id))) continue;
                 var dtmodifier = 1.0;
                 var beatmap = new Beatmap
                 {

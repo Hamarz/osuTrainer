@@ -538,7 +538,7 @@ namespace osuTrainer.Forms
                         int @checked = pChecked;
                         Invoke((MethodInvoker)delegate
                         {
-                            PlayersCheckedLbl.Text = @checked.ToString();
+                            PlayersCheckedLbl.Text = @checked.ToString(CultureInfo.InvariantCulture);
                         });
                     }
                     var userBestList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
