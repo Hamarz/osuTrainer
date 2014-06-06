@@ -86,15 +86,15 @@ namespace osuTrainer.Forms
             using (var login = new Login(true))
             {
                 if (login.ShowDialog() == DialogResult.Cancel) return;
-                currentUser = UserFactory.GetUser(Properties.Settings.Default.GameMode);
+                currentUser = UserFactory.GetUser(Settings.Default.GameMode);
                 currentUser.GetInfo(login.UserString, true);
-                Properties.Settings.Default.UserId = currentUser.User_id.ToString(CultureInfo.InvariantCulture);
-                Properties.Settings.Default.Username = currentUser.Username;
-                Properties.Settings.Default.Save();
+                Settings.Default.UserId = currentUser.User_id.ToString(CultureInfo.InvariantCulture);
+                Settings.Default.Username = currentUser.Username;
+                Settings.Default.Save();
                 LoadUserSettings();
                 PlayersCheckedLbl.Text = @"0";
                 ScoresAddedLbl.Text = @"0";
-                UpdateDataGrid(Properties.Settings.Default.GameMode);
+                UpdateDataGrid(Settings.Default.GameMode);
             }
         }
 
@@ -146,6 +146,7 @@ namespace osuTrainer.Forms
             if (dataGridView1.SelectedRows.Count != 1) return;
             Beatmap selected;
             beatmapCache.TryGetValue((int)dataGridView1.SelectedRows[0].Cells["BeatmapId"].Value, out selected);
+            if (selected == null) return;
             ArtistLbl.Text = selected.Artist;
             TitleLbl.Text = selected.Title;
             CreatorLbl.Text = selected.Creator;
