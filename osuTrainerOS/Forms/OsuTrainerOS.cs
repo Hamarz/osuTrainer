@@ -442,6 +442,7 @@ namespace osuTrainerOS.Forms
                 beatmapCache.Add(score.Beatmap_Id, null);
             }
             string statsjson = "";
+            Debug.WriteLine(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + gameMode + @"&pp_value=" + (int)minPp + @"&mod_only_selected=" + ExclusiveCB.Checked.ToString().ToLower() + @"&mod_string=" + SelectedModsToString());
             try
             {
                 statsjson = client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + gameMode + @"&pp_value=" + (int)minPp + @"&mod_only_selected=" + ExclusiveCB.Checked.ToString().ToLower() + @"&mod_string=" + SelectedModsToString());
@@ -508,6 +509,14 @@ namespace osuTrainerOS.Forms
             var toolStripLabel1 = sender as ToolStripLabel;
             Process.Start(toolStripLabel1.Tag.ToString());
             toolStripLabel1.LinkVisited = true;
+        }
+        private void pictureBox1_DoubleClick(object sender, EventArgs e)
+        {
+            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells["BeatmapID"].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
+        }
+        private void dataGridView1_DoubleClick(object sender, EventArgs e)
+        {
+            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells["BeatmapID"].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
     }
 }

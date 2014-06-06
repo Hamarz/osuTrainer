@@ -598,12 +598,12 @@ namespace osuTrainer.Forms
 
         private void pictureBox1_DoubleClick(object sender, EventArgs e)
         {
-            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells["ppRaw"].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
+            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells["BeatmapID"].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
 
         private void dataGridView1_DoubleClick(object sender, EventArgs e)
         {
-            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells["ppRaw"].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
+            Process.Start(beatmapCache.Single(x => x.Key == (int)dataGridView1.SelectedRows[0].Cells["BeatmapID"].Value).Value.Url + GlobalVars.Mode + GameModeCB.SelectedIndex);
         }
     }
 }
