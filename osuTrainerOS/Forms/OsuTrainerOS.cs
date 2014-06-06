@@ -123,6 +123,7 @@ namespace osuTrainerOS.Forms
             {
                 Beatmap selected;
                 beatmapCache.TryGetValue((int)dataGridView1.SelectedRows[0].Cells["BeatmapId"].Value, out selected);
+                if (selected == null) return;
                 ArtistLbl.Text = selected.Artist;
                 TitleLbl.Text = selected.Title;
                 CreatorLbl.Text = selected.Creator;
