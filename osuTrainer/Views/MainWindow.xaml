@@ -1,0 +1,212 @@
+﻿<controls:MetroWindow x:Class="osuTrainer.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="osu! Trainer" Height="550" Width="645" MinWidth="645" MinHeight="300" Loaded="MetroWindow_Loaded" BorderThickness="1" BorderBrush="#FF22A2D8" GlowBrush="#FF41B1E1" NonActiveBorderBrush="Black" NonActiveGlowBrush="{x:Null}" NonActiveWindowTitleBrush="#FF41B1E1" SourceInitialized="MetroWindow_SourceInitialized" Closing="MetroWindow_Closing">
+    <Grid x:Name="grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="220"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="25" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" 
+                    Margin="5,0,5,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="120"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="35"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="360"/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" Text="Artist:" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Text="{Binding SelectedItem.BeatmapArtist, ElementName=dataGrid}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Text="Title:" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Text="{Binding SelectedItem.BeatmapName, ElementName=dataGrid}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Text="Creator:" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Text="{Binding SelectedItem.BeatmapCreator, ElementName=dataGrid}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Text="Total Time:" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="0" Grid.Column="3" HorizontalAlignment="Left" Text="{Binding SelectedItem.TotalTime, ElementName=dataGrid}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" Text="Draining Time:" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Grid.Column="3" HorizontalAlignment="Left" Text="{Binding SelectedItem.DrainingTime, ElementName=dataGrid}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" Text="BPM:" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left" Text="{Binding SelectedItem.Bpm, ElementName=dataGrid}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </Grid>
+                <Image Grid.Column="1" Source="{Binding SelectedItem.ThumbUrl, ElementName=dataGrid}"/>
+                <StackPanel Grid.Column="2" Margin="5,5,0,0">
+                    <TextBlock Text="Username:" Width="70" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                    <TextBox Name="UsernameTb" Width="100" Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="API Key:" Width="70" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                    <PasswordBox Name="PasswordBox"  Width="100"/>
+                    <TextBlock>
+                            <Hyperlink NavigateUri="https://osu.ppy.sh/p/api" RequestNavigate="ApiLink_RequestNavigate">Link to API key</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="477"/>
+                    <ColumnDefinition Width="151"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="90"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="85"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Row="0" Grid.Column="0" Name ="DoubletimeCb" Content="Doubletime" IsChecked="{Binding Path=IsDoubletimeCbChecked}"/>
+                    <CheckBox Grid.Row="1" Grid.Column="0" Name ="HardrockCb" Content="Hardrock" IsChecked="{Binding Path=IsHardrockCbChecked}"/>
+                    <CheckBox Grid.Row="0" Grid.Column="1" Name ="HiddenCb" Content="Hidden" IsChecked="{Binding Path=IsHiddenCbChecked}"/>
+                    <CheckBox Grid.Row="1" Grid.Column="1" Name ="FlashlightCb" Content="Flashlight" IsChecked="{Binding Path=IsFlashlightCbChecked}"/>
+                    <CheckBox Grid.Row="0" Grid.Column="2" Name ="FcOnlyCb" Content="FC Only" IsChecked="{Binding Path=IsFcOnlyCbChecked}"/>
+                    <CheckBox Grid.Row="1" Grid.Column="2" Name ="ExclusiveCb" Content="Exclusive" IsChecked="{Binding Path=IsExclusiveCbChecked}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Score Source:" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                    <ComboBox Grid.Row="1" Grid.Column="3" Name="ScoreSourceCb" Width="80" HorizontalAlignment="Left"/>
+                </Grid>
+                <Grid Grid.Column="1" Margin="5,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width ="85"/>
+                        <ColumnDefinition Width ="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="UpdateButton"  Grid.Column="0" Command="{Binding UpdateCommand}" Content="{Binding UpdateContent, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsWorking, Converter={StaticResource InvertBoolConverter}, UpdateSourceTrigger=PropertyChanged}" CommandParameter="{Binding ElementName=PasswordBox}" Click="UpdateButton_Click"/>
+                    <controls:ProgressRing Grid.Column="1" IsActive="True" Visibility="{Binding IsWorking, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+                </Grid>
+            </Grid>
+            <DockPanel  Grid.Row="2"
+                        Margin="0,5,0,0"
+                        Height="30">
+                <TextBlock Text="Min. PP:" VerticalAlignment="Center" Width="50" HorizontalAlignment="Left"/>
+                <Slider Name="PpSlider" IsSnapToTickEnabled="True" TickPlacement="None" AutoToolTipPlacement="TopLeft" Value="{Binding Path=MinPp, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Minimum="1" Maximum="400" Width="300" VerticalAlignment="Center" SmallChange="1" LargeChange="25"/>
+                <controls:NumericUpDown Minimum="1" Maximum="400" Width="75" Value="{Binding Value, ElementName=PpSlider, UpdateSourceTrigger=PropertyChanged}"></controls:NumericUpDown>
+                <ComboBox Name="GameModeCb" Width="100" SelectedIndex="{Binding Path=SelectedGameMode}" DockPanel.Dock="Right"/>
+                <TextBlock Text="Game Mode:  " VerticalAlignment="Center" DockPanel.Dock="Right" TextAlignment="Right" />
+            </DockPanel>
+        </Grid>
+
+        <DataGrid x:Name="dataGrid" Grid.Row="1"
+                  Grid.Column="0"
+                  IsReadOnly="True" 
+                  AutoGenerateColumns="False" 
+                  ItemsSource="{Binding Path=Scores, UpdateSourceTrigger=PropertyChanged}" 
+                  CanUserResizeRows="False"
+                  ColumnWidth="*"
+                  SelectionMode="Single" Margin="2,0"
+                  SelectedItem="{Binding Path=SelectedScoreInfo}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="30" SortMemberPath="RankImage">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Path=RankImage}" Stretch="None"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Artist" Width="80" SortMemberPath="BeatmapArtist">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=BeatmapArtist}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=BeatmapArtist}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Beatmap Name" SortMemberPath="BeatmapName">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=BeatmapName}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=BeatmapName}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Version" Width="80" SortMemberPath="Version">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Version}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Version}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Creator" Width="80" SortMemberPath="BeatmapCreator">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=BeatmapCreator}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=BeatmapCreator}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Mods" Width="60" SortMemberPath="Mods">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Mods}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Mods}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="BPM" Width="50" SortMemberPath="Bpm">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Bpm}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Bpm}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="PP" Width="50" SortMemberPath="Pp">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Pp}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Pp}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu Name="ScoresMenu">
+                    <MenuItem Header="Open beatmap link" Command="{Binding OpenBeatmapLinkCommand}"/>
+                    <MenuItem Header="Copy link to clipboard" Command="{Binding CopyLinkCommand}"/>
+                    <MenuItem Header="Download" Command="{Binding DownloadCommand}" />
+                    <MenuItem Header="Download with osu!direct" Command="{Binding DownloadOdCommand}"/>
+                    <MenuItem Header="Download with Bloodcat" Command="{Binding DownloadBcCommand}" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.InputBindings>
+                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding OpenBeatmapLinkCommand}"/>
+            </DataGrid.InputBindings>
+        </DataGrid>
+        <Grid x:Name="grid1" Grid.Row="2" Margin="5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Height="20">
+                <Hyperlink NavigateUri="https://github.com/condone/osuTrainer/releases" RequestNavigate="Hyperlink_RequestNavigate">Changelog</Hyperlink>
+            </TextBlock>
+            <TextBlock Grid.Column="1" Height="20" Margin="5,0,0,0">                 
+                <Hyperlink Name="UpdateUri">
+                    <TextBlock x:Name="hyperLinkText"/>
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock Grid.Column="3"  Text=" Scores added: " Height="20"></TextBlock>
+            <TextBlock Grid.Column="4"  Text="{Binding Path=ScoresAdded, UpdateSourceTrigger=PropertyChanged}" Height="20"></TextBlock>
+        </Grid>
+    </Grid>
+</controls:MetroWindow>
