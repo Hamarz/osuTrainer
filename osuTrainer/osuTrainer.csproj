@@ -79,6 +79,7 @@
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\OsuApiViewModel.cs" />
     <Compile Include="ViewModels\OsuStatsViewModel.cs" />
+    <Compile Include="WindowSettings.cs" />
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

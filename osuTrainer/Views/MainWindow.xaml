@@ -4,8 +4,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Title="osu! Trainer" Height="550" Width="645" MinWidth="645" MinHeight="300" Loaded="MetroWindow_Loaded" BorderThickness="1" BorderBrush="#FF22A2D8" GlowBrush="#FF41B1E1" NonActiveBorderBrush="Black" NonActiveGlowBrush="{x:Null}" NonActiveWindowTitleBrush="#FF41B1E1" SourceInitialized="MetroWindow_SourceInitialized" Closing="MetroWindow_Closing">
+        xmlns:services="clr-namespace:osuTrainer" 
+        services:WindowSettings.Save="True"
+        Title="osu! Trainer" 
+        Height="550"
+        Width="645"
+                      MinWidth="645" 
+                      MinHeight="300" 
+                      Loaded="MetroWindow_Loaded" 
+                      BorderThickness="1" 
+                      BorderBrush="#FF22A2D8" 
+                      GlowBrush="#FF41B1E1" 
+                      NonActiveBorderBrush="Black" 
+                      NonActiveGlowBrush="{x:Null}" 
+                      NonActiveWindowTitleBrush="#FF41B1E1">
     <Grid x:Name="grid">
         <Grid.RowDefinitions>
             <RowDefinition Height="220"/>
