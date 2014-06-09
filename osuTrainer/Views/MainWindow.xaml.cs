@@ -57,22 +57,6 @@ namespace osuTrainer.Views
             updater.Start();
         }
 
-        private void SaveSettings()
-        {
-            Settings.Default.Username = UsernameTb.Text;
-            Settings.Default.ApiKey = PasswordBox.Password;
-            Settings.Default.MinPp = PpSlider.Value;
-            Settings.Default.DataSource = ScoreSourceCb.SelectedIndex;
-            Settings.Default.GameMode = GameModeCb.SelectedIndex;
-            Settings.Default.IsDoubletimeCbChecked = DoubletimeCb.IsChecked ?? false;
-            Settings.Default.IsHardrockCbChecked = HardrockCb.IsChecked ?? false;
-            Settings.Default.IsHiddenCbChecked = HiddenCb.IsChecked ?? false;
-            Settings.Default.IsFlashlightCbChecked = FlashlightCb.IsChecked ?? false;
-            Settings.Default.IsFcOnlyCbChecked = FcOnlyCb.IsChecked ?? false;
-            Settings.Default.IsExclusiveCbChecked = ExclusiveCb.IsChecked ?? false;
-            Settings.Default.Save();
-        }
-
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             PasswordBox.Password = Settings.Default.ApiKey;
