@@ -107,7 +107,7 @@ namespace osuTrainer.ViewModels
             }
             catch (Exception)
             {
-                
+
             }
 
             var osuStatsBest = JsonSerializer.DeserializeFromString<List<OsuStatsBest>>(json);
@@ -116,7 +116,7 @@ namespace osuTrainer.ViewModels
                 foreach (OsuStatsBest item in osuStatsBest)
                 {
                     UserScores.Add(item.Beatmap_Id);
-                } 
+                }
             }
             return true;
         }
@@ -209,7 +209,8 @@ namespace osuTrainer.ViewModels
                     UserScores.Add(beatmap.Beatmap_id);
                     scores.Add(new ScoreInfo
                     {
-                        Accuracy = (userBestList[j].Count300 * 300 + userBestList[j].Count100 * 100 + userBestList[j].Count50 * 50) / ((userBestList[j].CountMiss + userBestList[j].Count300 + userBestList[j].Count100 + userBestList[j].Count50) * 300.0),
+                        Accuracy = Math.Round(
+                        GetAccuracy(userBestList[j].Count50, userBestList[j].Count100, userBestList[j].Count300, userBestList[j].CountMiss, userBestList[j].CountKatu, userBestList[j].CountGeki),2),
                         BeatmapName = beatmap.Title,
                         Version = beatmap.Version,
                         BeatmapCreator = beatmap.Creator,
@@ -230,26 +231,6 @@ namespace osuTrainer.ViewModels
             IsWorking = false;
             UpdateContent = "Update";
             return scores;
-        }
-
-        private double CalculateAccuracy()
-        {
-            // https://osu.ppy.sh/wiki/Accuracy
-            double acc = 0.0;
-            switch (SelectedGameMode)
-            {
-                case 0:
-                // (count50*50+count100*100+count300*300)/(countmiss+count50+count100+count300)
-                case 1:
-                // (count100*0.5+count300)//countmiss+count100+count300)
-                case 2:
-                // (count300+100+50) / (count300+100+50+countkatu+countmiss)
-                case 3:
-                // (count50*50+count100*100+count200*200+count300*300+countmax*300)/(countmiss+count50+count100+count200+count300+countmax)
-                default:
-                    break;
-            }
-            return acc;
         }
 
         private int FindStartingUser(double targetpp, int[] ids)

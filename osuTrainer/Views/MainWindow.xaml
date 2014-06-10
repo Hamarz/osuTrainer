@@ -138,6 +138,13 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Acc" Width="50" SortMemberPath="Accuracy">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Accuracy}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Artist" Width="80" SortMemberPath="BeatmapArtist">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

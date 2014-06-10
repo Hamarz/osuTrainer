@@ -215,5 +215,25 @@ namespace osuTrainer.ViewModels
             }
             return mods;
         }
+
+        protected double GetAccuracy(int count50, int count100, int count300, int countmiss, int countkatu, int countgeki)
+        {
+            // https://osu.ppy.sh/wiki/Accuracy
+            switch (SelectedGameMode)
+            {
+                case 0:
+                    return (float)(count50 * 50 + count100 * 100 + count300 * 300) / (countmiss + count50 + count100 + count300) / 3;
+                case 1:
+                    return (float)(count100 * .5 + count300) / (countmiss + count100 + count300) * 100;
+                case 2:
+                    return (float)(count300 + count100 + count50) /
+                           (count300 + count100 + count50 + countkatu + countmiss) * 100;
+                case 3:
+                    return (float)(count50 * 50 + count100 * 100 + countkatu * 200 + count300 * 300 + countgeki * 300) /
+                           (countmiss + count50 + count100 + countkatu + count300 + countgeki) / 3;
+                default:
+                    return 0.0;
+            }
+        }
     }
 }
