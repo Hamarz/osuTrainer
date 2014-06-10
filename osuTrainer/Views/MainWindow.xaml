@@ -138,7 +138,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Acc" Width="50" SortMemberPath="Accuracy">
+                <DataGridTemplateColumn Header="Acc" Width="45" SortMemberPath="Accuracy">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Accuracy}"/>

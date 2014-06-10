@@ -130,6 +130,7 @@ namespace osuTrainer.ViewModels
                 }
                 scores.Add(new ScoreInfo
                 {
+                    Accuracy = "-",
                     Mods = (osuStatsScores[i].Enabled_Mods & ~GlobalVars.Mods.Autoplay),
                     BeatmapName = osuStatsScores[i].Beatmap_Title,
                     Version = osuStatsScores[i].Beatmap_Version,
