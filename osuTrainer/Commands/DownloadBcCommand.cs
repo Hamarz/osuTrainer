@@ -16,7 +16,7 @@ namespace osuTrainer.Commands
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            return _viewModelBase.Scores.Count > 0;
         }
 
         public void Execute(object parameter)
