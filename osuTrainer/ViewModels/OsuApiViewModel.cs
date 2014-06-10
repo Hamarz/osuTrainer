@@ -56,19 +56,19 @@ namespace osuTrainer.ViewModels
             var formatter = new BinaryFormatter();
             using (var fs = new FileStream("standard", FileMode.Open, FileAccess.Read))
             {
-                standardIds = (int[]) formatter.Deserialize(fs);
+                standardIds = (int[])formatter.Deserialize(fs);
             }
             using (var fs = new FileStream("taiko", FileMode.Open, FileAccess.Read))
             {
-                taikoIds = (int[]) formatter.Deserialize(fs);
+                taikoIds = (int[])formatter.Deserialize(fs);
             }
             using (var fs = new FileStream("ctb", FileMode.Open, FileAccess.Read))
             {
-                ctbIds = (int[]) formatter.Deserialize(fs);
+                ctbIds = (int[])formatter.Deserialize(fs);
             }
             using (var fs = new FileStream("mania", FileMode.Open, FileAccess.Read))
             {
-                maniaIds = (int[]) formatter.Deserialize(fs);
+                maniaIds = (int[])formatter.Deserialize(fs);
             }
         }
 
@@ -98,13 +98,25 @@ namespace osuTrainer.ViewModels
                 UserScores.Add(item.Beatmap_Id);
             }
 
-            json =
-                _client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + SelectedGameMode +
-                                       @"&uid=" + _userId);
-            var osuStatsBest = JsonSerializer.DeserializeFromString<List<OsuStatsBest>>(json);
-            foreach (OsuStatsBest item in osuStatsBest)
+            json = "";
+            try
             {
-                UserScores.Add(item.Beatmap_Id);
+                json =
+    _client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + SelectedGameMode +
+                           @"&uid=" + _userId);
+            }
+            catch (Exception)
+            {
+                
+            }
+
+            var osuStatsBest = JsonSerializer.DeserializeFromString<List<OsuStatsBest>>(json);
+            if (osuStatsBest != null)
+            {
+                foreach (OsuStatsBest item in osuStatsBest)
+                {
+                    UserScores.Add(item.Beatmap_Id);
+                } 
             }
             return true;
         }
@@ -182,7 +194,7 @@ namespace osuTrainer.ViewModels
                 for (int j = 0; j < userBestList.Count; j++)
                 {
                     if (userBestList[j].PP < MinPp) break;
-                    if (IsFcOnlyCbChecked) if ((int) userBestList[j].Rank > 3) continue;
+                    if (IsFcOnlyCbChecked) if ((int)userBestList[j].Rank > 3) continue;
                     if ((!IsExclusiveCbChecked ||
                          (userBestList[j].Enabled_Mods != modsAndNv && userBestList[j].Enabled_Mods != mods)) &&
                         (IsExclusiveCbChecked || !userBestList[j].Enabled_Mods.HasFlag(mods))) continue;
@@ -197,13 +209,14 @@ namespace osuTrainer.ViewModels
                     UserScores.Add(beatmap.Beatmap_id);
                     scores.Add(new ScoreInfo
                     {
+                        Accuracy = (userBestList[j].Count300 * 300 + userBestList[j].Count100 * 100 + userBestList[j].Count50 * 50) / ((userBestList[j].CountMiss + userBestList[j].Count300 + userBestList[j].Count100 + userBestList[j].Count50) * 300.0),
                         BeatmapName = beatmap.Title,
                         Version = beatmap.Version,
                         BeatmapCreator = beatmap.Creator,
                         BeatmapArtist = beatmap.Artist,
                         Mods = userBestList[j].Enabled_Mods,
-                        Bpm = (int) Math.Truncate(beatmap.Bpm*dtmodifier),
-                        Pp = (int) Math.Truncate(userBestList[j].PP),
+                        Bpm = (int)Math.Truncate(beatmap.Bpm * dtmodifier),
+                        Pp = (int)Math.Truncate(userBestList[j].PP),
                         RankImage = GetRankImageUri(userBestList[j].Rank),
                         BeatmapId = beatmap.Beatmap_id,
                         BeatmapSetId = beatmap.BeatmapSet_id,
@@ -219,6 +232,26 @@ namespace osuTrainer.ViewModels
             return scores;
         }
 
+        private double CalculateAccuracy()
+        {
+            // https://osu.ppy.sh/wiki/Accuracy
+            double acc = 0.0;
+            switch (SelectedGameMode)
+            {
+                case 0:
+                // (count50*50+count100*100+count300*300)/(countmiss+count50+count100+count300)
+                case 1:
+                // (count100*0.5+count300)//countmiss+count100+count300)
+                case 2:
+                // (count300+100+50) / (count300+100+50+countkatu+countmiss)
+                case 3:
+                // (count50*50+count100*100+count200*200+count300*300+countmax*300)/(countmiss+count50+count100+count200+count300+countmax)
+                default:
+                    break;
+            }
+            return acc;
+        }
+
         private int FindStartingUser(double targetpp, int[] ids)
         {
             int low = 0;
@@ -227,7 +260,7 @@ namespace osuTrainer.ViewModels
             int iterations = 0;
             while (low < high && iterations < 7)
             {
-                midpoint = low + (high - low)/2;
+                midpoint = low + (high - low) / 2;
                 double midUserPp = GetUserPp(ids[midpoint]);
                 if (targetpp > midUserPp)
                 {

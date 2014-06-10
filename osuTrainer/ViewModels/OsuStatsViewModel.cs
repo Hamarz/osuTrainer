@@ -62,9 +62,16 @@ namespace osuTrainer.ViewModels
                 UserScores.Add(item.Beatmap_Id);
             }
 
-            json =
-                _client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + SelectedGameMode +
-                                       @"&uid=" + _userId);
+            try
+            {
+                json =
+    _client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + SelectedGameMode +
+                           @"&uid=" + _userId);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
             var osuStatsBest = JsonSerializer.DeserializeFromString<List<OsuStatsBest>>(json);
             foreach (OsuStatsBest item in osuStatsBest)
             {
@@ -82,7 +89,7 @@ namespace osuTrainer.ViewModels
             {
                 IsWorking = false;
                 UpdateContent = "Update";
-                MessageBox.Show("Wrong API key or username.");
+                MessageBox.Show("Wrong API key, username or osustats is down.");
                 return scores;
             }
             string statsjson = "";
@@ -109,11 +116,11 @@ namespace osuTrainer.ViewModels
             }
             var osuStatsScores = JsonSerializer.DeserializeFromString<List<OsuStatsScores>>(statsjson);
             osuStatsScores =
-                osuStatsScores.GroupBy(e => new {e.Beatmap_Id, e.Enabled_Mods}).Select(g => g.First()).ToList();
+                osuStatsScores.GroupBy(e => new { e.Beatmap_Id, e.Enabled_Mods }).Select(g => g.First()).ToList();
             for (int i = 0; i < osuStatsScores.Count; i++)
             {
                 if (UserScores.Contains(osuStatsScores[i].Beatmap_Id)) continue;
-                if (IsFcOnlyCbChecked) if ((int) osuStatsScores[i].Rank > 3) continue;
+                if (IsFcOnlyCbChecked) if ((int)osuStatsScores[i].Rank > 3) continue;
                 UserScores.Add(osuStatsScores[i].Beatmap_Id);
                 double dtmodifier = 1.0;
                 if (osuStatsScores[i].Enabled_Mods.HasFlag(GlobalVars.Mods.DT) ||
@@ -128,7 +135,7 @@ namespace osuTrainer.ViewModels
                     Version = osuStatsScores[i].Beatmap_Version,
                     BeatmapCreator = osuStatsScores[i].Beatmap_Creator,
                     BeatmapArtist = osuStatsScores[i].Beatmap_Artist,
-                    Bpm = Math.Truncate(osuStatsScores[i].Beatmap_Bpm*dtmodifier),
+                    Bpm = Math.Truncate(osuStatsScores[i].Beatmap_Bpm * dtmodifier),
                     Pp = Math.Truncate(osuStatsScores[i].Pp_Value),
                     TotalTime = TimeSpan.FromSeconds(osuStatsScores[i].Beatmap_Total_Length).ToString(@"mm\:ss"),
                     DrainingTime = TimeSpan.FromSeconds(osuStatsScores[i].Beatmap_Hit_Length).ToString(@"mm\:ss"),
