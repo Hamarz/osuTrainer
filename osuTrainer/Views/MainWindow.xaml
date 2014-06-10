@@ -205,7 +205,7 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.InputBindings>
-                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding OpenBeatmapLinkCommand}"/>
+                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DownloadOdCommand}"/>
             </DataGrid.InputBindings>
         </DataGrid>
         <Grid x:Name="grid1" Grid.Row="2" Margin="5,0">
