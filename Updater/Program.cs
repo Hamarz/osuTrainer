@@ -32,14 +32,18 @@ namespace Updater
                 Console.WriteLine("Downloading " + updateUrl);
                 client.DownloadFile(updateUrl, "temp");
             }
-            ZipArchive zip = ZipFile.OpenRead("temp");
-            foreach (ZipArchiveEntry file in zip.Entries)
+
+            using (ZipArchive zip = ZipFile.OpenRead("temp"))
             {
-                Console.WriteLine("Extracting " + Path.Combine(Directory.GetCurrentDirectory(), file.FullName));
-                file.ExtractToFile(Path.Combine(Directory.GetCurrentDirectory(), file.FullName), true);
+                foreach (ZipArchiveEntry file in zip.Entries)
+                {
+                    if (file.FullName == "Updater.exe") continue;
+                    Console.WriteLine("Extracting " + Path.Combine(Directory.GetCurrentDirectory(), file.FullName));
+                    file.ExtractToFile(Path.Combine(Directory.GetCurrentDirectory(), file.FullName), true);
+                }               
             }
-            Console.WriteLine("Update complete.");
             File.Delete("temp");
+            Console.WriteLine("Update complete.");
             Process.Start(progExe);
         }
     }

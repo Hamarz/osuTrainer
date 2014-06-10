@@ -59,6 +59,7 @@ namespace osuTrainer.Views
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            Title = "osu! Trainer " + Assembly.GetExecutingAssembly().GetName().Version;
             PasswordBox.Password = Settings.Default.ApiKey;
             GameModeCb.ItemsSource = Enum.GetValues(typeof(GlobalVars.GameMode)).Cast<int>();
             ScoreSourceCb.Items.Add("osu! API");
