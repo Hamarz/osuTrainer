@@ -25,7 +25,8 @@
                              Margin="150,0,0,0"
                              Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=controls:MetroWindow}, Path=ActualWidth}"
                              Header="Settings"
-                             Position="Right">
+                             Position="Right"
+                             IsPinned="False">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />

@@ -74,7 +74,7 @@ namespace osuTrainer.Views
         {
             Title = "osu! Trainer " + Assembly.GetExecutingAssembly().GetName().Version;
             PasswordBox.Password = Settings.Default.ApiKey;
-            GameModeCb.ItemsSource = Enum.GetValues(typeof(GlobalVars.GameMode)).Cast<int>();
+            GameModeCb.ItemsSource = Enum.GetValues(typeof (GlobalVars.GameMode)).Cast<int>();
             ScoreSourceCb.Items.Add("osu! API");
             ScoreSourceCb.Items.Add("osustats API");
             ScoreSourceCb.SelectedIndex = Settings.Default.DataSource;
@@ -137,7 +137,7 @@ namespace osuTrainer.Views
 
         private void ToggleFlyout(int index)
         {
-            var flyout = this.Flyouts.Items[index] as Flyout;
+            var flyout = Flyouts.Items[index] as Flyout;
             if (flyout == null)
             {
                 return;
