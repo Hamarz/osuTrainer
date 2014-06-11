@@ -82,6 +82,7 @@ namespace osuTrainer.ViewModels
             {
                 return false;
             }
+            //TODO: fix error if there are null values
             Match match = Regex.Match(json,
                 @"""user_id"":""(.+?)"".+?""username"":""(.+?)"".+?""pp_rank"":""(.+?)"".+?""pp_raw"":""(.+?)""");
             _userId = Convert.ToInt32(match.Groups[1].Value);

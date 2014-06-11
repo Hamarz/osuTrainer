@@ -178,5 +178,137 @@ namespace osuTrainer.Properties {
                 this["UpgradeRequired"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsRankImageVisible {
+            get {
+                return ((bool)(this["IsRankImageVisible"]));
+            }
+            set {
+                this["IsRankImageVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsAccVisible {
+            get {
+                return ((bool)(this["IsAccVisible"]));
+            }
+            set {
+                this["IsAccVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsBeatmapNameVisible {
+            get {
+                return ((bool)(this["IsBeatmapNameVisible"]));
+            }
+            set {
+                this["IsBeatmapNameVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsArtistVisible {
+            get {
+                return ((bool)(this["IsArtistVisible"]));
+            }
+            set {
+                this["IsArtistVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsVersionVisible {
+            get {
+                return ((bool)(this["IsVersionVisible"]));
+            }
+            set {
+                this["IsVersionVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsCreatorVisible {
+            get {
+                return ((bool)(this["IsCreatorVisible"]));
+            }
+            set {
+                this["IsCreatorVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsModsVisible {
+            get {
+                return ((bool)(this["IsModsVisible"]));
+            }
+            set {
+                this["IsModsVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsBpmVisible {
+            get {
+                return ((bool)(this["IsBpmVisible"]));
+            }
+            set {
+                this["IsBpmVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsPpVisible {
+            get {
+                return ((bool)(this["IsPpVisible"]));
+            }
+            set {
+                this["IsPpVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsLengthVisible {
+            get {
+                return ((bool)(this["IsLengthVisible"]));
+            }
+            set {
+                this["IsLengthVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsDrainVisible {
+            get {
+                return ((bool)(this["IsDrainVisible"]));
+            }
+            set {
+                this["IsDrainVisible"] = value;
+            }
+        }
     }
 }

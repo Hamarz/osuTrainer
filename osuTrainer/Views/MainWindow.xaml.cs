@@ -116,5 +116,21 @@ namespace osuTrainer.Views
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
         }
+
+        private void ShowSettings(object sender, RoutedEventArgs e)
+        {
+            ToggleFlyout(0);
+        }
+
+        private void ToggleFlyout(int index)
+        {
+            var flyout = this.Flyouts.Items[index] as Flyout;
+            if (flyout == null)
+            {
+                return;
+            }
+            flyout.IsOpen = !flyout.IsOpen;
+            Settings.Default.Save();
+        }
     }
 }

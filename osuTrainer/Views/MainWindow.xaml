@@ -4,6 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:properties="clr-namespace:osuTrainer.Properties"
         xmlns:services="clr-namespace:osuTrainer" 
         services:WindowSettings.Save="True"
         Title="osu! Trainer" 
@@ -18,13 +19,106 @@
                       NonActiveBorderBrush="Black" 
                       NonActiveGlowBrush="{x:Null}" 
                       NonActiveWindowTitleBrush="#FF41B1E1">
+    <controls:MetroWindow.Flyouts>
+        <controls:FlyoutsControl>
+            <controls:Flyout x:Name="settingsFlyout"
+                             Margin="150,0,0,0"
+                             Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=controls:MetroWindow}, Path=ActualWidth}"
+                             Header="Settings"
+                             Position="Right">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0"
+                               FontSize="16"
+                               Text="Visible columns:" Margin="0,0,0,5" />
+                    <ScrollViewer Grid.Row="1"
+                                  VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Rank image" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="0" Grid.Column="1" 
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsRankImageVisible}" 
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="Accuracy" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="0" Grid.Column="3"
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsAccVisible}" 
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="0" Grid.Column="4" Text="Artist" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="0" Grid.Column="5" 
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsArtistVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Beatmap name" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="1" Grid.Column="1"
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsBeatmapNameVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="Version" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="1" Grid.Column="3" 
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsVersionVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="4" Text="Creator" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="1" Grid.Column="5"
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsCreatorVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Enabled mods" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="2" Grid.Column="1"
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsModsVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="2" Text="Length" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="2" Grid.Column="3" 
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsLengthVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="4" Text="Drain" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="2" Grid.Column="5" 
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsDrainVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="BPM" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="3" Grid.Column="1"
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsBpmVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="3" Grid.Column="2" Text="PP" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="3" Grid.Column="3" 
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsPpVisible}"
+                                                   Margin="10,0"/>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </controls:Flyout>
+        </controls:FlyoutsControl>
+    </controls:MetroWindow.Flyouts>
     <Grid x:Name="grid">
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="220"/>
             <RowDefinition Height="*" />
             <RowDefinition Height="25" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" 
+        <Grid Grid.Row="0">
+            <Menu>
+                <MenuItem Header="Settings"
+                          Click="ShowSettings">
+                </MenuItem>
+            </Menu>
+        </Grid>
+        <Grid Grid.Row="1" 
                     Margin="5,0,5,5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="120"/>
@@ -65,9 +159,9 @@
                 <Image Grid.Column="1" Source="{Binding SelectedItem.ThumbUrl, ElementName=dataGrid}"/>
                 <StackPanel Grid.Column="2" Margin="5,5,0,0">
                     <TextBlock Text="Username:" Width="70" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-                    <TextBox Name="UsernameTb" Width="100" Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Name="UsernameTb" Width="100" controls:TextboxHelper.Watermark="Username" Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="API Key:" Width="70" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-                    <PasswordBox Name="PasswordBox"  Width="100"/>
+                    <PasswordBox Name="PasswordBox"  Width="100" controls:TextboxHelper.Watermark="API key"/>
                     <TextBlock>
                             <Hyperlink NavigateUri="https://osu.ppy.sh/p/api" RequestNavigate="ApiLink_RequestNavigate">Link to API key</Hyperlink>
                     </TextBlock>
@@ -121,73 +215,98 @@
             </DockPanel>
         </Grid>
 
-        <DataGrid x:Name="dataGrid" Grid.Row="1"
+        <DataGrid x:Name="dataGrid" Grid.Row="2"
                   Grid.Column="0"
                   IsReadOnly="True" 
                   AutoGenerateColumns="False" 
                   ItemsSource="{Binding Path=Scores, UpdateSourceTrigger=PropertyChanged}" 
                   CanUserResizeRows="False"
                   ColumnWidth="*"
-                  SelectionMode="Single" Margin="2,0"
+                  SelectionMode="Single" Margin="0,0,4,0"
                   SelectedItem="{Binding Path=SelectedScoreInfo}">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Width="30" SortMemberPath="RankImage">
+                <DataGridTemplateColumn Width="30" SortMemberPath="RankImage" 
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsRankImageVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Image Source="{Binding Path=RankImage}" Stretch="None"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Acc" Width="45" SortMemberPath="Accuracy">
+                <DataGridTemplateColumn Header="Acc" Width="45" SortMemberPath="Accuracy"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsAccVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Accuracy}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Artist" Width="80" SortMemberPath="BeatmapArtist">
+                <DataGridTemplateColumn Header="Artist" Width="80" SortMemberPath="BeatmapArtist"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsArtistVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=BeatmapArtist}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=BeatmapArtist}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Beatmap Name" SortMemberPath="BeatmapName">
+                <DataGridTemplateColumn Header="Beatmap Name" SortMemberPath="BeatmapName"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsBeatmapNameVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=BeatmapName}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=BeatmapName}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Version" Width="80" SortMemberPath="Version">
+                <DataGridTemplateColumn Header="Version" Width="80" SortMemberPath="Version"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsVersionVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Version}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Version}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Creator" Width="80" SortMemberPath="BeatmapCreator">
+                <DataGridTemplateColumn Header="Creator" Width="80" SortMemberPath="BeatmapCreator"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsCreatorVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=BeatmapCreator}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=BeatmapCreator}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Mods" Width="60" SortMemberPath="Mods">
+                <DataGridTemplateColumn Header="Mods" Width="60" SortMemberPath="Mods"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsModsVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Mods}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Mods}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="BPM" Width="50" SortMemberPath="Bpm">
+                <DataGridTemplateColumn Header="Length" Width="70" SortMemberPath="TotalTime"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsLengthVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=TotalTime}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=TotalTime}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Drain" Width="60" SortMemberPath="DrainingTime"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsDrainVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=DrainingTime}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=DrainingTime}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="BPM" Width="50" SortMemberPath="Bpm"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsBpmVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Bpm}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Bpm}" HorizontalAlignment="Right"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="PP" Width="50" SortMemberPath="Pp">
+                <DataGridTemplateColumn Header="PP" Width="50" SortMemberPath="Pp"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsPpVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Pp}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Pp}" HorizontalAlignment="Right"/>
@@ -208,13 +327,14 @@
                 <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DownloadOdCommand}"/>
             </DataGrid.InputBindings>
         </DataGrid>
-        <Grid x:Name="grid1" Grid.Row="2" Margin="5,0">
+        <Grid Grid.Row="3" 
+              Margin="5,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Height="20">
                 <Hyperlink NavigateUri="https://github.com/condone/osuTrainer/releases" RequestNavigate="Hyperlink_RequestNavigate">Changelog</Hyperlink>
