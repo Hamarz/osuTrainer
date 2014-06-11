@@ -46,6 +46,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -105,8 +106,8 @@
                                FontSize="16"
                                Text="Visual Settings:" Margin="0,0,0,5" />
                     <StackPanel Grid.Row="3" Orientation="Horizontal">
-                        <TextBlock Text="Theme:" VerticalAlignment="Center"/>
-                        <ListBox Name="ThemeListBox" SelectionMode="Single" SelectionChanged="ThemeListBox_SelectionChanged">
+                        <TextBlock Text="Theme:" VerticalAlignment="Center" Width="50"/>
+                        <ListBox Name="ThemeListBox" SelectionMode="Single" SelectionChanged="ThemeListBox_SelectionChanged" Background="#00FFFFFF">
                             <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Orientation="Horizontal" IsItemsHost="True" />
@@ -124,6 +125,38 @@
                                 </Grid>
                             </ListBoxItem>
                             <ListBoxItem IsSelected="{Binding Source={x:Static properties:Settings.Default}, Path=IsThemeDark, UpdateSourceTrigger=PropertyChanged}">
+                                <Grid Margin="0 4 4 0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="Content" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                        <Ellipse Width="16" Height="16" StrokeThickness="1" Stroke="#FFFFFFFF" Fill="#FF000000" />
+                                        <Label HorizontalAlignment="Center" Content="Dark" />
+                                    </StackPanel>
+                                </Grid>
+                            </ListBoxItem>
+                        </ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Orientation="Horizontal">
+                        <TextBlock Text="Flyout:" VerticalAlignment="Center" Width="50"/>
+                        <ListBox Name="FlyoutListBox" SelectionChanged="FlyoutListBox_SelectionChanged" SelectionMode="Single" Background="#00FFFFFF">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" IsItemsHost="True" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBoxItem IsSelected="{Binding Source={x:Static properties:Settings.Default}, Path=IsFlyoutLight, UpdateSourceTrigger=PropertyChanged}">
+                                <Grid Margin="0 4 4 0" HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="Content" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Vertical">
+                                        <Ellipse Width="16" Height="16" StrokeThickness="1" Stroke="#FF000000" Fill="#FFFFFFFF" />
+                                        <Label HorizontalAlignment="Center" Content="Light" />
+                                    </StackPanel>
+                                </Grid>
+                            </ListBoxItem>
+                            <ListBoxItem IsSelected="{Binding Source={x:Static properties:Settings.Default}, Path=IsFlyoutDark, UpdateSourceTrigger=PropertyChanged}">
                                 <Grid Margin="0 4 4 0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition SharedSizeGroup="Content" />

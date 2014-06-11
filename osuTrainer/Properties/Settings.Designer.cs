@@ -334,5 +334,29 @@ namespace osuTrainer.Properties {
                 this["IsThemeDark"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsFlyoutLight {
+            get {
+                return ((bool)(this["IsFlyoutLight"]));
+            }
+            set {
+                this["IsFlyoutLight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsFlyoutDark {
+            get {
+                return ((bool)(this["IsFlyoutDark"]));
+            }
+            set {
+                this["IsFlyoutDark"] = value;
+            }
+        }
     }
 }

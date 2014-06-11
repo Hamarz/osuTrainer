@@ -164,5 +164,17 @@ namespace osuTrainer.Views
                 ThemeManager.ChangeAppStyle(Application.Current, theme.Item2, expectedTheme);
             }
         }
+
+        private void FlyoutListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (FlyoutListBox.SelectedIndex == 0)
+            {
+                settingsFlyout.Theme = FlyoutTheme.Light;
+            }
+            else
+            {
+                settingsFlyout.Theme = FlyoutTheme.Dark;
+            }
+        }
     }
 }
