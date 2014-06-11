@@ -106,7 +106,7 @@
                                Text="Visual Settings:" Margin="0,0,0,5" />
                     <StackPanel Grid.Row="3" Orientation="Horizontal">
                         <TextBlock Text="Theme:" VerticalAlignment="Center"/>
-                        <ListBox Name="ThemeListBox" SelectionChanged="ThemeListBox_SelectionChanged">
+                        <ListBox Name="ThemeListBox" SelectionMode="Single" SelectionChanged="ThemeListBox_SelectionChanged">
                             <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Orientation="Horizontal" IsItemsHost="True" />
