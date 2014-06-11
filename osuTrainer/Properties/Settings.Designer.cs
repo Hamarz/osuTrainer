@@ -206,12 +206,12 @@ namespace osuTrainer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool IsBeatmapNameVisible {
+        public bool IsTitleVisible {
             get {
-                return ((bool)(this["IsBeatmapNameVisible"]));
+                return ((bool)(this["IsTitleVisible"]));
             }
             set {
-                this["IsBeatmapNameVisible"] = value;
+                this["IsTitleVisible"] = value;
             }
         }
         
@@ -356,6 +356,18 @@ namespace osuTrainer.Properties {
             }
             set {
                 this["IsFlyoutDark"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsDiffVisible {
+            get {
+                return ((bool)(this["IsDiffVisible"]));
+            }
+            set {
+                this["IsDiffVisible"] = value;
             }
         }
     }

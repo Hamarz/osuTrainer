@@ -132,11 +132,12 @@ namespace osuTrainer.ViewModels
                 {
                     Accuracy = "-",
                     Mods = (osuStatsScores[i].Enabled_Mods & ~GlobalVars.Mods.Autoplay),
-                    BeatmapName = osuStatsScores[i].Beatmap_Title,
+                    BeatmapTitle = osuStatsScores[i].Beatmap_Title,
                     Version = osuStatsScores[i].Beatmap_Version,
                     BeatmapCreator = osuStatsScores[i].Beatmap_Creator,
                     BeatmapArtist = osuStatsScores[i].Beatmap_Artist,
                     Bpm = Math.Truncate(osuStatsScores[i].Beatmap_Bpm * dtmodifier),
+                    Difficultyrating = Math.Round(osuStatsScores[i].Beatmap_Diffrating,2),
                     Pp = Math.Truncate(osuStatsScores[i].Pp_Value),
                     TotalTime = TimeSpan.FromSeconds(osuStatsScores[i].Beatmap_Total_Length).ToString(@"mm\:ss"),
                     DrainingTime = TimeSpan.FromSeconds(osuStatsScores[i].Beatmap_Hit_Length).ToString(@"mm\:ss"),

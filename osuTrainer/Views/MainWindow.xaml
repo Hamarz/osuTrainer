@@ -22,7 +22,7 @@
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
             <controls:Flyout x:Name="settingsFlyout"
-                             Margin="150,0,0,0"
+                             Margin="200,0,0,0"
                              Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=controls:MetroWindow}, Path=ActualWidth}"
                              Header="Settings"
                              Position="Right"
@@ -56,7 +56,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Rank image" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Rank" VerticalAlignment="Center"/>
                             <controls:ToggleSwitch Grid.Row="0" Grid.Column="1" 
                                                    IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsRankImageVisible}" 
                                                    Margin="10,0"/>
@@ -68,9 +68,9 @@
                             <controls:ToggleSwitch Grid.Row="0" Grid.Column="5" 
                                                    IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsArtistVisible}"
                                                    Margin="10,0"/>
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Beatmap name" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Title" VerticalAlignment="Center"/>
                             <controls:ToggleSwitch Grid.Row="1" Grid.Column="1"
-                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsBeatmapNameVisible}"
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsTitleVisible}"
                                                    Margin="10,0"/>
                             <TextBlock Grid.Row="1" Grid.Column="2" Text="Version" VerticalAlignment="Center"/>
                             <controls:ToggleSwitch Grid.Row="1" Grid.Column="3" 
@@ -80,24 +80,28 @@
                             <controls:ToggleSwitch Grid.Row="1" Grid.Column="5"
                                                    IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsCreatorVisible}"
                                                    Margin="10,0"/>
-                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Enabled mods" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Mods" VerticalAlignment="Center"/>
                             <controls:ToggleSwitch Grid.Row="2" Grid.Column="1"
                                                    IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsModsVisible}"
                                                    Margin="10,0"/>
                             <TextBlock Grid.Row="2" Grid.Column="2" Text="Length" VerticalAlignment="Center"/>
-                            <controls:ToggleSwitch Grid.Row="2" Grid.Column="3" 
+                            <controls:ToggleSwitch Grid.Row="2" Grid.Column="3"
                                                    IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsLengthVisible}"
                                                    Margin="10,0"/>
                             <TextBlock Grid.Row="2" Grid.Column="4" Text="Drain" VerticalAlignment="Center"/>
-                            <controls:ToggleSwitch Grid.Row="2" Grid.Column="5" 
+                            <controls:ToggleSwitch Grid.Row="2" Grid.Column="5"
                                                    IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsDrainVisible}"
                                                    Margin="10,0"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="BPM" VerticalAlignment="Center"/>
                             <controls:ToggleSwitch Grid.Row="3" Grid.Column="1"
                                                    IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsBpmVisible}"
                                                    Margin="10,0"/>
-                            <TextBlock Grid.Row="3" Grid.Column="2" Text="PP" VerticalAlignment="Center"/>
-                            <controls:ToggleSwitch Grid.Row="3" Grid.Column="3" 
+                            <TextBlock Grid.Row="3" Grid.Column="2" Text="Diff. Rating" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="3" Grid.Column="3"
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsDiffVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="3" Grid.Column="4" Text="PP" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="3" Grid.Column="5" 
                                                    IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsPpVisible}"
                                                    Margin="10,0"/>
                         </Grid>
@@ -318,11 +322,11 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Beatmap Name" SortMemberPath="BeatmapName"
-                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsBeatmapNameVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
+                <DataGridTemplateColumn Header="Title" SortMemberPath="BeatmapTitle"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsTitleVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=BeatmapName}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=BeatmapName}"/>
+                            <TextBlock Text="{Binding Path=BeatmapTitle}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=BeatmapTitle}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -371,6 +375,14 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Bpm}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Bpm}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Diff" Width="50" SortMemberPath="Difficultyrating"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsDiffVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Difficultyrating}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Difficultyrating}" HorizontalAlignment="Right"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

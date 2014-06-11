@@ -14,7 +14,8 @@
 
         public int BeatmapId { get; set; }
         public int BeatmapSetId { get; set; }
-        public string BeatmapName { get; set; }
+        public double Difficultyrating { get; set; }
+        public string BeatmapTitle { get; set; }
         public string BeatmapArtist { get; set; }
         public string BeatmapCreator { get; set; }
         public string BeatmapUrl { get; set; }

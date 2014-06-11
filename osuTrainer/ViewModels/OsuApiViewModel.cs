@@ -212,12 +212,13 @@ namespace osuTrainer.ViewModels
                     {
                         Accuracy = Math.Round(
                         GetAccuracy(userBestList[j].Count50, userBestList[j].Count100, userBestList[j].Count300, userBestList[j].CountMiss, userBestList[j].CountKatu, userBestList[j].CountGeki),2).ToString(),
-                        BeatmapName = beatmap.Title,
+                        BeatmapTitle = beatmap.Title,
                         Version = beatmap.Version,
                         BeatmapCreator = beatmap.Creator,
                         BeatmapArtist = beatmap.Artist,
                         Mods = userBestList[j].Enabled_Mods,
                         Bpm = (int)Math.Truncate(beatmap.Bpm * dtmodifier),
+                        Difficultyrating = Math.Round(beatmap.Difficultyrating,2),
                         Pp = (int)Math.Truncate(userBestList[j].PP),
                         RankImage = GetRankImageUri(userBestList[j].Rank),
                         BeatmapId = beatmap.Beatmap_id,

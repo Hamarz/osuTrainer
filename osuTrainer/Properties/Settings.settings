@@ -47,7 +47,7 @@
     <Setting Name="IsAccVisible" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="IsBeatmapNameVisible" Type="System.Boolean" Scope="User">
+    <Setting Name="IsTitleVisible" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="IsArtistVisible" Type="System.Boolean" Scope="User">
@@ -85,6 +85,9 @@
     </Setting>
     <Setting Name="IsFlyoutDark" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="IsDiffVisible" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>
