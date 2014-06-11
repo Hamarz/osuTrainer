@@ -22,6 +22,12 @@ namespace osuTrainer.Views
             InitializeComponent();
             LoadPreviousSettings();
             CheckUpdates();
+            settingsFlyout.IsOpenChanged += SettingsFlyoutOnIsOpenChanged;
+        }
+
+        private void SettingsFlyoutOnIsOpenChanged(object sender, EventArgs eventArgs)
+        {
+            Settings.Default.Save();
         }
 
         private void LoadPreviousSettings()
@@ -130,7 +136,6 @@ namespace osuTrainer.Views
                 return;
             }
             flyout.IsOpen = !flyout.IsOpen;
-            Settings.Default.Save();
         }
     }
 }
