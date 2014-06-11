@@ -42,10 +42,17 @@ namespace osuTrainer.Views
 
         private async void CheckUpdates()
         {
-            newestVersion = await Updater.Check();
-            if (newestVersion <= Assembly.GetExecutingAssembly().GetName().Version) return;
-            hyperLinkText.Text = "Update to " + newestVersion + " available.";
-            UpdateUri.Click += UpdateUri_Click;
+            try
+            {
+                newestVersion = await Updater.Check();
+                if (newestVersion <= Assembly.GetExecutingAssembly().GetName().Version) return;
+                hyperLinkText.Text = "Update to " + newestVersion + " available.";
+                UpdateUri.Click += UpdateUri_Click;
+            }
+            catch (Exception)
+            {
+                // Ignore ratelimitedexception
+            }
         }
 
         private void UpdateUri_Click(object sender, RoutedEventArgs e)
