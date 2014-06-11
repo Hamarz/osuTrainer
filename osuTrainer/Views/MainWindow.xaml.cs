@@ -3,7 +3,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Navigation;
+using MahApps.Metro;
 using MahApps.Metro.Controls;
 using osuTrainer.Properties;
 using osuTrainer.ViewModels;
@@ -46,7 +48,7 @@ namespace osuTrainer.Views
             {
                 newestVersion = await Updater.Check();
                 if (newestVersion <= Assembly.GetExecutingAssembly().GetName().Version) return;
-                hyperLinkText.Text = "Update to " + newestVersion + " available.";
+                hyperLinkText.Text = @"Update to " + newestVersion + @" available.";
                 UpdateUri.Click += UpdateUri_Click;
             }
             catch (Exception)
@@ -61,7 +63,7 @@ namespace osuTrainer.Views
             {
                 StartInfo =
                 {
-                    FileName = "Updater.exe",
+                    FileName = @"Updater.exe",
                     Arguments =
                         @"osuTrainer.exe ""https://github.com/condone/osuTrainer/releases/download/v" + newestVersion +
                         @"/osuTrainer.zip"""
@@ -143,6 +145,24 @@ namespace osuTrainer.Views
                 return;
             }
             flyout.IsOpen = !flyout.IsOpen;
+        }
+
+        private void ThemeListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ThemeListBox.SelectedIndex == 0)
+            {
+                Tuple<AppTheme, Accent> theme = ThemeManager.DetectAppStyle(this);
+                AppTheme expectedTheme = ThemeManager.GetAppTheme("BaseLight");
+
+                ThemeManager.ChangeAppStyle(Application.Current, theme.Item2, expectedTheme);
+            }
+            else
+            {
+                Tuple<AppTheme, Accent> theme = ThemeManager.DetectAppStyle(this);
+                AppTheme expectedTheme = ThemeManager.GetAppTheme("BaseDark");
+
+                ThemeManager.ChangeAppStyle(Application.Current, theme.Item2, expectedTheme);
+            }
         }
     }
 }

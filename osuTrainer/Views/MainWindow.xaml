@@ -30,7 +30,7 @@
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -101,6 +101,41 @@
                                                    Margin="10,0"/>
                         </Grid>
                     </ScrollViewer>
+                    <TextBlock Grid.Row="2"
+                               FontSize="16"
+                               Text="Visual Settings:" Margin="0,0,0,5" />
+                    <StackPanel Grid.Row="3" Orientation="Horizontal">
+                        <TextBlock Text="Theme:" VerticalAlignment="Center"/>
+                        <ListBox Name="ThemeListBox" SelectionChanged="ThemeListBox_SelectionChanged">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" IsItemsHost="True" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBoxItem IsSelected="{Binding Source={x:Static properties:Settings.Default}, Path=IsThemeLight, UpdateSourceTrigger=PropertyChanged}">
+                                <Grid Margin="0 4 4 0" HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="Content" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Vertical">
+                                        <Ellipse Width="16" Height="16" StrokeThickness="1" Stroke="#FF000000" Fill="#FFFFFFFF" />
+                                        <Label HorizontalAlignment="Center" Content="Light" />
+                                    </StackPanel>
+                                </Grid>
+                            </ListBoxItem>
+                            <ListBoxItem IsSelected="{Binding Source={x:Static properties:Settings.Default}, Path=IsThemeDark, UpdateSourceTrigger=PropertyChanged}">
+                                <Grid Margin="0 4 4 0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="Content" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                        <Ellipse Width="16" Height="16" StrokeThickness="1" Stroke="#FFFFFFFF" Fill="#FF000000" />
+                                        <Label HorizontalAlignment="Center" Content="Dark" />
+                                    </StackPanel>
+                                </Grid>
+                            </ListBoxItem>
+                        </ListBox>
+                    </StackPanel>
                 </Grid>
             </controls:Flyout>
         </controls:FlyoutsControl>
@@ -114,7 +149,7 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu>
-                <MenuItem Header="Settings"
+                <MenuItem Name="SettingsMenu" Header="Settings"
                           Click="ShowSettings">
                 </MenuItem>
             </Menu>

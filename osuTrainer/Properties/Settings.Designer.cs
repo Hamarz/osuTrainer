@@ -310,5 +310,29 @@ namespace osuTrainer.Properties {
                 this["IsDrainVisible"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsThemeLight {
+            get {
+                return ((bool)(this["IsThemeLight"]));
+            }
+            set {
+                this["IsThemeLight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsThemeDark {
+            get {
+                return ((bool)(this["IsThemeDark"]));
+            }
+            set {
+                this["IsThemeDark"] = value;
+            }
+        }
     }
 }
