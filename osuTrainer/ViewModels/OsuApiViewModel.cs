@@ -210,7 +210,7 @@ namespace osuTrainer.ViewModels
                     scores.Add(new ScoreInfo
                     {
                         Accuracy = Math.Round(
-                        GetAccuracy(userBestList[j].Count50, userBestList[j].Count100, userBestList[j].Count300, userBestList[j].CountMiss, userBestList[j].CountKatu, userBestList[j].CountGeki),2).ToString(),
+                        GetAccuracy(userBestList[j].Count50, userBestList[j].Count100, userBestList[j].Count300, userBestList[j].CountMiss, userBestList[j].CountKatu, userBestList[j].CountGeki),2),
                         BeatmapTitle = beatmap.Title,
                         Version = beatmap.Version,
                         BeatmapCreator = beatmap.Creator,

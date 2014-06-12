@@ -2,7 +2,7 @@
 {
     public class ScoreInfo
     {
-        public string Accuracy { get; set; }
+        public double Accuracy { get; set; }
         public string RankImage { get; set; }
 
         public string Version { get; set; }

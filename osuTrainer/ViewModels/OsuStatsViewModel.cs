@@ -131,7 +131,7 @@ namespace osuTrainer.ViewModels
                 }
                 scores.Add(new ScoreInfo
                 {
-                    Accuracy = "-",
+                    Accuracy = osuStatsScores[i].Accuracy,
                     Mods = osuStatsScores[i].Enabled_Mods,
                     BeatmapTitle = osuStatsScores[i].Beatmap_Title,
                     Version = osuStatsScores[i].Beatmap_Version,
@@ -160,6 +160,7 @@ namespace osuTrainer.ViewModels
         public string Username { get; set; }
 
         public int Uid { get; set; }
+        public double Accuracy { get; set; }
 
         public GlobalVars.Mods Enabled_Mods { get; set; }
 
