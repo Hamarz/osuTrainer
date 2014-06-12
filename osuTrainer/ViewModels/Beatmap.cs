@@ -15,12 +15,13 @@ namespace osuTrainer.ViewModels
             using (var client = new CustomWebClient())
             {
                 string json = client.DownloadString(GlobalVars.BeatmapApi + apiKey + "&b=" + beatmapId);
+
                 Match match = Regex.Match(json,
                     @"""beatmapset_id"":""(.+?)"".+?""total_length"":""(.+?)"".+?""hit_length"":""(.+?)"".+?""version"":""(.+?)"".+?""artist"":""(.+?)"".+?""title"":""(.+?)"".+?""creator"":""(.+?)"".+?""bpm"":""(.+?)"".+?""difficultyrating"":""(.+?)"".+?""mode"":""(.+?)""");
-                BeatmapSet_id = Convert.ToInt32(match.Groups[1].Value);
-                Beatmap_id = beatmapId;
-                Total_length = Convert.ToInt32(match.Groups[2].Value);
-                Hit_length = Convert.ToInt32(match.Groups[3].Value);
+                BeatmapSet_Id = Convert.ToInt32(match.Groups[1].Value);
+                Beatmap_Id = beatmapId;
+                Total_Length = Convert.ToInt32(match.Groups[2].Value);
+                Hit_Length = Convert.ToInt32(match.Groups[3].Value);
                 Version = match.Groups[4].Value;
                 Artist = match.Groups[5].Value;
                 Title = match.Groups[6].Value;
@@ -31,13 +32,18 @@ namespace osuTrainer.ViewModels
             }
         }
 
-        public int Beatmap_id { get; set; }
+        public int BeatmapSet_Id { get; set; }
+        public int Beatmap_Id { get; set; }
 
-        public int BeatmapSet_id { get; set; }
+        public int Approved { get; set; }
 
-        public int Total_length { get; set; }
+        public DateTime Approved_Date { get; set; }
 
-        public int Hit_length { get; set; }
+        public DateTime Last_Update { get; set; }
+
+        public int Total_Length { get; set; }
+
+        public int Hit_Length { get; set; }
 
         public string Version { get; set; }
 
@@ -50,6 +56,10 @@ namespace osuTrainer.ViewModels
         public double Bpm { get; set; }
 
         public double Difficultyrating { get; set; }
+        public int Diff_Size { get; set; }
+        public int Diff_Overall { get; set; }
+        public int Diff_Approach { get; set; }
+        public int Diff_Drain { get; set; }
 
         public GlobalVars.GameMode Mode { get; set; }
     }

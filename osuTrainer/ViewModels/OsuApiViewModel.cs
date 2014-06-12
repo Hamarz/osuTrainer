@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -198,33 +200,39 @@ namespace osuTrainer.ViewModels
                     userBestList[j].Enabled_Mods &= ~(GlobalVars.Mods.NV | GlobalVars.Mods.Perfect | GlobalVars.Mods.SD | GlobalVars.Mods.SpunOut);
                     if ((!IsExclusiveCbChecked || userBestList[j].Enabled_Mods != mods) &&
                         (IsExclusiveCbChecked || !userBestList[j].Enabled_Mods.HasFlag(mods))) continue;
-                    if (UserScores.Contains(userBestList[j].Beatmap_Id)) continue;
-                    var beatmap = new Beatmap(userBestList[j].Beatmap_Id, ApiKey);
+                    if (UserScores.Contains(userBestList[j].Beatmap_Id)) continue;                   
+                    var beatmap = JsonSerializer.DeserializeFromString<List<Beatmap>>(_client.DownloadString(GlobalVars.BeatmapApi + ApiKey + "&b=" + userBestList[j].Beatmap_Id));
                     double dtmodifier = 1.0;
                     if (userBestList[j].Enabled_Mods.HasFlag(GlobalVars.Mods.DT) ||
                         userBestList[j].Enabled_Mods.HasFlag(GlobalVars.Mods.NC))
                     {
                         dtmodifier = 1.5;
                     }
-                    UserScores.Add(beatmap.Beatmap_id);
+                    UserScores.Add(beatmap.First().Beatmap_Id);
                     scores.Add(new ScoreInfo
                     {
                         Accuracy = Math.Round(
                         GetAccuracy(userBestList[j].Count50, userBestList[j].Count100, userBestList[j].Count300, userBestList[j].CountMiss, userBestList[j].CountKatu, userBestList[j].CountGeki),2),
-                        BeatmapTitle = beatmap.Title,
-                        Version = beatmap.Version,
-                        BeatmapCreator = beatmap.Creator,
-                        BeatmapArtist = beatmap.Artist,
+                        BeatmapTitle = beatmap.First().Title,
+                        Version = beatmap.First().Version,
+                        BeatmapCreator = beatmap.First().Creator,
+                        BeatmapArtist = beatmap.First().Artist,
                         Mods = userBestList[j].Enabled_Mods,
-                        Bpm = (int)Math.Truncate(beatmap.Bpm * dtmodifier),
-                        Difficultyrating = Math.Round(beatmap.Difficultyrating,2),
+                        Bpm = (int)Math.Truncate(beatmap.First().Bpm * dtmodifier),
+                        Difficultyrating = Math.Round(beatmap.First().Difficultyrating, 2),
                         Pp = (int)Math.Truncate(userBestList[j].PP),
                         RankImage = GetRankImageUri(userBestList[j].Rank),
-                        BeatmapId = beatmap.Beatmap_id,
-                        BeatmapSetId = beatmap.BeatmapSet_id,
-                        ThumbUrl = GlobalVars.ThumbUrl + beatmap.BeatmapSet_id + @"l.jpg",
-                        TotalTime = TimeSpan.FromSeconds(beatmap.Total_length).ToString(@"mm\:ss"),
-                        DrainingTime = TimeSpan.FromSeconds(beatmap.Hit_length).ToString(@"mm\:ss")
+                        BeatmapId = beatmap.First().Beatmap_Id,
+                        BeatmapSetId = beatmap.First().BeatmapSet_Id,
+                        ThumbUrl = GlobalVars.ThumbUrl + beatmap.First().BeatmapSet_Id + @"l.jpg",
+                        TotalTime = TimeSpan.FromSeconds(beatmap.First().Total_Length).ToString(@"mm\:ss"),
+                        DrainingTime = TimeSpan.FromSeconds(beatmap.First().Hit_Length).ToString(@"mm\:ss"),
+                        ApprovedDate = beatmap.First().Approved_Date,
+                        DiffApproach = beatmap.First().Diff_Approach,
+                        DiffDrain = beatmap.First().Diff_Drain,
+                        DiffOverall = beatmap.First().Diff_Overall,
+                        DiffSize = beatmap.First().Diff_Size,
+                        Mode = beatmap.First().Mode
                     });
                     ScoresAdded++;
                 }

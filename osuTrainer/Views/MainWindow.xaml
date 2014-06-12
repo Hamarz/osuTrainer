@@ -47,6 +47,8 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -100,8 +102,24 @@
                             <controls:ToggleSwitch Grid.Row="3" Grid.Column="3"
                                                    IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsDiffVisible}"
                                                    Margin="10,0"/>
-                            <TextBlock Grid.Row="3" Grid.Column="4" Text="PP" VerticalAlignment="Center"/>
-                            <controls:ToggleSwitch Grid.Row="3" Grid.Column="5" 
+                            <TextBlock Grid.Row="3" Grid.Column="4" Text="CS" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="3" Grid.Column="5"
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsCsVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="OD" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="4" Grid.Column="1"
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsOdVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="4" Grid.Column="2" Text="AR" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="4" Grid.Column="3"
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsArVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="4" Grid.Column="4" Text="DR" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="4" Grid.Column="5"
+                                                   IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsDrVisible}"
+                                                   Margin="10,0"/>
+                            <TextBlock Grid.Row="5" Grid.Column="0" Text="PP" VerticalAlignment="Center"/>
+                            <controls:ToggleSwitch Grid.Row="5" Grid.Column="1" 
                                                    IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsPpVisible}"
                                                    Margin="10,0"/>
                         </Grid>
@@ -383,6 +401,38 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Difficultyrating}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Difficultyrating}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="CS" Width="40" SortMemberPath="DiffSize"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsCsVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=DiffSize}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=DiffSize}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="OD" Width="40" SortMemberPath="DiffOverall"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsOdVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=DiffOverall}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=DiffOverall}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="AR" Width="40" SortMemberPath="DiffApproach"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsArVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=DiffApproach}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=DiffApproach}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="DR" Width="40" SortMemberPath="DiffDrain"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsDrVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=DiffDrain}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=DiffDrain}" HorizontalAlignment="Right"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

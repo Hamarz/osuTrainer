@@ -187,6 +187,8 @@ namespace osuTrainer.ViewModels
         public int Beatmap_Hit_Length { get; set; }
 
         public string Beatmap_Version { get; set; }
+
+        public DateTime Beatmap_RankedDate { get; set; }
     }
 
     internal class OsuStatsBest

@@ -370,5 +370,53 @@ namespace osuTrainer.Properties {
                 this["IsDiffVisible"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsOdVisible {
+            get {
+                return ((bool)(this["IsOdVisible"]));
+            }
+            set {
+                this["IsOdVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsArVisible {
+            get {
+                return ((bool)(this["IsArVisible"]));
+            }
+            set {
+                this["IsArVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsCsVisible {
+            get {
+                return ((bool)(this["IsCsVisible"]));
+            }
+            set {
+                this["IsCsVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsDrVisible {
+            get {
+                return ((bool)(this["IsDrVisible"]));
+            }
+            set {
+                this["IsDrVisible"] = value;
+            }
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace osuTrainer.ViewModels
+﻿using System;
+
+namespace osuTrainer.ViewModels
 {
     public class ScoreInfo
     {
@@ -18,12 +20,14 @@
         public string BeatmapTitle { get; set; }
         public string BeatmapArtist { get; set; }
         public string BeatmapCreator { get; set; }
-        public string BeatmapUrl { get; set; }
-        public string BloodcatDlUrl { get; set; }
-        public string DlUrl { get; set; }
         public string ThumbUrl { get; set; }
-        public string OsuDirectCmd { get; set; }
         public string TotalTime { get; set; }
         public string DrainingTime { get; set; }
+        public DateTime ApprovedDate { get; set; }
+        public int DiffSize { get; set; }
+        public int DiffOverall { get; set; }
+        public int DiffApproach { get; set; }
+        public int DiffDrain { get; set; }
+        public GlobalVars.GameMode Mode { get; set; }
     }
 }
