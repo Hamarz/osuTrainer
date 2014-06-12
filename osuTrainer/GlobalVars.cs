@@ -73,10 +73,10 @@ namespace osuTrainer
         }
 
         public static readonly string BeatmapUrl = @"http://osu.ppy.sh/b/";
-        public static string BeatmapApi = @"http://osu.ppy.sh/api/get_beatmaps?k=";
-        public static string UserApi = @"http://osu.ppy.sh/api/get_user?k=";
+        public static readonly string BeatmapApi = @"http://osu.ppy.sh/api/get_beatmaps?k=";
+        public static readonly string UserApi = @"http://osu.ppy.sh/api/get_user?k=";
         public static readonly string BloodcatUrl = @"http://bloodcat.com/osu/m/";
-        public static string UserBestApi = @"https://osu.ppy.sh/api/get_user_best?k=";
+        public static readonly string UserBestApi = @"https://osu.ppy.sh/api/get_user_best?k=";
         public static readonly string ThumbUrl = @"https://b.ppy.sh/thumb/";
         public static readonly string DownloadURL = @"http://osu.ppy.sh/d/";
         public static readonly string OsuDirectURL = @"osu://dl/";

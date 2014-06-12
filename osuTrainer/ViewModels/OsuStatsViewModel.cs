@@ -121,6 +121,7 @@ namespace osuTrainer.ViewModels
             {
                 if (UserScores.Contains(osuStatsScores[i].Beatmap_Id)) continue;
                 if (IsFcOnlyCbChecked) if ((int)osuStatsScores[i].Rank > 3) continue;
+                osuStatsScores[i].Enabled_Mods &= ~(GlobalVars.Mods.NV | GlobalVars.Mods.Perfect | GlobalVars.Mods.SD | GlobalVars.Mods.SpunOut | GlobalVars.Mods.Autoplay);
                 UserScores.Add(osuStatsScores[i].Beatmap_Id);
                 double dtmodifier = 1.0;
                 if (osuStatsScores[i].Enabled_Mods.HasFlag(GlobalVars.Mods.DT) ||
@@ -131,7 +132,7 @@ namespace osuTrainer.ViewModels
                 scores.Add(new ScoreInfo
                 {
                     Accuracy = "-",
-                    Mods = (osuStatsScores[i].Enabled_Mods & ~GlobalVars.Mods.Autoplay),
+                    Mods = osuStatsScores[i].Enabled_Mods,
                     BeatmapTitle = osuStatsScores[i].Beatmap_Title,
                     Version = osuStatsScores[i].Beatmap_Version,
                     BeatmapCreator = osuStatsScores[i].Beatmap_Creator,

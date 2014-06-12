@@ -136,7 +136,6 @@ namespace osuTrainer.ViewModels
             }
             string json = "";
             GlobalVars.Mods mods = SelectedModsToEnum();
-            GlobalVars.Mods modsAndNv = mods | GlobalVars.Mods.NV;
             int[] userids;
             int startid;
             switch (SelectedGameMode)
@@ -193,11 +192,11 @@ namespace osuTrainer.ViewModels
                 startid -= 1;
                 var userBestList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
                 for (int j = 0; j < userBestList.Count; j++)
-                {
+                {                       
                     if (userBestList[j].PP < MinPp) break;
                     if (IsFcOnlyCbChecked) if ((int)userBestList[j].Rank > 3) continue;
-                    if ((!IsExclusiveCbChecked ||
-                         (userBestList[j].Enabled_Mods != modsAndNv && userBestList[j].Enabled_Mods != mods)) &&
+                    userBestList[j].Enabled_Mods &= ~(GlobalVars.Mods.NV | GlobalVars.Mods.Perfect | GlobalVars.Mods.SD | GlobalVars.Mods.SpunOut);
+                    if ((!IsExclusiveCbChecked || userBestList[j].Enabled_Mods != mods) &&
                         (IsExclusiveCbChecked || !userBestList[j].Enabled_Mods.HasFlag(mods))) continue;
                     if (UserScores.Contains(userBestList[j].Beatmap_Id)) continue;
                     var beatmap = new Beatmap(userBestList[j].Beatmap_Id, ApiKey);
