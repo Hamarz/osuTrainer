@@ -138,7 +138,7 @@ namespace osuTrainer.ViewModels
                     BeatmapCreator = osuStatsScores[i].Beatmap_Creator,
                     BeatmapArtist = osuStatsScores[i].Beatmap_Artist,
                     Bpm = Math.Truncate(osuStatsScores[i].Beatmap_Bpm * dtmodifier),
-                    Difficultyrating = Math.Round(osuStatsScores[i].Beatmap_Diffrating,2),
+                    Difficultyrating = Math.Round(osuStatsScores[i].Beatmap_Diffrating, 2),
                     Pp = Math.Truncate(osuStatsScores[i].Pp_Value),
                     TotalTime = TimeSpan.FromSeconds(osuStatsScores[i].Beatmap_Total_Length).ToString(@"mm\:ss"),
                     DrainingTime = TimeSpan.FromSeconds(osuStatsScores[i].Beatmap_Hit_Length).ToString(@"mm\:ss"),
@@ -146,6 +146,8 @@ namespace osuTrainer.ViewModels
                     BeatmapId = osuStatsScores[i].Beatmap_Id,
                     BeatmapSetId = osuStatsScores[i].Beatmap_SetId,
                     ThumbUrl = GlobalVars.ThumbUrl + osuStatsScores[i].Beatmap_SetId + @"l.jpg",
+                    ApprovedDate = osuStatsScores[i].Beatmap_RankedDate.ToShortDateString(),
+                    Mode = "-"
                 });
                 ScoresAdded++;
             }

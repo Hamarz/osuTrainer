@@ -418,5 +418,29 @@ namespace osuTrainer.Properties {
                 this["IsDrVisible"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsAdVisible {
+            get {
+                return ((bool)(this["IsAdVisible"]));
+            }
+            set {
+                this["IsAdVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsModeVisible {
+            get {
+                return ((bool)(this["IsModeVisible"]));
+            }
+            set {
+                this["IsModeVisible"] = value;
+            }
+        }
     }
 }

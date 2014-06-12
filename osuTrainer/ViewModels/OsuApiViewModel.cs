@@ -227,12 +227,12 @@ namespace osuTrainer.ViewModels
                         ThumbUrl = GlobalVars.ThumbUrl + beatmap.First().BeatmapSet_Id + @"l.jpg",
                         TotalTime = TimeSpan.FromSeconds(beatmap.First().Total_Length).ToString(@"mm\:ss"),
                         DrainingTime = TimeSpan.FromSeconds(beatmap.First().Hit_Length).ToString(@"mm\:ss"),
-                        ApprovedDate = beatmap.First().Approved_Date,
+                        ApprovedDate = beatmap.First().Approved_Date.ToShortDateString(),
                         DiffApproach = beatmap.First().Diff_Approach,
                         DiffDrain = beatmap.First().Diff_Drain,
                         DiffOverall = beatmap.First().Diff_Overall,
                         DiffSize = beatmap.First().Diff_Size,
-                        Mode = beatmap.First().Mode
+                        Mode = beatmap.First().Mode.ToString()
                     });
                     ScoresAdded++;
                 }

@@ -23,11 +23,11 @@ namespace osuTrainer.ViewModels
         public string ThumbUrl { get; set; }
         public string TotalTime { get; set; }
         public string DrainingTime { get; set; }
-        public DateTime ApprovedDate { get; set; }
+        public string ApprovedDate { get; set; }
         public int DiffSize { get; set; }
         public int DiffOverall { get; set; }
         public int DiffApproach { get; set; }
         public int DiffDrain { get; set; }
-        public GlobalVars.GameMode Mode { get; set; }
+        public string Mode { get; set; }
     }
 }
