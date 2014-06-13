@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel.Syndication;
@@ -17,8 +18,10 @@ namespace osuTrainer.Views
     /// </summary>
     public partial class Beatmaps : UserControl
     {
-        private List<FeedItem> newBeatmaps;
-        private DispatcherTimer timer;
+        private List<FeedItem> _newBeatmaps;
+        private DispatcherTimer _timer;
+        private readonly BackgroundWorker _worker = new BackgroundWorker();
+        private bool _shouldUpdate;
 
         public Beatmaps()
         {
@@ -27,23 +30,24 @@ namespace osuTrainer.Views
 
         private void Beatmaps_OnInitialized(object sender, EventArgs e)
         {
-            timer = new DispatcherTimer
+            _timer = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 1, 0)
             };
-            timer.Tick += timer_Tick;
-            timer_Tick(sender, e);
+            _timer.Tick += timer_Tick;
+            _worker.DoWork += WorkerOnDoWork;
+            _worker.RunWorkerCompleted += WorkerOnRunWorkerCompleted;
         }
 
-        private void timer_Tick(object sender, EventArgs e)
+        private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            const string url = "https://osu.ppy.sh/feed/ranked/";
+            const string url = @"https://osu.ppy.sh/feed/ranked/";
             XmlReader reader = XmlReader.Create(url);
             SyndicationFeed feed = SyndicationFeed.Load(reader);
             reader.Close();
             if (feed != null)
             {
-                newBeatmaps = feed.Items.Select(item => new FeedItem
+                _newBeatmaps = feed.Items.Select(item => new FeedItem
                 {
                     BeatmapSetId = Regex.Match(item.Links.First().Uri.ToString(), @"\d+").Value,
                     Title = item.Title.Text,
@@ -54,15 +58,30 @@ namespace osuTrainer.Views
                                 "l.jpg"),
                     RankedDate = item.PublishDate.LocalDateTime
                 }).AsParallel().ToList();
+                _shouldUpdate = true;
+            }
+        }
+
+        private void WorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
+        {
+            if (_shouldUpdate)
+            {
                 UpdateBeatmapDisplay();
+            }
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            if(!_worker.IsBusy)
+            {
+                _worker.RunWorkerAsync();
             }
         }
 
         private void UpdateBeatmapDisplay()
         {
             BeatmapSp.Children.Clear();
-
-            foreach (FeedItem item in newBeatmaps)
+            foreach (FeedItem item in _newBeatmaps)
             {
                 var grid1 = new Grid();
                 grid1.ColumnDefinitions.Add(new ColumnDefinition {Width = new GridLength(120)});
@@ -118,6 +137,11 @@ namespace osuTrainer.Views
         private void ButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
             Process.Start((string) (sender as Button).Tag);
+        }
+
+        private void Beatmaps_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            timer_Tick(sender, e);
         }
     }
 

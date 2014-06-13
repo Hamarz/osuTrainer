@@ -17,7 +17,8 @@
         GlowBrush="#FF41B1E1" 
         NonActiveBorderBrush="Black" 
         NonActiveGlowBrush="{x:Null}" 
-        NonActiveWindowTitleBrush="#FF41B1E1">
+        NonActiveWindowTitleBrush="#FF41B1E1"
+                      Initialized="MainWindow_OnInitialized">
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
             <controls:Flyout x:Name="settingsFlyout"
@@ -228,8 +229,6 @@
                     <views:Beatmaps DataContext="{Binding}" />
                 </TabItem>
             </controls:MetroAnimatedSingleRowTabControl>
-            <ContentControl x:Name="SelectedPage"  Grid.Row="1">                
-            </ContentControl>
             <Grid Grid.Row="1" 
                   Margin="5,0">
                 <Grid.ColumnDefinitions>

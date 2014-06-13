@@ -22,10 +22,6 @@ namespace osuTrainer.Views
         public MainWindow()
         {
             InitializeComponent();
-            Title = "osu! Trainer " + Assembly.GetExecutingAssembly().GetName().Version;
-            LoadPreviousSettings();            
-            CheckUpdates();
-            settingsFlyout.IsOpenChanged += SettingsFlyoutOnIsOpenChanged;
         }
 
         private void SettingsFlyoutOnIsOpenChanged(object sender, EventArgs eventArgs)
@@ -121,6 +117,14 @@ namespace osuTrainer.Views
         private void ShowSettings(object sender, RoutedEventArgs e)
         {
             ToggleFlyout(0);
+        }
+
+        private void MainWindow_OnInitialized(object sender, EventArgs e)
+        {
+            Title = "osu! Trainer " + Assembly.GetExecutingAssembly().GetName().Version;
+            LoadPreviousSettings();
+            CheckUpdates();
+            settingsFlyout.IsOpenChanged += SettingsFlyoutOnIsOpenChanged;
         }
     }
 }

@@ -6,7 +6,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" 
              d:DesignWidth="300"
-             Initialized="Beatmaps_OnInitialized">
+             Initialized="Beatmaps_OnInitialized"
+             Loaded="Beatmaps_OnLoaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button"></Style>
