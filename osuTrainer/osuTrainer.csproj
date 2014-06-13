@@ -76,10 +76,21 @@
     <Compile Include="InvertBoolConverter.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Updater.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\OsuApiViewModel.cs" />
     <Compile Include="ViewModels\OsuStatsViewModel.cs" />
+    <Compile Include="Views\Beatmaps.xaml.cs">
+      <DependentUpon>Beatmaps.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Scores.xaml.cs">
+      <DependentUpon>Scores.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowSettings.cs" />
+    <Page Include="Resources\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -93,6 +104,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Beatmaps.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Scores.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ViewModels\Beatmap.cs" />
@@ -129,6 +148,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Resource Include="Resources\Entypo.ttf" />
     <None Include="standard">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -151,6 +171,12 @@
     <Resource Include="Resources\S_small.png" />
     <Resource Include="Resources\XH_small.png" />
     <Resource Include="Resources\X_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\WindowsIcons-license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Entypo-license.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

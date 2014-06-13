@@ -22,7 +22,8 @@ namespace osuTrainer.Views
         public MainWindow()
         {
             InitializeComponent();
-            LoadPreviousSettings();
+            Title = "osu! Trainer " + Assembly.GetExecutingAssembly().GetName().Version;
+            LoadPreviousSettings();            
             CheckUpdates();
             settingsFlyout.IsOpenChanged += SettingsFlyoutOnIsOpenChanged;
         }
@@ -72,71 +73,6 @@ namespace osuTrainer.Views
             updater.Start();
         }
 
-        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            Title = "osu! Trainer " + Assembly.GetExecutingAssembly().GetName().Version;
-            PasswordBox.Password = Settings.Default.ApiKey;
-            GameModeCb.ItemsSource = Enum.GetValues(typeof (GlobalVars.GameMode)).Cast<int>();
-            ScoreSourceCb.Items.Add("osu! API");
-            ScoreSourceCb.Items.Add("osustats API");
-            ScoreSourceCb.SelectedIndex = Settings.Default.DataSource;
-            switch (Settings.Default.DataSource)
-            {
-                case 1:
-                    DataContext = new OsuStatsViewModel();
-                    break;
-                default:
-                    DataContext = new OsuApiViewModel();
-                    break;
-            }
-        }
-
-        private void UpdateButton_Click(object sender, RoutedEventArgs e)
-        {
-            Settings.Default.Username = UsernameTb.Text;
-            Settings.Default.ApiKey = PasswordBox.Password;
-            Settings.Default.MinPp = PpSlider.Value;
-            Settings.Default.GameMode = GameModeCb.SelectedIndex;
-            Settings.Default.IsDoubletimeCbChecked = DoubletimeCb.IsChecked ?? false;
-            Settings.Default.IsHardrockCbChecked = HardrockCb.IsChecked ?? false;
-            Settings.Default.IsHiddenCbChecked = HiddenCb.IsChecked ?? false;
-            Settings.Default.IsFlashlightCbChecked = FlashlightCb.IsChecked ?? false;
-            Settings.Default.IsFcOnlyCbChecked = FcOnlyCb.IsChecked ?? false;
-            Settings.Default.IsExclusiveCbChecked = ExclusiveCb.IsChecked ?? false;
-            Settings.Default.Save();
-            if (ScoreSourceCb.SelectedIndex != Settings.Default.DataSource)
-            {
-                switch (ScoreSourceCb.SelectedIndex)
-                {
-                    case 1:
-                        DataContext = new OsuStatsViewModel();
-                        break;
-                    default:
-                        DataContext = new OsuApiViewModel();
-                        break;
-                }
-            }
-            Settings.Default.DataSource = ScoreSourceCb.SelectedIndex;
-            Settings.Default.Save();
-        }
-
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
-            e.Handled = true;
-        }
-
-        private void ApiLink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
-            e.Handled = true;
-        }
-
-        private void ShowSettings(object sender, RoutedEventArgs e)
-        {
-            ToggleFlyout(0);
-        }
-
         private void ToggleFlyout(int index)
         {
             var flyout = Flyouts.Items[index] as Flyout;
@@ -175,6 +111,16 @@ namespace osuTrainer.Views
             {
                 settingsFlyout.Theme = FlyoutTheme.Dark;
             }
+        }
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
+        }
+
+        private void ShowSettings(object sender, RoutedEventArgs e)
+        {
+            ToggleFlyout(0);
         }
     }
 }
