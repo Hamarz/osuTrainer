@@ -1,26 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using osuTrainer.Properties;
 using osuTrainer.ViewModels;
 
 namespace osuTrainer.Views
 {
     /// <summary>
-    /// Interaction logic for Scores.xaml
+    ///     Interaction logic for Scores.xaml
     /// </summary>
     public partial class Scores : UserControl
     {
@@ -66,7 +56,6 @@ namespace osuTrainer.Views
 
         private void Scores_Loaded(object sender, RoutedEventArgs e)
         {
-
             if (DataContext == null)
             {
                 switch (Settings.Default.DataSource)
@@ -84,11 +73,10 @@ namespace osuTrainer.Views
         private void Scores_Initialized(object sender, EventArgs e)
         {
             PasswordBox.Password = Settings.Default.ApiKey;
-            GameModeCb.ItemsSource = Enum.GetValues(typeof(GlobalVars.GameMode)).Cast<int>();
+            GameModeCb.ItemsSource = Enum.GetValues(typeof (GlobalVars.GameMode)).Cast<int>();
             ScoreSourceCb.Items.Add("osu! API");
             ScoreSourceCb.Items.Add("osustats API");
             ScoreSourceCb.SelectedIndex = Settings.Default.DataSource;
         }
-
     }
 }

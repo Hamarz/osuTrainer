@@ -76,7 +76,7 @@
     <Compile Include="GlobalVars.cs" />
     <Compile Include="InvertBoolConverter.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="Updater.cs" />
+    <Compile Include="Views\Updater.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\OsuApiViewModel.cs" />
@@ -136,26 +136,19 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="ctb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="mania">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Resource Include="Resources\ctb" />
+    <Resource Include="Resources\mania" />
+    <Resource Include="Resources\standard" />
+    <Resource Include="Resources\taiko" />
     <Resource Include="Resources\Entypo.ttf" />
-    <None Include="standard">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="taiko">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

@@ -14,14 +14,14 @@ using System.Xml;
 namespace osuTrainer.Views
 {
     /// <summary>
-    ///     Interaction logic for NewestRanked.xaml
+    ///     Interaction logic for Beatmaps.xaml
     /// </summary>
     public partial class Beatmaps : UserControl
     {
-        private List<FeedItem> _newBeatmaps;
-        private DispatcherTimer _timer;
         private readonly BackgroundWorker _worker = new BackgroundWorker();
+        private List<FeedItem> _newBeatmaps;
         private bool _shouldUpdate;
+        private DispatcherTimer _timer;
 
         public Beatmaps()
         {
@@ -73,7 +73,7 @@ namespace osuTrainer.Views
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            if(!_worker.IsBusy)
+            if (!_worker.IsBusy)
             {
                 _worker.RunWorkerAsync();
             }

@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -56,22 +54,22 @@ namespace osuTrainer.ViewModels
         private void LoadUserIds()
         {
             var formatter = new BinaryFormatter();
-            using (var fs = new FileStream("standard", FileMode.Open, FileAccess.Read))
-            {
-                standardIds = (int[])formatter.Deserialize(fs);
-            }
-            using (var fs = new FileStream("taiko", FileMode.Open, FileAccess.Read))
-            {
-                taikoIds = (int[])formatter.Deserialize(fs);
-            }
-            using (var fs = new FileStream("ctb", FileMode.Open, FileAccess.Read))
-            {
-                ctbIds = (int[])formatter.Deserialize(fs);
-            }
-            using (var fs = new FileStream("mania", FileMode.Open, FileAccess.Read))
-            {
-                maniaIds = (int[])formatter.Deserialize(fs);
-            }
+            standardIds =
+                (int[])
+                    formatter.Deserialize(
+                        Application.GetResourceStream(new Uri("Resources/standard", UriKind.Relative)).Stream);
+            taikoIds =
+                (int[])
+                    formatter.Deserialize(
+                        Application.GetResourceStream(new Uri("Resources/taiko", UriKind.Relative)).Stream);
+            ctbIds =
+                (int[])
+                    formatter.Deserialize(
+                        Application.GetResourceStream(new Uri("Resources/ctb", UriKind.Relative)).Stream);
+            maniaIds =
+                (int[])
+                    formatter.Deserialize(
+                        Application.GetResourceStream(new Uri("Resources/mania", UriKind.Relative)).Stream);
         }
 
         private bool GetUserBest()
@@ -105,12 +103,11 @@ namespace osuTrainer.ViewModels
             try
             {
                 json =
-    _client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + SelectedGameMode +
-                           @"&uid=" + _userId);
+                    _client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + SelectedGameMode +
+                                           @"&uid=" + _userId);
             }
             catch (Exception)
             {
-
             }
 
             var osuStatsBest = JsonSerializer.DeserializeFromString<List<OsuStatsBest>>(json);
@@ -194,14 +191,17 @@ namespace osuTrainer.ViewModels
                 startid -= 1;
                 var userBestList = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
                 for (int j = 0; j < userBestList.Count; j++)
-                {                       
+                {
                     if (userBestList[j].PP < MinPp) break;
-                    if (IsFcOnlyCbChecked) if ((int)userBestList[j].Rank > 3) continue;
-                    userBestList[j].Enabled_Mods &= ~(GlobalVars.Mods.NV | GlobalVars.Mods.Perfect | GlobalVars.Mods.SD | GlobalVars.Mods.SpunOut);
+                    if (IsFcOnlyCbChecked) if ((int) userBestList[j].Rank > 3) continue;
+                    userBestList[j].Enabled_Mods &=
+                        ~(GlobalVars.Mods.NV | GlobalVars.Mods.Perfect | GlobalVars.Mods.SD | GlobalVars.Mods.SpunOut);
                     if ((!IsExclusiveCbChecked || userBestList[j].Enabled_Mods != mods) &&
                         (IsExclusiveCbChecked || !userBestList[j].Enabled_Mods.HasFlag(mods))) continue;
-                    if (UserScores.Contains(userBestList[j].Beatmap_Id)) continue;                   
-                    var beatmap = JsonSerializer.DeserializeFromString<List<Beatmap>>(_client.DownloadString(GlobalVars.BeatmapApi + ApiKey + "&b=" + userBestList[j].Beatmap_Id));
+                    if (UserScores.Contains(userBestList[j].Beatmap_Id)) continue;
+                    var beatmap =
+                        JsonSerializer.DeserializeFromString<List<Beatmap>>(
+                            _client.DownloadString(GlobalVars.BeatmapApi + ApiKey + "&b=" + userBestList[j].Beatmap_Id));
                     double dtmodifier = 1.0;
                     if (userBestList[j].Enabled_Mods.HasFlag(GlobalVars.Mods.DT) ||
                         userBestList[j].Enabled_Mods.HasFlag(GlobalVars.Mods.NC))
@@ -212,15 +212,16 @@ namespace osuTrainer.ViewModels
                     scores.Add(new ScoreInfo
                     {
                         Accuracy = Math.Round(
-                        GetAccuracy(userBestList[j].Count50, userBestList[j].Count100, userBestList[j].Count300, userBestList[j].CountMiss, userBestList[j].CountKatu, userBestList[j].CountGeki),2),
+                            GetAccuracy(userBestList[j].Count50, userBestList[j].Count100, userBestList[j].Count300,
+                                userBestList[j].CountMiss, userBestList[j].CountKatu, userBestList[j].CountGeki), 2),
                         BeatmapTitle = beatmap.First().Title,
                         Version = beatmap.First().Version,
                         BeatmapCreator = beatmap.First().Creator,
                         BeatmapArtist = beatmap.First().Artist,
                         Mods = userBestList[j].Enabled_Mods,
-                        Bpm = (int)Math.Truncate(beatmap.First().Bpm * dtmodifier),
+                        Bpm = (int) Math.Truncate(beatmap.First().Bpm*dtmodifier),
                         Difficultyrating = Math.Round(beatmap.First().Difficultyrating, 2),
-                        Pp = (int)Math.Truncate(userBestList[j].PP),
+                        Pp = (int) Math.Truncate(userBestList[j].PP),
                         RankImage = GetRankImageUri(userBestList[j].Rank),
                         BeatmapId = beatmap.First().Beatmap_Id,
                         BeatmapSetId = beatmap.First().BeatmapSet_Id,
@@ -250,7 +251,7 @@ namespace osuTrainer.ViewModels
             int iterations = 0;
             while (low < high && iterations < 7)
             {
-                midpoint = low + (high - low) / 2;
+                midpoint = low + (high - low)/2;
                 double midUserPp = GetUserPp(ids[midpoint]);
                 if (targetpp > midUserPp)
                 {
