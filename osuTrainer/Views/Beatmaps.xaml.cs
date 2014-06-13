@@ -34,6 +34,7 @@ namespace osuTrainer.Views
             {
                 Interval = new TimeSpan(0, 1, 0)
             };
+            _timer.Start();
             _timer.Tick += timer_Tick;
             _worker.DoWork += WorkerOnDoWork;
             _worker.RunWorkerCompleted += WorkerOnRunWorkerCompleted;
