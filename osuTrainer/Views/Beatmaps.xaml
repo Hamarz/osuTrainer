@@ -5,9 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" 
-             d:DesignWidth="300">
-    <Grid>
-        <DataGrid HorizontalAlignment="Left" Margin="72,123,0,0" VerticalAlignment="Top" Height="139" Width="161"/>
-
+             d:DesignWidth="300"
+             Initialized="Beatmaps_OnInitialized">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button"></Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="10,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" FontSize="20" Text="Newest ranked/qualified:"/>
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Name="BeatmapSp" Margin="10,0,0,0">
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>
