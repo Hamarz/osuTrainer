@@ -225,8 +225,11 @@
                 <TabItem Header="Scores">
                     <views:Scores x:Name="ScoresTab" DataContext="{Binding}" />
                 </TabItem>
-                <TabItem Header="Latest">
-                    <views:Latest DataContext="{Binding}" />
+                <TabItem Header="Beatmaps">
+                    <views:Beatmaps DataContext="{Binding}" />
+                </TabItem>
+                <TabItem Header="Rivals">
+                    <views:Rivals DataContext="{Binding}" />
                 </TabItem>
             </controls:MetroAnimatedSingleRowTabControl>
             <Grid Grid.Row="1" 

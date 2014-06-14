@@ -16,14 +16,14 @@ namespace osuTrainer.Views
     /// <summary>
     ///     Interaction logic for Latest.xaml
     /// </summary>
-    public partial class Latest : UserControl
+    public partial class Beatmaps : UserControl
     {
         private readonly BackgroundWorker _worker = new BackgroundWorker();
         private List<FeedItem> _newBeatmaps;
         private bool _shouldUpdate;
         private DispatcherTimer _timer;
 
-        public Latest()
+        public Beatmaps()
         {
             InitializeComponent();
         }

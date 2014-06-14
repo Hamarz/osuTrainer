@@ -21,7 +21,7 @@ namespace osuTrainer.Views
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Default.Username = UsernameTb.Text;
+            Settings.Default.Userid = UseridTb.Text;
             Settings.Default.ApiKey = PasswordBox.Password;
             Settings.Default.MinPp = PpSlider.Value;
             Settings.Default.GameMode = GameModeCb.SelectedIndex;

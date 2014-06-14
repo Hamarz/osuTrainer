@@ -54,8 +54,8 @@
                 </Grid>
                 <Image Grid.Column="1" Source="{Binding SelectedItem.ThumbUrl, ElementName=dataGrid}"/>
                 <StackPanel Grid.Column="2" Margin="5,5,0,0">
-                    <TextBlock Text="Username:" Width="70" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-                    <TextBox Name="UsernameTb" Width="100" controls:TextboxHelper.Watermark="Username" Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="Userid\-name:" Width="100" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                    <TextBox Name="UseridTb" Width="100" controls:TextboxHelper.Watermark="Userid\-name" Text="{Binding Path=Userid, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="API Key:" Width="70" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
                     <PasswordBox Name="PasswordBox"  Width="100" controls:TextboxHelper.Watermark="API key"/>
                     <TextBlock>

@@ -72,6 +72,7 @@ namespace osuTrainer
             D_small
         }
 
+        public static readonly string UserUrl = @"http://osu.ppy.sh/u/";
         public static readonly string BeatmapUrl = @"http://osu.ppy.sh/b/";
         public static readonly string BeatmapApi = @"http://osu.ppy.sh/api/get_beatmaps?k=";
         public static readonly string UserApi = @"http://osu.ppy.sh/api/get_user?k=";
