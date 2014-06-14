@@ -87,8 +87,10 @@
                     <CheckBox Grid.Row="1" Grid.Column="1" Name ="FlashlightCb" Content="Flashlight" IsChecked="{Binding Path=IsFlashlightCbChecked}"/>
                     <CheckBox Grid.Row="0" Grid.Column="2" Name ="FcOnlyCb" Content="FC Only" IsChecked="{Binding Path=IsFcOnlyCbChecked}"/>
                     <CheckBox Grid.Row="1" Grid.Column="2" Name ="ExclusiveCb" Content="Exclusive" IsChecked="{Binding Path=IsExclusiveCbChecked}"/>
-                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Score Source:" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Score source:" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
                     <ComboBox Grid.Row="1" Grid.Column="3" Name="ScoreSourceCb" Width="80" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Row="0" Grid.Column="4" Text="Scores added:" VerticalAlignment="Bottom"/>
+                    <TextBlock Grid.Row="1" Grid.Column="4"  Text="{Binding ScoresAdded, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right"/>
                 </Grid>
                 <Grid Grid.Column="1" Margin="5,0,0,0">
                     <Grid.ColumnDefinitions>
