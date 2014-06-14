@@ -211,7 +211,7 @@
                     <VisualBrush Visual="{StaticResource appbar_settings}"></VisualBrush>
                 </Rectangle.OpacityMask>
             </Rectangle>
-            <Button Content="Settings" Click="ShowSettings">
+            <Button Content="Settings" FontSize="18" Click="ShowSettings">
             </Button>
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
@@ -223,10 +223,10 @@
             </Grid.RowDefinitions>
             <controls:MetroAnimatedSingleRowTabControl Grid.Row="0">
                 <TabItem Header="Scores">
-                    <views:Scores DataContext="{Binding}" />
+                    <views:Scores x:Name="ScoresTab" DataContext="{Binding}" />
                 </TabItem>
-                <TabItem Header="Beatmaps">
-                    <views:Beatmaps DataContext="{Binding}" />
+                <TabItem Header="Latest">
+                    <views:Latest DataContext="{Binding}" />
                 </TabItem>
             </controls:MetroAnimatedSingleRowTabControl>
             <Grid Grid.Row="1" 
@@ -247,7 +247,7 @@
                 </Hyperlink>
             </TextBlock>
                 <TextBlock Grid.Column="3"  Text=" Scores added: " Height="20"></TextBlock>
-                <TextBlock Grid.Column="4"  Text="{Binding Path=ScoresAdded, UpdateSourceTrigger=PropertyChanged}" Height="20"></TextBlock>
+                <TextBlock Grid.Column="4"  Text="{Binding ScoresAdded, ElementName=ScoresTab, UpdateSourceTrigger=PropertyChanged}" Height="20"></TextBlock>
             </Grid>
         </Grid>
     </controls:MetroContentControl>

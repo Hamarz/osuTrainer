@@ -14,16 +14,16 @@ using System.Xml;
 namespace osuTrainer.Views
 {
     /// <summary>
-    ///     Interaction logic for Beatmaps.xaml
+    ///     Interaction logic for Latest.xaml
     /// </summary>
-    public partial class Beatmaps : UserControl
+    public partial class Latest : UserControl
     {
         private readonly BackgroundWorker _worker = new BackgroundWorker();
         private List<FeedItem> _newBeatmaps;
         private bool _shouldUpdate;
         private DispatcherTimer _timer;
 
-        public Beatmaps()
+        public Latest()
         {
             InitializeComponent();
         }
