@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Navigation;
 using System.Windows.Threading;
+using osuTrainer.Properties;
 using osuTrainer.ViewModels;
 using ServiceStack;
 using ServiceStack.Text;
@@ -172,31 +173,30 @@ namespace osuTrainer.Views
 
         private void LoadRivals()
         {
-            if (File.Exists(_textfile))
+            if (!File.Exists(_textfile)) CreateRivals();
+            using (var reader = new StreamReader(_textfile))
             {
-                using (var reader = new StreamReader(_textfile))
+                string line;
+                _rivals = new List<int>();
+                while ((line = reader.ReadLine()) != null)
                 {
-                    string line;
-                    _rivals = new List<int>();
-                    while ((line = reader.ReadLine()) != null)
+                    if (line.StartsWith("#")) continue;
+                    try
                     {
-                        if (line.StartsWith("#")) continue;
-                        try
-                        {
-                            _rivals.Add(Convert.ToInt32(line));
-                        }
-                        catch (Exception)
-                        {
-                            MessageBox.Show("Failed reading " + _textfile);
-                            return;
-                        }
+                        _rivals.Add(Convert.ToInt32(line));
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Failed reading " + _textfile);
+                        return;
                     }
                 }
             }
-            else
-            {
-                MessageBox.Show(_textfile + "not found.");
-            }
+        }
+
+        private void CreateRivals()
+        {
+            File.WriteAllText(Path.Combine(Environment.CurrentDirectory,"rivals.txt"), Properties.Resources.rivals);
         }
     }
 

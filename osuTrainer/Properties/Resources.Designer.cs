@@ -131,6 +131,21 @@ namespace osuTrainer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to #This is a comment line
+        ///#One userid per line
+        ///#Might crash if there&apos;s too many ids
+        ///352328
+        ///50265
+        ///713266
+        ///.
+        /// </summary>
+        internal static string rivals {
+            get {
+                return ResourceManager.GetString("rivals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap S_small {

@@ -1,0 +1,6 @@
+#This is a comment line
+#One userid per line
+#Might crash if there's too many ids
+352328
+50265
+713266
