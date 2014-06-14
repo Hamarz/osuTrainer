@@ -1,0 +1,19 @@
+﻿<Window x:Class="osuTrainer.Views.Editor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Editor" Height="300" Width="300"
+        Initialized="Editor_OnInitialized"
+        WindowStartupLocation="CenterOwner">
+    <Grid>
+        <ScrollViewer>
+            <RichTextBox Name="rtbEditor" 
+                         TextChanged="RtbEditor_OnTextChanged">
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
+            </RichTextBox>
+        </ScrollViewer>
+    </Grid>
+</Window>
