@@ -63,7 +63,7 @@ namespace osuTrainer.Views
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            if (!_worker.IsBusy)
+            if (!_worker.IsBusy && _rivals.Count>0)
             {
                 _worker.RunWorkerAsync();
             }
@@ -188,6 +188,7 @@ namespace osuTrainer.Views
                         catch (Exception)
                         {
                             MessageBox.Show("Failed reading " + _textfile);
+                            return;
                         }
                     }
                 }
