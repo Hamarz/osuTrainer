@@ -26,7 +26,7 @@ namespace osuTrainer.Views
         {
             if (_textChanged)
             {
-                MessageBoxResult result = MessageBox.Show("You've made some changes. Save them?", "",
+                MessageBoxResult result = MessageBox.Show("You've made some changes. Save and refresh events?", "",
                     MessageBoxButton.YesNoCancel);
                 if (result == MessageBoxResult.Yes)
                 {

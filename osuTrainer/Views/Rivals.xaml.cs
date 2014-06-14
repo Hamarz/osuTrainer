@@ -10,6 +10,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Navigation;
 using System.Windows.Threading;
+using MahApps.Metro.Controls;
+using osuTrainer.Properties;
 using osuTrainer.ViewModels;
 using ServiceStack.Text;
 
@@ -37,8 +39,9 @@ namespace osuTrainer.Views
             foreach (int rival in _rivals)
             {
                 string json =
-                    _client.DownloadString(GlobalVars.UserApi + "7725cd9f63aef9abcdeee48a9c4b9c0f23ec3b68" + "&u=" +
+                    _client.DownloadString(GlobalVars.UserApi + Settings.Default.ApiKey + "&u=" +
                                            rival + "&event_days=" + 31);
+                if (json.Length < 33) continue;
                 var test = JsonSerializer.DeserializeFromString<List<User>>(json);
                 foreach (Event item in test.First().Events)
                 {
@@ -65,6 +68,11 @@ namespace osuTrainer.Views
         {
             if (!_worker.IsBusy && _rivals.Count > 0)
             {
+                var progressRing = new ProgressRing();
+                progressRing.IsActive = true;
+                progressRing.HorizontalAlignment = HorizontalAlignment.Left;
+                RivalsSp.Children.Clear();
+                RivalsSp.Children.Add(progressRing);
                 _worker.RunWorkerAsync();
             }
         }
@@ -92,12 +100,12 @@ namespace osuTrainer.Views
         {
             RivalsSp.Children.Clear();
             var grid = new Grid();
-            grid.ColumnDefinitions.Add(new ColumnDefinition {Width = new GridLength(80)});
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(80) });
             grid.ColumnDefinitions.Add(new ColumnDefinition());
             int row = 0;
             foreach (UserScore item in _score)
             {
-                grid.RowDefinitions.Add(new RowDefinition {Height = new GridLength(25)});
+                grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(25) });
                 var link = new Hyperlink();
                 link.NavigateUri = new Uri(GlobalVars.UserUrl + item.User_Id);
                 link.RequestNavigate += LinkOnRequestNavigate;
@@ -179,8 +187,9 @@ namespace osuTrainer.Views
             {
                 string line;
                 _rivals = new List<int>();
-                while ((line = reader.ReadLine()) != null)
+                while (true)
                 {
+                    if ((line = reader.ReadLine()) == null) break;
                     if (line.StartsWith("#")) continue;
                     try
                     {
@@ -188,7 +197,7 @@ namespace osuTrainer.Views
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Failed reading " + _textfile);
+                        MessageBox.Show("Failed to read this line: " + line);
                         return;
                     }
                 }
@@ -232,7 +241,7 @@ namespace osuTrainer.Views
             unchecked
             {
                 int hashCode = Beatmap_id;
-                hashCode = (hashCode*397) ^ User_Id;
+                hashCode = (hashCode * 397) ^ User_Id;
                 return hashCode;
             }
         }
