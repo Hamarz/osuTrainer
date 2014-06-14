@@ -10,9 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Navigation;
 using System.Windows.Threading;
-using osuTrainer.Properties;
 using osuTrainer.ViewModels;
-using ServiceStack;
 using ServiceStack.Text;
 
 namespace osuTrainer.Views
@@ -22,17 +20,18 @@ namespace osuTrainer.Views
     /// </summary>
     public partial class Rivals : UserControl
     {
-        private readonly BackgroundWorker _worker = new BackgroundWorker();
-        private DispatcherTimer _timer;
         private readonly CustomWebClient _client = new CustomWebClient();
-        private List<int> _rivals = new List<int>();
         private readonly SortedSet<UserScore> _score = new SortedSet<UserScore>();
         private readonly string _textfile = "rivals.txt";
+        private readonly BackgroundWorker _worker = new BackgroundWorker();
+        private List<int> _rivals = new List<int>();
+        private DispatcherTimer _timer;
 
         public Rivals()
         {
             InitializeComponent();
         }
+
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
             foreach (int rival in _rivals)
@@ -43,7 +42,7 @@ namespace osuTrainer.Views
                 var test = JsonSerializer.DeserializeFromString<List<User>>(json);
                 foreach (Event item in test.First().Events)
                 {
-                    Match match = Regex.Match(item.Display_Html, @"#(\d+?).+?'>(.+?)<.+?\((.+?)\)");
+                    Match match = Regex.Match(item.Display_Html, @"#(\d+).+?'>(.+?)<.+?\((.+?)\)");
                     if (match.Groups.Count > 3)
                     {
                         _score.Add(new UserScore
@@ -64,15 +63,17 @@ namespace osuTrainer.Views
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            if (!_worker.IsBusy && _rivals.Count>0)
+            if (!_worker.IsBusy && _rivals.Count > 0)
             {
                 _worker.RunWorkerAsync();
             }
         }
+
         private void WorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
         {
             UpdateDisplay();
         }
+
         private void Rivals_OnInitialized(object sender, EventArgs e)
         {
             _timer = new DispatcherTimer
@@ -91,12 +92,12 @@ namespace osuTrainer.Views
         {
             RivalsSp.Children.Clear();
             var grid = new Grid();
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(80) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition {Width = new GridLength(80)});
             grid.ColumnDefinitions.Add(new ColumnDefinition());
             int row = 0;
             foreach (UserScore item in _score)
             {
-                grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(25) });
+                grid.RowDefinitions.Add(new RowDefinition {Height = new GridLength(25)});
                 var link = new Hyperlink();
                 link.NavigateUri = new Uri(GlobalVars.UserUrl + item.User_Id);
                 link.RequestNavigate += LinkOnRequestNavigate;
@@ -196,7 +197,7 @@ namespace osuTrainer.Views
 
         private void CreateRivals()
         {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory,"rivals.txt"), Properties.Resources.rivals);
+            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "rivals.txt"), Properties.Resources.rivals);
         }
     }
 
@@ -231,7 +232,7 @@ namespace osuTrainer.Views
             unchecked
             {
                 int hashCode = Beatmap_id;
-                hashCode = (hashCode * 397) ^ User_Id;
+                hashCode = (hashCode*397) ^ User_Id;
                 return hashCode;
             }
         }

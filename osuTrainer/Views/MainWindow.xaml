@@ -250,7 +250,7 @@
                 </Hyperlink>
             </TextBlock>
                 <TextBlock Grid.Column="3"  Text=" Scores added: " Height="20"></TextBlock>
-                <TextBlock Grid.Column="4"  Text="{Binding ScoresAdded, ElementName=ScoresTab, UpdateSourceTrigger=PropertyChanged}" Height="20"></TextBlock>
+                <TextBlock Grid.Column="4"  Text="{Binding ScoresAdded, UpdateSourceTrigger=PropertyChanged}" Height="20"></TextBlock>
             </Grid>
         </Grid>
     </controls:MetroContentControl>
