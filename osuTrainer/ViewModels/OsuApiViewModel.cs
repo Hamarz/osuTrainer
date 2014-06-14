@@ -39,7 +39,7 @@ namespace osuTrainer.ViewModels
 
         private void LoadSettings()
         {
-            Username = Settings.Default.Username;
+            Userid = Settings.Default.Userid;
             ApiKey = Settings.Default.ApiKey;
             MinPp = Settings.Default.MinPp;
             SelectedGameMode = Settings.Default.GameMode;
@@ -75,8 +75,9 @@ namespace osuTrainer.ViewModels
         private bool GetUserBest()
         {
             UserScores = new List<int>();
+            
             string json =
-                _client.DownloadString(GlobalVars.UserApi + ApiKey + "&u=" + Username + GlobalVars.Mode +
+                _client.DownloadString(GlobalVars.UserApi + ApiKey + "&u=" + Userid + GlobalVars.Mode +
                                        SelectedGameMode);
             if (json.Length < 33)
             {
@@ -85,13 +86,12 @@ namespace osuTrainer.ViewModels
             //TODO: fix error if there are null values
             Match match = Regex.Match(json,
                 @"""user_id"":""(.+?)"".+?""username"":""(.+?)"".+?""pp_rank"":""(.+?)"".+?""pp_raw"":""(.+?)""");
-            _userId = Convert.ToInt32(match.Groups[1].Value);
-            Username = match.Groups[2].Value;
+            Userid = match.Groups[1].Value;
             curUserPpRank = Convert.ToInt32(match.Groups[3].Value);
             curUserPp = Convert.ToDouble(match.Groups[4].Value, CultureInfo.InvariantCulture);
 
             json =
-                _client.DownloadString(GlobalVars.UserBestApi + ApiKey + "&u=" + _userId + GlobalVars.Mode +
+                _client.DownloadString(GlobalVars.UserBestApi + ApiKey + "&u=" + Userid + GlobalVars.Mode +
                                        SelectedGameMode);
             var userBest = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
             foreach (UserBest item in userBest)
@@ -104,7 +104,7 @@ namespace osuTrainer.ViewModels
             {
                 json =
                     _client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + SelectedGameMode +
-                                           @"&uid=" + _userId);
+                                           @"&uid=" + Userid);
             }
             catch (Exception)
             {
@@ -130,7 +130,7 @@ namespace osuTrainer.ViewModels
             {
                 IsWorking = false;
                 UpdateContent = "Update";
-                MessageBox.Show("Wrong API key or username.");
+                MessageBox.Show("Wrong API key or username. If your username is made up of numbers only, use your userid instead.");
                 return scores;
             }
             string json = "";

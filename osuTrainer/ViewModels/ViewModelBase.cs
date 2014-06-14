@@ -14,9 +14,8 @@ namespace osuTrainer.ViewModels
         private ObservableCollection<ScoreInfo> _scores = new ObservableCollection<ScoreInfo>();
         private int _scoresAdded;
         private string _updateContent;
-        protected int _userId;
         private List<int> _userScores = new List<int>();
-        private string _username;
+        private string _userid;
         public ICommand OpenBeatmapLinkCommand { get; set; }
         public ICommand CopyLinkCommand { get; set; }
         public ICommand DownloadCommand { get; set; }
@@ -98,13 +97,13 @@ namespace osuTrainer.ViewModels
         public int SelectedGameMode { get; set; }
         public string ApiKey { get; set; }
 
-        public string Username
+        public string Userid
         {
-            get { return _username; }
+            get { return _userid; }
             set
             {
-                _username = value;
-                RaisePropertyChanged("Username");
+                _userid = value;
+                RaisePropertyChanged("Userid");
             }
         }
 

@@ -27,7 +27,7 @@ namespace osuTrainer.ViewModels
 
         private void LoadSettings()
         {
-            Username = Settings.Default.Username;
+            Userid = Settings.Default.Userid;
             ApiKey = Settings.Default.ApiKey;
             MinPp = Settings.Default.MinPp;
             SelectedGameMode = Settings.Default.GameMode;
@@ -43,18 +43,17 @@ namespace osuTrainer.ViewModels
         {
             UserScores = new List<int>();
             string json =
-                _client.DownloadString(GlobalVars.UserApi + ApiKey + "&u=" + Username + GlobalVars.Mode +
+                _client.DownloadString(GlobalVars.UserApi + ApiKey + "&u=" + Userid + GlobalVars.Mode +
                                        SelectedGameMode);
             if (json.Length < 33)
             {
                 return false;
             }
             Match match = Regex.Match(json, @"""user_id"":""(.+?)"".+?""username"":""(.+?)""");
-            _userId = Convert.ToInt32(match.Groups[1].Value);
-            Username = match.Groups[2].Value;
+            Userid = match.Groups[1].Value;
 
             json =
-                _client.DownloadString(GlobalVars.UserBestApi + ApiKey + "&u=" + _userId + GlobalVars.Mode +
+                _client.DownloadString(GlobalVars.UserBestApi + ApiKey + "&u=" + Userid + GlobalVars.Mode +
                                        SelectedGameMode);
             var userBest = JsonSerializer.DeserializeFromString<List<UserBest>>(json);
             foreach (UserBest item in userBest)
@@ -66,7 +65,7 @@ namespace osuTrainer.ViewModels
             {
                 json =
     _client.DownloadString(@"http://osustats.ezoweb.de/API/osuTrainer.php?mode=" + SelectedGameMode +
-                           @"&uid=" + _userId);
+                           @"&uid=" + Userid);
             }
             catch (Exception)
             {

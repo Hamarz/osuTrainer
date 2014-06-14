@@ -23,10 +23,7 @@
     <Setting Name="IsFlashlightCbChecked" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Username" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="UserId" Type="System.String" Scope="User">
+    <Setting Name="Userid" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="MinPp" Type="System.Double" Scope="User">
