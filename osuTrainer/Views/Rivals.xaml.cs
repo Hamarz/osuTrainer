@@ -112,6 +112,7 @@ namespace osuTrainer.Views
                 var image = new Image();
                 image.Height = 15;
                 image.Width = 20;
+                image.VerticalAlignment = VerticalAlignment.Top;
                 image.Source = new BitmapImage(new Uri(item.RankImage, UriKind.Relative));
                 grid.Children.Add(image);
                 Grid.SetRow(image, row);
