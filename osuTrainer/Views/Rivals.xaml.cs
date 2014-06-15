@@ -201,16 +201,21 @@ namespace osuTrainer.Views
                 while (true)
                 {
                     if ((line = reader.ReadLine()) == null) break;
-                    if (line.StartsWith("#")) continue;
-                    try
+                    var userid = 0;
+                    int.TryParse(line, out userid);
+                    if (userid > 0)
                     {
-                        _rivals.Add(Convert.ToInt32(line));
+                        try
+                        {
+                            _rivals.Add(Convert.ToInt32(line));
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Failed to read this line: " + line);
+                            return;
+                        }
                     }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("Failed to read this line: " + line);
-                        return;
-                    }
+
                 }
             }
         }
