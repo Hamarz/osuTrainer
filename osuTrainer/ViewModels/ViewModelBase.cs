@@ -144,28 +144,28 @@ namespace osuTrainer.ViewModels
             switch (rank)
             {
                 case GlobalVars.Rank.S:
-                    return "/osuTrainer;component/Resources/S_small.png";
+                    return @"/osuTrainer;component/Resources/S_small.png";
 
                 case GlobalVars.Rank.A:
-                    return "/osuTrainer;component/Resources/A_small.png";
+                    return @"/osuTrainer;component/Resources/A_small.png";
 
                 case GlobalVars.Rank.X:
-                    return "/osuTrainer;component/Resources/X_small.png";
+                    return @"/osuTrainer;component/Resources/X_small.png";
 
                 case GlobalVars.Rank.SH:
-                    return "/osuTrainer;component/Resources/SH_small.png";
+                    return @"/osuTrainer;component/Resources/SH_small.png";
 
                 case GlobalVars.Rank.XH:
-                    return "/osuTrainer;component/Resources/XH_small.png";
+                    return @"/osuTrainer;component/Resources/XH_small.png";
 
                 case GlobalVars.Rank.B:
-                    return "/osuTrainer;component/Resources/B_small.png";
+                    return @"/osuTrainer;component/Resources/B_small.png";
 
                 case GlobalVars.Rank.C:
-                    return "/osuTrainer;component/Resources/C_small.png";
+                    return @"/osuTrainer;component/Resources/C_small.png";
 
                 case GlobalVars.Rank.D:
-                    return "/osuTrainer;component/Resources/D_small.png";
+                    return @"/osuTrainer;component/Resources/D_small.png";
                 default:
                     return null;
             }

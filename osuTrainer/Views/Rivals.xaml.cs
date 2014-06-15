@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Threading;
 using MahApps.Metro.Controls;
@@ -45,19 +46,20 @@ namespace osuTrainer.Views
                 var test = JsonSerializer.DeserializeFromString<List<User>>(json);
                 foreach (Event item in test.First().Events)
                 {
-                    Match match = Regex.Match(item.Display_Html, @"#(\d+).+?'>(.+?)<.+?\((.+?)\)");
+                    Match match = Regex.Match(item.Display_Html, @"images\/(.+?)\..+?#(\d+).+?'>(.+?)<.+?\((.+?)\)");
                     if (match.Groups.Count > 3)
                     {
                         _score.Add(new UserScore
                         {
-                            Rank = Convert.ToInt32(match.Groups[1].Value),
-                            BeatmapName = match.Groups[2].Value,
+                            RankImage = @"/osuTrainer;component/Resources/" + match.Groups[1].Value + ".png",
+                            Rank = Convert.ToInt32(match.Groups[2].Value),
+                            BeatmapName = match.Groups[3].Value,
                             Beatmap_id = item.Beatmap_Id,
                             Beatmapset_Id = item.Beatmapset_Id,
                             Date = item.Date - new TimeSpan(8, 0, 0),
                             User_Id = test.First().User_Id,
                             Username = test.First().Username,
-                            Mode = match.Groups[3].Value
+                            Mode = match.Groups[4].Value
                         });
                     }
                 }
@@ -102,10 +104,19 @@ namespace osuTrainer.Views
             var grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(80) });
             grid.ColumnDefinitions.Add(new ColumnDefinition());
+            grid.ColumnDefinitions.Add(new ColumnDefinition());
             int row = 0;
             foreach (UserScore item in _score)
             {
                 grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(25) });
+                var image = new Image();
+                image.Height = 15;
+                image.Width = 20;
+                image.Source = new BitmapImage(new Uri(item.RankImage, UriKind.Relative));
+                grid.Children.Add(image);
+                Grid.SetRow(image, row);
+                Grid.SetColumn(image, 1);
+
                 var link = new Hyperlink();
                 link.NavigateUri = new Uri(GlobalVars.UserUrl + item.User_Id);
                 link.RequestNavigate += LinkOnRequestNavigate;
@@ -124,7 +135,7 @@ namespace osuTrainer.Views
                 text.Inlines.Add(" (" + item.Mode + ")");
                 grid.Children.Add(text);
                 Grid.SetRow(text, row);
-                Grid.SetColumn(text, 1);
+                Grid.SetColumn(text, 2);
 
                 text = new TextBlock();
                 text.Text = ElapsedDate(item.Date);
@@ -220,6 +231,7 @@ namespace osuTrainer.Views
         public string Username { get; set; }
         public string Mode { get; set; }
         public DateTime Date { get; set; }
+        public string RankImage { get; set; }
 
         public int CompareTo(UserScore other)
         {
