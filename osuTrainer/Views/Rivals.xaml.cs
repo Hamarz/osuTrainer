@@ -75,6 +75,7 @@ namespace osuTrainer.Views
                 progressRing.HorizontalAlignment = HorizontalAlignment.Left;
                 RivalsSp.Children.Clear();
                 RivalsSp.Children.Add(progressRing);
+                _score.Clear();
                 _worker.RunWorkerAsync();
             }
         }

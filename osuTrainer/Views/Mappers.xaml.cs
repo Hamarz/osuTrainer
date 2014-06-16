@@ -35,7 +35,7 @@ namespace osuTrainer.Views
         private readonly string _textfile = "mappers.txt";
         private readonly BackgroundWorker _worker = new BackgroundWorker();
         private List<int> _mappers = new List<int>();
-        private DispatcherTimer _timer;
+        private DispatcherTimer _timer = new DispatcherTimer();
 
         public Mappers()
         {
@@ -56,10 +56,7 @@ namespace osuTrainer.Views
 
         private void Mappers_OnInitialized(object sender, EventArgs e)
         {
-            _timer = new DispatcherTimer
-            {
-                Interval = new TimeSpan(0, 10, 47)
-            };
+            _timer.Interval = new TimeSpan(0, 10, 47);
             _timer.Start();
             _timer.Tick += timer_Tick;
             _worker.DoWork += WorkerOnDoWork;
@@ -193,6 +190,7 @@ namespace osuTrainer.Views
                 progressRing.HorizontalAlignment = HorizontalAlignment.Left;
                 MappersSp.Children.Clear();
                 MappersSp.Children.Add(progressRing);
+                _maps.Clear();
                 _worker.RunWorkerAsync();
             }
         }
