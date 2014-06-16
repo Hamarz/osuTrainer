@@ -13,12 +13,13 @@ namespace osuTrainer.Views
     /// </summary>
     public partial class Editor : Window
     {
-        private readonly string _textfile = "rivals.txt";
+        private readonly string _textfile;
         public bool Saved;
         private bool _textChanged;
 
-        public Editor()
+        public Editor(string filename)
         {
+            _textfile = filename;
             InitializeComponent();
         }
 

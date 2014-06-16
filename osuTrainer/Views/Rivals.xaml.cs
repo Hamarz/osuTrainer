@@ -182,7 +182,7 @@ namespace osuTrainer.Views
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            var editor = new Editor();
+            var editor = new Editor(_textfile);
             editor.Owner = Application.Current.MainWindow;
             editor.ShowDialog();
             if (editor.Saved)
@@ -197,10 +197,10 @@ namespace osuTrainer.Views
             if (!File.Exists(_textfile)) CreateRivals();
             using (var reader = new StreamReader(_textfile))
             {
-                string line;
                 _rivals = new List<int>();
                 while (true)
                 {
+                    string line;
                     if ((line = reader.ReadLine()) == null) break;
                     var userid = 0;
                     int.TryParse(line, out userid);

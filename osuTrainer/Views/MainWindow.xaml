@@ -223,13 +223,16 @@
             </Grid.RowDefinitions>
             <controls:MetroAnimatedSingleRowTabControl Grid.Row="0">
                 <TabItem Header="Scores">
-                    <views:Scores x:Name="ScoresTab" DataContext="{Binding}" />
+                    <views:Scores DataContext="{Binding}" />
                 </TabItem>
                 <TabItem Header="Beatmaps">
                     <views:Beatmaps DataContext="{Binding}" />
                 </TabItem>
                 <TabItem Header="Rivals">
                     <views:Rivals DataContext="{Binding}" />
+                </TabItem>
+                <TabItem Header="Mappers">
+                    <views:Mappers DataContext="{Binding}" />
                 </TabItem>
             </controls:MetroAnimatedSingleRowTabControl>
             <Grid Grid.Row="1" 

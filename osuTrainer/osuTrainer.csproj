@@ -80,6 +80,9 @@
     <Compile Include="Views\Editor.xaml.cs">
       <DependentUpon>Editor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Mappers.xaml.cs">
+      <DependentUpon>Mappers.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Rivals.xaml.cs">
       <DependentUpon>Rivals.xaml</DependentUpon>
     </Compile>
@@ -117,6 +120,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\Beatmaps.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Mappers.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -189,6 +196,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\rivals.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mappers.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -121,6 +121,21 @@ namespace osuTrainer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Any line that is not a userid is ignored
+        ///One userid per line
+        ///Might be slow to update if there&apos;s too many ids
+        ///251395
+        ///537084
+        ///243917
+        ///.
+        /// </summary>
+        internal static string mappers {
+            get {
+                return ResourceManager.GetString("mappers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon osutrainer {
@@ -131,9 +146,9 @@ namespace osuTrainer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #This is a comment line
-        ///#One userid per line
-        ///#Might crash if there&apos;s too many ids
+        ///   Looks up a localized string similar to Any line that is not a userid is ignored
+        ///One userid per line
+        ///Might be slow to update if there&apos;s too many ids
         ///352328
         ///50265
         ///713266
