@@ -115,7 +115,7 @@ namespace osuTrainer.Views
         {
             MappersSp.Children.Clear();
             var grid = new Grid();
-            grid.ColumnDefinitions.Add(new ColumnDefinition());
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(85) });
             grid.ColumnDefinitions.Add(new ColumnDefinition());
             int row = 0;
             foreach (BeatmapInfo item in _maps)
@@ -134,13 +134,13 @@ namespace osuTrainer.Views
                 link = new Hyperlink();
                 link.NavigateUri = new Uri(GlobalVars.BeatmapUrl + item.Beatmap_Id);
                 link.RequestNavigate += LinkOnRequestNavigate;
-                link.Inlines.Add(new Run(item.Artist + " - " + item.Title + " [" + item.Version+"]"));
+                link.Inlines.Add(new Run(item.Artist + " - " + item.Title + " [" + item.Version + "]"));
 
                 text.Inlines.Add(link);
                 text.Inlines.Add(" (" + item.Mode + ")");
                 grid.Children.Add(text);
                 Grid.SetRow(text, row);
-                Grid.SetColumn(text, 2);
+                Grid.SetColumn(text, 1);
 
                 text = new TextBlock();
                 text.Text = ElapsedDate(item.Last_Update);
