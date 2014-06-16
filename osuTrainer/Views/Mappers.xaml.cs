@@ -85,7 +85,7 @@ namespace osuTrainer.Views
                         Beatmap_Id = item.Beatmap_Id,
                         Approved = item.Approved,
                         Approved_Date = item.Approved_Date,
-                        Last_Update = item.Last_Update,
+                        Last_Update = item.Last_Update - new TimeSpan(8, 0, 0),
                         Total_Length = item.Total_Length,
                         Hit_Length = item.Hit_Length,
                         Version = item.Version,
