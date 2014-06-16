@@ -32,7 +32,7 @@ namespace osuTrainer.Views
         {
             _timer = new DispatcherTimer
             {
-                Interval = new TimeSpan(0, 1, 0)
+                Interval = new TimeSpan(0, 1, 7)
             };
             _timer.Start();
             _timer.Tick += timer_Tick;
