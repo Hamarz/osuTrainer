@@ -10,7 +10,7 @@ using ServiceStack.Text;
 
 namespace osuTrainer.ViewModels
 {
-    public class OsuStatsViewModel : ViewModelBase
+    public class OsuStatsViewModel : ScoresViewModel
     {
         public OsuStatsViewModel()
         {

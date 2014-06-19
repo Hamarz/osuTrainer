@@ -77,10 +77,13 @@
     <Compile Include="Commands\DownloadCommand.cs" />
     <Compile Include="Commands\DownloadOdCommand.cs" />
     <Compile Include="Commands\OpenBeatmapLinkCommand.cs" />
+    <Compile Include="Commands\SearchCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="GlobalVars.cs" />
     <Compile Include="InvertBoolConverter.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ViewModels\SearchViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\Editor.xaml.cs">
       <DependentUpon>Editor.xaml</DependentUpon>
     </Compile>
@@ -90,9 +93,12 @@
     <Compile Include="Views\Rivals.xaml.cs">
       <DependentUpon>Rivals.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Search.xaml.cs">
+      <DependentUpon>Search.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Updater.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="ViewModels\ScoresViewModel.cs" />
     <Compile Include="ViewModels\OsuApiViewModel.cs" />
     <Compile Include="ViewModels\OsuStatsViewModel.cs" />
     <Compile Include="Views\Beatmaps.xaml.cs">
@@ -136,6 +142,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Scores.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Search.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,9 +7,9 @@ namespace osuTrainer.Commands
 {
     internal class DownloadOdCommand : ICommand
     {
-        private readonly ViewModelBase _viewModelBase;
+        private readonly ScoresViewModel _viewModelBase;
 
-        public DownloadOdCommand(ViewModelBase viewModelBase)
+        public DownloadOdCommand(ScoresViewModel viewModelBase)
         {
             _viewModelBase = viewModelBase;
         }

@@ -7,9 +7,9 @@ namespace osuTrainer.Commands
 {
     internal class CopyLinkCommand : ICommand
     {
-        private readonly ViewModelBase _viewModelBase;
+        private readonly ScoresViewModel _viewModelBase;
 
-        public CopyLinkCommand(ViewModelBase viewModelBase)
+        public CopyLinkCommand(ScoresViewModel viewModelBase)
         {
             _viewModelBase = viewModelBase;
         }

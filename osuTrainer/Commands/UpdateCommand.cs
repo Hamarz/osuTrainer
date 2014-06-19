@@ -7,9 +7,9 @@ namespace osuTrainer.Commands
 {
     internal class UpdateCommand : ICommand
     {
-        private readonly ViewModelBase _viewModelBase;
+        private readonly ScoresViewModel _viewModelBase;
 
-        public UpdateCommand(ViewModelBase viewModelBase)
+        public UpdateCommand(ScoresViewModel viewModelBase)
         {
             _viewModelBase = viewModelBase;
         }

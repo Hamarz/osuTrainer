@@ -75,6 +75,7 @@ namespace osuTrainer
         public static readonly string UserUrl = @"http://osu.ppy.sh/u/";
         public static readonly string BeatmapUrl = @"http://osu.ppy.sh/b/";
         public static readonly string BeatmapApi = @"http://osu.ppy.sh/api/get_beatmaps?k=";
+        public static readonly string ScoresApi = @"http://osu.ppy.sh/api/get_scores?k=";
         public static readonly string UserApi = @"http://osu.ppy.sh/api/get_user?k=";
         public static readonly string BloodcatUrl = @"http://bloodcat.com/osu/m/";
         public static readonly string UserBestApi = @"https://osu.ppy.sh/api/get_user_best?k=";

@@ -13,7 +13,7 @@ using ServiceStack.Text;
 
 namespace osuTrainer.ViewModels
 {
-    public class OsuApiViewModel : ViewModelBase
+    public class OsuApiViewModel : ScoresViewModel
     {
         private int[] ctbIds;
         private double curUserPp;

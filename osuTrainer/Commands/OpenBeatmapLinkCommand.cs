@@ -7,9 +7,9 @@ namespace osuTrainer.Commands
 {
     internal class OpenBeatmapLinkCommand : ICommand
     {
-        private readonly ViewModelBase _viewModelBase;
+        private readonly ScoresViewModel _viewModelBase;
 
-        public OpenBeatmapLinkCommand(ViewModelBase viewModelBase)
+        public OpenBeatmapLinkCommand(ScoresViewModel viewModelBase)
         {
             _viewModelBase = viewModelBase;
         }

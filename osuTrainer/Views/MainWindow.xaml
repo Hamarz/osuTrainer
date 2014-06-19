@@ -234,6 +234,9 @@
                 <TabItem Header="Mappers">
                     <views:Mappers DataContext="{Binding}" />
                 </TabItem>
+                <TabItem Header="Search">
+                    <views:Search DataContext="{Binding}" />
+                </TabItem>
             </controls:MetroAnimatedSingleRowTabControl>
             <Grid Grid.Row="1" 
                   Margin="5,0">
