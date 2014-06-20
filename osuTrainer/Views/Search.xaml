@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="osuTrainer.Views.Search"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:properties="clr-namespace:osuTrainer.Properties"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Initialized="Search_OnInitialized"
+             Loaded="Search_OnLoaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0"
+              Margin="5,0,5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0">Enter a Beatmap Id to list its top 50 scores and their PP amount.</TextBlock>
+            <TextBlock Grid.Column="1"></TextBlock>
+            <TextBox Grid.Column="2" Width="100" controls:TextboxHelper.Watermark="Beatmap Id" Text="{Binding Path=BeatmapId, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <ComboBox Grid.Column="3" Name="GameModeCb" Width="100" SelectedIndex="{Binding Path=SelectedGameMode}"/>
+            <Button Grid.Column="4" Content="Search" Command="{Binding SearchCommand}" IsEnabled="{Binding IsWorking, Converter={StaticResource InvertBoolConverter}, UpdateSourceTrigger=PropertyChanged}"></Button>
+        </Grid>
+        <DataGrid x:Name="dataGrid" Grid.Row="1"
+                  Grid.Column="0"
+                  IsReadOnly="True" 
+                  AutoGenerateColumns="False" 
+                  ItemsSource="{Binding Path=Scores, UpdateSourceTrigger=PropertyChanged}" 
+                  CanUserResizeRows="False"
+                  ColumnWidth="*"
+                  SelectionMode="Single" Margin="0,0,4,0">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="30" SortMemberPath="RankImage">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Path=RankImage}" Stretch="None"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Acc" Width="45" SortMemberPath="Accuracy">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Accuracy}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Player" SortMemberPath="Player">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Player}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Player}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="MaxCombo" Width="100" SortMemberPath="MaxCombo">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=MaxCombo}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=MaxCombo}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Misses" Width="70" SortMemberPath="CountMiss">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=CountMiss}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=CountMiss}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Mods" Width="90" SortMemberPath="EnabledMods">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=EnabledMods}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=EnabledMods}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="PP" Width="70" SortMemberPath="Pp"
+                                        Visibility="{Binding Source={x:Static properties:Settings.Default}, Path=IsPpVisible, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Pp}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=Pp}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
